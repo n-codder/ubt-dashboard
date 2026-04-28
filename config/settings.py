@@ -24,6 +24,10 @@ API_BASKETBALL_KEY    = os.getenv("API_BASKETBALL_KEY", "")
 API_BASKETBALL_BASE   = "https://v1.basketball.api-sports.io"
 API_BASKETBALL_LIMIT  = 100  # requests per day
 
+RAPIDAPI_KEY              = os.getenv("RAPIDAPI_KEY", "")
+RAPIDAPI_HOST_BASKETBALL  = "basketapi1.p.rapidapi.com"
+RAPIDAPI_BASE_BASKETBALL  = "https://basketapi1.p.rapidapi.com"
+
 # ── Google Sheets ──────────────────────────────────────────────────────────
 GOOGLE_SHEETS_ID           = os.getenv("GOOGLE_SHEETS_ID", "")
 GOOGLE_SERVICE_ACCOUNT_FILE = ROOT / os.getenv(

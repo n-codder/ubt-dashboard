@@ -1,0 +1,47 @@
+competition,competition_key,season,game_code,round,phase,date,home_team,home_code,away_team,away_code,score_home,score_away,venue,attendance,ubt_is_home,ubt_score,opp_score,opponent,result,score_diff
+ABA League,aba_league,2025,14397509,2,Regular Season,2025-10-11,KK Krka,kk-krka-novo-mesto,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,83,85,,,False,85,83,KK Krka,W,2
+ABA League,aba_league,2025,14397526,3,Regular Season,2025-10-19,BC Dubai,bc-dubai,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,81,77,,,False,77,81,BC Dubai,L,-4
+ABA League,aba_league,2025,14397529,4,Regular Season,2025-10-25,KK Split,kk-split,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,87,80,,,False,80,87,KK Split,L,-7
+ABA League,aba_league,2025,14397496,5,Regular Season,2025-11-01,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,Igokea m:tel,kk-igokea-aleksandrovac-mtl,106,84,,,True,106,84,Igokea m:tel,W,22
+ABA League,aba_league,2025,14397502,18,Regular Season,2025-11-08,KK Borac,kk-borac-mozzart,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,76,97,,,False,97,76,KK Borac,W,21
+ABA League,aba_league,2025,14397505,7,Regular Season,2025-11-14,KK SC Derby,kk-sc-derby,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,82,95,,,False,95,82,KK SC Derby,W,13
+ABA League,aba_league,2025,15039407,8,Regular Season,2025-11-22,FMP Beograd,fmp-beograd,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,98,104,,,False,104,98,FMP Beograd,W,6
+ABA League,aba_league,2025,14397519,9,Regular Season,2025-12-07,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Partizan,kk-partizan-mozzart-bet,85,92,,,True,85,92,KK Partizan,L,-7
+ABA League,aba_league,2025,14397524,10,Regular Season,2025-12-19,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Krka,kk-krka-novo-mesto,92,82,,,True,92,82,KK Krka,W,10
+ABA League,aba_league,2025,14936498,11,Regular Season,2025-12-22,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Split,kk-split,105,87,,,True,105,87,KK Split,W,18
+ABA League,aba_league,2025,14397578,12,Regular Season,2025-12-26,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK SC Derby,kk-sc-derby,96,85,,,True,96,85,KK SC Derby,W,11
+ABA League,aba_league,2025,15306734,13,Regular Season,2026-01-03,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,FMP Beograd,fmp-beograd,93,65,,,True,93,65,FMP Beograd,W,28
+ABA League,aba_league,2025,14397589,14,Regular Season,2026-01-10,Igokea m:tel,kk-igokea-aleksandrovac-mtl,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,114,108,,,False,108,114,Igokea m:tel,L,-6
+ABA League,aba_league,2025,14397598,15,Regular Season,2026-01-17,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC Dubai,bc-dubai,93,110,,,True,93,110,BC Dubai,L,-17
+ABA League,aba_league,2025,14397597,17,Regular Season,2026-01-31,KK Partizan,kk-partizan-mozzart-bet,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,90,79,,,False,79,90,KK Partizan,L,-11
+ABA League,aba_league,2025,14949152,18,Regular Season,2026-02-07,KK Borac,kk-borac-mozzart,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,87,93,,,False,93,87,KK Borac,W,6
+ABA League,aba_league,2025,15485269,2,Regular Season,2026-03-08,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Crvena zvezda,kk-crvena-zvezda-meridianbet,85,97,,,True,85,97,KK Crvena zvezda,L,-12
+ABA League,aba_league,2025,15485273,3,Regular Season,2026-03-14,KK Budućnost VOLI,kk-buducnost-voli,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,89,,,False,89,94,KK Budućnost VOLI,L,-5
+ABA League,aba_league,2025,15485278,4,Regular Season,2026-03-22,KK Bosna,kk-bosna-meridianbet,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,90,93,,,False,93,90,KK Bosna,W,3
+ABA League,aba_league,2025,15485268,1,Regular Season,2026-03-25,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Cedevita Olimpija,kk-cedevita-olimpija,98,95,,,True,98,95,KK Cedevita Olimpija,W,3
+ABA League,aba_league,2025,15485282,5,Regular Season,2026-03-28,KK Cedevita Olimpija,kk-cedevita-olimpija,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,72,84,,,False,84,72,KK Cedevita Olimpija,W,12
+ABA League,aba_league,2025,15485264,6,Regular Season,2026-04-05,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Bosna,kk-bosna-meridianbet,90,98,,,True,90,98,KK Bosna,L,-8
+ABA League,aba_league,2025,15485272,7,Regular Season,2026-04-13,KK Crvena zvezda,kk-crvena-zvezda-meridianbet,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,86,76,,,False,76,86,KK Crvena zvezda,L,-10
+ABA League,aba_league,2025,15485284,8,Regular Season,2026-04-19,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Budućnost VOLI,kk-buducnost-voli,72,110,,,True,72,110,KK Budućnost VOLI,L,-38
+EuroCup,eurocup,2025,2,1,REGULAR SEASON,2025-10-01,U-BT Cluj-Napoca,CLU,Bahçeşehir Koleji,BAH,90,98,BT ARENA,6881,True,90,98,Bahçeşehir Koleji,L,-8
+EuroCup,eurocup,2025,15,2,REGULAR SEASON,2025-10-07,Klaipėdos Neptūnas,KLA,U-BT Cluj-Napoca,CLU,102,107,SVYTURIO ARENA,2087,False,107,102,Klaipėdos Neptūnas,W,5
+EuroCup,eurocup,2025,21,3,REGULAR SEASON,2025-10-15,Śląsk Wrocław,WRO,U-BT Cluj-Napoca,CLU,94,93,HALA ORBITA,2417,False,93,94,Śląsk Wrocław,L,-1
+EuroCup,eurocup,2025,35,4,REGULAR SEASON,2025-10-22,U-BT Cluj-Napoca,CLU,Umana Reyer Venezia,VNC,103,102,BT ARENA,7962,True,103,102,Umana Reyer Venezia,W,1
+EuroCup,eurocup,2025,42,5,REGULAR SEASON,2025-10-28,Hamburg Towers,HAM,U-BT Cluj-Napoca,CLU,76,95,INSELPARK ARENA,1940,False,95,76,Hamburg Towers,W,19
+EuroCup,eurocup,2025,54,6,REGULAR SEASON,2025-11-05,U-BT Cluj-Napoca,CLU,KK Cedevita Olimpija,LJU,87,93,BT ARENA,6631,True,87,93,KK Cedevita Olimpija,L,-6
+EuroCup,eurocup,2025,63,7,REGULAR SEASON,2025-11-12,U-BT Cluj-Napoca,CLU,BAXI Manresa,MAN,110,86,NOVA PG ARENA,2973,True,110,86,BAXI Manresa,W,24
+EuroCup,eurocup,2025,73,8,REGULAR SEASON,2025-11-18,U-BT Cluj-Napoca,CLU,Hapoel Jerusalem BC,JER,89,101,BT ARENA,8327,True,89,101,Hapoel Jerusalem BC,L,-12
+EuroCup,eurocup,2025,84,9,REGULAR SEASON,2025-12-04,Aris BC,ARI,U-BT Cluj-Napoca,CLU,88,98,PALAIS DE SPORTS,3642,False,98,88,Aris BC,W,10
+EuroCup,eurocup,2025,92,10,REGULAR SEASON,2025-12-10,Bahçeşehir Koleji,BAH,U-BT Cluj-Napoca,CLU,84,72,SINAN ERDEM SPORTS HALL,714,False,72,84,Bahçeşehir Koleji,L,-12
+EuroCup,eurocup,2025,105,11,REGULAR SEASON,2025-12-17,U-BT Cluj-Napoca,CLU,Klaipėdos Neptūnas,KLA,118,97,BT ARENA,4837,True,118,97,Klaipėdos Neptūnas,W,21
+EuroCup,eurocup,2025,111,12,REGULAR SEASON,2025-12-30,U-BT Cluj-Napoca,CLU,Śląsk Wrocław,WRO,94,92,BT ARENA,4168,True,94,92,Śląsk Wrocław,W,2
+EuroCup,eurocup,2025,125,13,REGULAR SEASON,2026-01-07,Umana Reyer Venezia,VNC,U-BT Cluj-Napoca,CLU,90,83,PALASPORT TALIERCIO,1536,False,83,90,Umana Reyer Venezia,L,-7
+EuroCup,eurocup,2025,132,14,REGULAR SEASON,2026-01-13,U-BT Cluj-Napoca,CLU,Hamburg Towers,HAM,103,92,BT ARENA,3347,True,103,92,Hamburg Towers,W,11
+EuroCup,eurocup,2025,144,15,REGULAR SEASON,2026-01-20,KK Cedevita Olimpija,LJU,U-BT Cluj-Napoca,CLU,86,80,HALA TIVOLI,2991,False,80,86,KK Cedevita Olimpija,L,-6
+EuroCup,eurocup,2025,153,16,REGULAR SEASON,2026-01-28,BAXI Manresa,MAN,U-BT Cluj-Napoca,CLU,101,99,PAVELLO NOU CONGOST,3775,False,99,101,BAXI Manresa,L,-2
+EuroCup,eurocup,2025,163,17,REGULAR SEASON,2026-02-04,Hapoel Jerusalem BC,JER,U-BT Cluj-Napoca,CLU,114,104,PAIS ARENA JERUSALEM,2764,False,104,114,Hapoel Jerusalem BC,L,-10
+EuroCup,eurocup,2025,174,18,REGULAR SEASON,2026-02-11,U-BT Cluj-Napoca,CLU,Aris BC,ARI,111,92,BT ARENA,10000,True,111,92,Aris BC,W,19
+EuroCup,eurocup,2025,183,19,EIGHTHFINALS,2026-03-11,KK Budućnost VOLI,BUD,U-BT Cluj-Napoca,CLU,82,100,MORACA,3150,False,100,82,KK Budućnost VOLI,W,18
+EuroCup,eurocup,2025,188,20,QUARTERFINALS,2026-03-17,Bahçeşehir Koleji,BAH,U-BT Cluj-Napoca,CLU,75,72,SINAN ERDEM SPORTS HALL,3248,False,72,75,Bahçeşehir Koleji,L,-3
+Liga Națională,liga_nationala,2026,16035738,27,Regular Season,2026-04-24,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,101,,,False,101,94,BC CSU Sibiu,W,7
+Liga Națională,liga_nationala,2026,16035742,27,Regular Season,2026-04-26,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,87,,,False,87,84,BC CSU Sibiu,W,3

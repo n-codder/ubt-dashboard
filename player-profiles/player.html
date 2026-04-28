@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil jucător · U-BT Cluj-Napoca Stats</title>
+  <meta name="description" content="Profil și statistici individuale pentru jucătorii U-BT Cluj-Napoca.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css?v=6">
+</head>
+<body data-page="player">
+
+<!-- ── Header ─────────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-logo-wrap"><img src="../logo-ubt.svg" class="brand-logo-img" alt="U-BT"></div>
+      <div>
+        <div class="brand-name">U-BT Cluj-Napoca</div>
+        <div class="brand-sub">Player Stats</div>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a class="nav-link" href="index.html">Jucători</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── Page ───────────────────────────────────────────────────────────── -->
+<main class="page">
+
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Toți jucătorii
+  </a>
+
+  <!-- Filled by app.js -->
+  <div id="player-content"></div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
+        integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="assets/app.js?v=6"></script>
+</body>
+</html>

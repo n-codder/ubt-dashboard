@@ -7,23 +7,30 @@
     "eurocup": {
       "team_code": "UBT",
       "season_code": "E2025",
-      "competition_code": "EC"
+      "competition_code": "EC",
+      "status": "finished"
     },
     "aba_league": {
-      "team_id": null,
-      "league_id": 119,
-      "season": "2025-2026"
+      "team_id": 59003,
+      "tournament_id": 235,
+      "seasons": {
+        "2025": 80150
+      },
+      "status": "active"
     },
     "liga_nationala": {
-      "team_id": null,
-      "league_id": null,
-      "season": "2025-2026"
+      "team_id": 59003,
+      "tournament_id": 1948,
+      "seasons": {
+        "2026": 83566
+      },
+      "status": "active"
     },
     "cupa_romaniei": {
       "team_id": null,
       "league_id": null,
-      "season": "2025-2026"
+      "season": "2025-2026",
+      "status": "not_started"
     }
-  },
-  "_note": "Fill in null values after first API call to discover IDs"
+  }
 }
