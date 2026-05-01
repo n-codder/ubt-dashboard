@@ -368,7 +368,6 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
         <h1 class="hero-name">${name}</h1>
         ${natLine ? `<p class="hero-meta hero-meta-nat">${natLine}</p>` : ''}
         <p class="hero-meta"><span>${totalGP}</span> meciuri${gpBreakdown ? ` <span class="hero-meta-gp-detail">(${gpBreakdown})</span>` : ''}</p>
-        <div class="hero-kpis" id="hero-kpis-wrap">${_buildHeroKpis(activeRow)}</div>
         ${multiComp ? `
         <div class="hero-comp-filter">
           <span class="hero-comp-filter-label">Performanțe pe competiție:</span>
@@ -404,29 +403,67 @@ function buildEvolutionSection() {
     </div>`;
 }
 
+let _compTableMode = 'medii';
+
+function toggleCompTableMode() {
+  _compTableMode = _compTableMode === 'medii' ? 'total' : 'medii';
+  if (_playerCtx) {
+    const section = document.querySelector('.comp-table-section');
+    if (section) section.outerHTML = buildCompTable(_playerCtx.player.rows);
+  }
+}
+
 function buildCompTable(rows) {
   const sorted = [...rows].sort((a, b) => COMP_ORDER.indexOf(a.competition_key) - COMP_ORDER.indexOf(b.competition_key));
-  const cols = ['GP','PPG','RPG','APG','SPG','BPG','FG2%','FG3%','FT%'];
-  const headers = cols.map(c => `<th>${c}</th>`).join('');
+  const mode = _compTableMode;
+
+  const COLS_MEDII = [
+    { label: 'Meciuri jucate', fmt: r => r.games_played ?? '—' },
+    { label: 'Puncte',         fmt: r => fmt(r.points_pg) },
+    { label: 'Recuperări',     fmt: r => fmt(r.rebounds_pg) },
+    { label: 'Pase decisive',  fmt: r => fmt(r.assists_pg) },
+    { label: 'Intercepții',    fmt: r => fmt(r.steals_pg) },
+    { label: 'Blocaje',        fmt: r => fmt(r.blocks_pg) },
+    { label: 'Eficiență',      fmt: r => fmt(r.pir != null ? r.pir / (r.games_played || 1) : null) },
+    { label: 'Minute/meci',    fmt: r => fmtMinutes(r.minutes_pg) },
+    { label: 'FG2%',           fmt: r => { const p = fmtPct(r.fg2_pct); return p !== null ? p + '%' : '—'; } },
+    { label: 'FG3%',           fmt: r => { const p = fmtPct(r.fg3_pct); return p !== null ? p + '%' : '—'; } },
+    { label: 'FT%',            fmt: r => { const p = fmtPct(r.ft_pct);  return p !== null ? p + '%' : '—'; } },
+  ];
+
+  const COLS_TOTAL = [
+    { label: 'Meciuri jucate', fmt: r => r.games_played ?? '—' },
+    { label: 'Puncte',         fmt: r => fmt(r.points, 0) },
+    { label: 'Recuperări',     fmt: r => fmt(r.rebounds, 0) },
+    { label: 'Pase decisive',  fmt: r => fmt(r.assists, 0) },
+    { label: 'Intercepții',    fmt: r => fmt(r.steals, 0) },
+    { label: 'Blocaje',        fmt: r => fmt(r.blocks, 0) },
+    { label: 'Eficiență',      fmt: r => fmt(r.pir, 0) },
+    { label: 'Minute jucate',  fmt: r => fmtMinutes(r.minutes != null ? r.minutes : (r.minutes_pg != null ? r.minutes_pg * (r.games_played || 1) : null)) },
+    { label: 'FG2%',           fmt: r => { const p = fmtPct(r.fg2_pct); return p !== null ? p + '%' : '—'; } },
+    { label: 'FG3%',           fmt: r => { const p = fmtPct(r.fg3_pct); return p !== null ? p + '%' : '—'; } },
+    { label: 'FT%',            fmt: r => { const p = fmtPct(r.ft_pct);  return p !== null ? p + '%' : '—'; } },
+  ];
+
+  const cols = mode === 'medii' ? COLS_MEDII : COLS_TOTAL;
+  const headers = cols.map(c => `<th>${c.label}</th>`).join('');
   const trows = sorted.map(r => {
-    const f2 = fmtPct(r.fg2_pct); const f3 = fmtPct(r.fg3_pct); const ft = fmtPct(r.ft_pct);
+    const cells = cols.map(c => `<td>${c.fmt(r)}</td>`).join('');
     return `<tr>
       <td><span class="comp-badge comp-${r.competition_key}">${COMP_LABEL[r.competition_key] ?? r.competition_key}</span></td>
-      <td>${r.games_played ?? '—'}</td>
-      <td>${fmt(r.points_pg)}</td>
-      <td>${fmt(r.rebounds_pg)}</td>
-      <td>${fmt(r.assists_pg)}</td>
-      <td>${fmt(r.steals_pg)}</td>
-      <td>${fmt(r.blocks_pg)}</td>
-      <td>${f2 !== null ? f2+'%' : '—'}</td>
-      <td>${f3 !== null ? f3+'%' : '—'}</td>
-      <td>${ft  !== null ? ft +'%' : '—'}</td>
+      ${cells}
     </tr>`;
   }).join('');
 
   return `
     <div class="comp-table-section">
-      <p class="section-title" style="padding:20px 20px 0">Pe competiție</p>
+      <div class="comp-table-header">
+        <p class="section-title" style="margin:0">Pe competiție</p>
+        <div class="comp-table-toggle">
+          <button class="${mode === 'medii' ? 'active' : ''}" onclick="toggleCompTableMode()">Medii</button>
+          <button class="${mode === 'total' ? 'active' : ''}" onclick="toggleCompTableMode()">Total</button>
+        </div>
+      </div>
       <table class="comp-table">
         <thead><tr><th>Competiție</th>${headers}</tr></thead>
         <tbody>${trows}</tbody>
@@ -488,9 +525,6 @@ function filterByComp(key) {
     ? _aggregateRows(_playerCtx.player.rows)
     : (_playerCtx.player.rows.find(r => r.competition_key === key) || primaryRow(_playerCtx.player));
 
-  // Update hero KPIs
-  document.getElementById('hero-kpis-wrap').innerHTML = _buildHeroKpis(row);
-
   // Re-render stats body
   const gamesForComp = key === 'all'
     ? _playerCtx.playerGames
@@ -512,20 +546,6 @@ function filterByComp(key) {
   });
 }
 
-function _buildHeroKpis(row) {
-  return [
-    { v: fmt(row.points_pg),   l: 'PPG' },
-    { v: fmt(row.rebounds_pg), l: 'RPG' },
-    { v: fmt(row.assists_pg),  l: 'APG' },
-    { v: fmt(row.steals_pg),   l: 'SPG' },
-    { v: fmt(row.blocks_pg),   l: 'BPG' },
-  ].map((k, i) => `
-    ${i > 0 ? '<div class="kpi-divider"></div>' : ''}
-    <div class="hero-kpi">
-      <span class="hero-kpi-value">${k.v}</span>
-      <span class="hero-kpi-label">${k.l}</span>
-    </div>`).join('');
-}
 
 function _renderStatsBody(row, player, gamesForComp) {
   const gp = Number(row.games_played) || 0;
@@ -714,10 +734,9 @@ function buildRadarChart(canvas, allPlayers, target) {
     assists_pg:  maxOf('assists_pg'),
     steals_pg:   maxOf('steals_pg'),
     blocks_pg:   maxOf('blocks_pg'),
-    fg3_pct:     0.5,   // cap at 50% for display
+    minutes_pg:  maxOf('minutes_pg') || 40,
   };
 
-  const row = target.rows?.length === 1 ? target.rows[0] : primaryRow(target);
   const pct = key => Math.min((get(target, key) / maxes[key]) * 100, 100);
 
   const data = [
@@ -726,13 +745,13 @@ function buildRadarChart(canvas, allPlayers, target) {
     pct('assists_pg'),
     pct('steals_pg'),
     pct('blocks_pg'),
-    Math.min(((row.fg3_pct ?? 0) / maxes.fg3_pct) * 100, 100),
+    pct('minutes_pg'),
   ];
 
   new Chart(canvas, {
     type: 'radar',
     data: {
-      labels: ['Scoring', 'Rebounds', 'Assists', 'Steals', 'Blocks', 'FG3%'],
+      labels: ['Puncte înscrise', 'Recuperări', 'Pase decisive', 'Mingi furate', 'Blocaje', 'Minute/meci'],
       datasets: [{
         data,
         backgroundColor: 'rgba(194,106,46,0.12)',

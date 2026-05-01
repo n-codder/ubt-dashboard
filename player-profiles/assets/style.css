@@ -645,6 +645,37 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .evo-dot-loss { background: var(--red); }
 
 /* ─── Competitions table ─────────────────────────────────────────────────── */
+.comp-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 0;
+}
+.comp-table-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 3px;
+}
+.comp-table-toggle button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font: 600 12px var(--font);
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.comp-table-toggle button.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.comp-table-toggle button:hover:not(.active) {
+  color: var(--text-secondary);
+}
 .comp-table-section {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
