@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=7">
+  <link rel="stylesheet" href="assets/style.css?v=9">
 </head>
 <body>
 
@@ -31,18 +31,20 @@
 <!-- ── Page ───────────────────────────────────────────────────────────── -->
 <main class="page">
 
+  <!-- Info card -->
+  <div class="lb-info-card">
+    <div class="lb-info-main">
+      <h2 class="lb-info-title">Performanța jucătorilor noștri, la zi.</h2>
+      <p class="lb-info-sub">Explorează statistici din toate competițiile sau filtrează pe EuroCup, ABA sau Liga Națională.</p>
+    </div>
+    <div class="lb-info-badge">
+      <div class="lb-badge-label">Statistici agregate (toate competițiile)</div>
+      <div class="lb-badge-season" id="info-season">—</div>
+    </div>
+  </div>
+
   <!-- Controls -->
   <div class="controls">
-    <!-- Search -->
-    <div class="search-wrap">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input id="search-input" class="search-input" type="search"
-             placeholder="Caută jucător…" autocomplete="off" spellcheck="false">
-    </div>
-
-    <!-- Competition filter -->
     <div class="filter-group">
       <button class="filter-btn active" data-comp="all">Toate</button>
       <button class="filter-btn" data-comp="eurocup">EuroCup</button>
@@ -50,12 +52,10 @@
       <button class="filter-btn" data-comp="liga_nationala">LN</button>
     </div>
 
-    <!-- Sort -->
     <div class="sort-wrap">
       <svg class="sort-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M2 4h12M4 8h8M6 12h4"/>
       </svg>
-      <span class="sort-label">Ordonează după</span>
       <select id="sort-select" class="sort-select">
         <option value="points_pg">Puncte pe meci</option>
         <option value="pir">Eficiență (PIR)</option>
@@ -67,17 +67,30 @@
       </select>
     </div>
 
-    <span id="results-count" class="results-count"></span>
+    <div class="controls-meta">
+      <span id="sort-label" class="sort-label-current"></span>
+      <span id="results-count" class="results-count"></span>
+    </div>
   </div>
 
-  <!-- Grid — filled by app.js -->
-  <div id="player-grid" class="player-grid"></div>
+  <!-- Top 3 -->
+  <section class="lb-top3-section">
+    <h2 class="lb-section-title" id="top3-title">⭐ TOP 3</h2>
+    <div class="top3-grid" id="top3-grid"></div>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </section>
+
+  <!-- Separator -->
+  <div class="lb-separator"><span>Lot complet</span></div>
+
+  <!-- Roster -->
+  <div class="roster-grid" id="roster-grid"></div>
 
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
         integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="assets/app.js?v=8"></script>
+<script src="assets/app.js?v=9"></script>
 </body>
 </html>
