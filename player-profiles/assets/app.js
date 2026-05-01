@@ -222,9 +222,10 @@ function buildCard(player, sortKey = 'points_pg', filteredComp = 'all') {
     <article class="player-card" onclick="location.href='player.html?id=${player.id}'" role="button" tabindex="0" aria-label="${name}">
       <div class="card-photo-wrap" id="photo-${player.id}">
         <img src="${photoRow.image_url || ''}" alt="${name}"
+             referrerpolicy="no-referrer"
              onload="this.style.opacity=1"
              onerror="document.getElementById('photo-${player.id}').classList.add('no-photo')"
-             style="opacity:0;transition:opacity .3s">
+            style="opacity:0;transition:opacity .3s">
         <div class="card-photo-placeholder">${getInitials(name)}</div>
         <div class="card-gradient"></div>
       </div>
@@ -359,9 +360,10 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
     <div class="player-hero">
       <div class="hero-photo-wrap" id="hero-photo">
         <img src="${row.image_url || ''}" alt="${name}"
-             onload="this.style.opacity=1"
-             onerror="document.getElementById('hero-photo').classList.add('no-photo')"
-             style="opacity:0;transition:opacity .4s">
+            referrerpolicy="no-referrer"
+            onload="this.style.opacity=1"
+            onerror="document.getElementById('hero-photo').classList.add('no-photo')"
+            style="opacity:0;transition:opacity .4s">
         <div class="hero-photo-placeholder">${getInitials(name)}</div>
       </div>
       <div class="hero-content">
