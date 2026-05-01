@@ -770,35 +770,368 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .player-card:nth-child(6)  { animation-delay: .20s; }
 .player-card:nth-child(n+7){ animation-delay: .24s; }
 
+/* ─── Leaderboard — Info card ────────────────────────────────────────────── */
+.lb-info-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-card);
+}
+.lb-info-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.lb-info-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 520px;
+}
+.lb-info-badge {
+  flex-shrink: 0;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 190px;
+}
+.lb-badge-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+.lb-badge-season {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: var(--mono);
+}
+
+/* ─── Controls meta row ──────────────────────────────────────────────────── */
+.controls-meta {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -4px;
+}
+.sort-label-current {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── Top 3 section ──────────────────────────────────────────────────────── */
+.lb-top3-section { margin-bottom: 8px; }
+
+.lb-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.top3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* ── Card — horizontal layout ── */
+.top3-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 156px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  box-shadow: var(--shadow-card);
+  animation: fadeUp .3s ease both;
+}
+.top3-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+}
+.top3-card.rank-1 {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-card), 0 0 24px rgba(194,106,46,0.10);
+}
+.top3-card.rank-1:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 32px rgba(194,106,46,0.18);
+}
+
+/* ── Photo side ── */
+.top3-card-photo {
+  width: 42%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-card-alt);
+}
+.top3-card-photo img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 1;
+}
+.top3-card-photo-placeholder {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700; color: var(--text-muted);
+  z-index: 0;
+}
+.top3-card-photo.no-photo img { display: none; }
+.top3-card-photo-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 40%, rgba(23,26,33,0.55) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Rank badge ── */
+.top3-rank-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  z-index: 2;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  line-height: 1;
+}
+.top3-rank-badge.rank-1 {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ── Top performer badge ── */
+.top3-performer-badge {
+  position: absolute;
+  bottom: 10px; left: 8px;
+  z-index: 2;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px; font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── Stats side ── */
+.top3-card-content {
+  flex: 1;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+.top3-name {
+  font-size: 14px; font-weight: 700; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.top3-stats-row {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.top3-stat-block {
+  display: flex; flex-direction: column;
+}
+.top3-stats-sep {
+  width: 1px; height: 30px;
+  background: var(--border-subtle);
+  align-self: center; flex-shrink: 0;
+}
+.top3-stat-val {
+  font-family: var(--mono); font-size: 26px; font-weight: 800;
+  color: var(--accent); line-height: 1;
+}
+.top3-total-val {
+  font-family: var(--mono); font-size: 17px; font-weight: 700;
+  color: var(--text-primary); line-height: 1;
+}
+.top3-stat-lbl {
+  font-size: 9px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;
+}
+.top3-see-profile {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  transition: color .15s;
+}
+.top3-card:hover .top3-see-profile { color: var(--accent); }
+
+/* ─── Carousel dots (mobile) ─────────────────────────────────────────────── */
+.carousel-dots {
+  display: none;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+.carousel-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--border-strong); border: none;
+  cursor: pointer; transition: background .15s, transform .15s; padding: 0;
+}
+.carousel-dot.active { background: var(--accent); transform: scale(1.3); }
+
+/* ─── Separator ──────────────────────────────────────────────────────────── */
+.lb-separator {
+  display: flex; align-items: center; gap: 14px;
+  margin: 24px 0 20px;
+  color: var(--text-muted); font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.10em;
+}
+.lb-separator::before,
+.lb-separator::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+/* ─── Roster grid ────────────────────────────────────────────────────────── */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.roster-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  transition: transform .15s, border-color .15s, background .15s;
+  box-shadow: var(--shadow-card);
+  animation: fadeUp .25s ease both;
+}
+.roster-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  background: var(--bg-card-alt);
+}
+.roster-card:hover .roster-arrow { color: var(--accent); }
+.roster-rank {
+  font-family: var(--mono); font-size: 11px; font-weight: 800;
+  color: var(--text-muted); min-width: 18px; text-align: center;
+}
+.roster-photo-wrap {
+  width: 38px; height: 38px; border-radius: 50%;
+  overflow: hidden; background: var(--bg-card-alt);
+  flex-shrink: 0; position: relative;
+}
+.roster-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.roster-photo-placeholder {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  background: var(--bg-card-alt);
+}
+.roster-photo-wrap.no-photo img { display: none; }
+.roster-photo-wrap:not(.no-photo) img[style*="opacity: 1"] ~ .roster-photo-placeholder,
+.roster-photo-wrap:not(.no-photo) img[style*="opacity:1"] ~ .roster-photo-placeholder { display: none; }
+.roster-info { flex: 1; min-width: 0; }
+.roster-name {
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.roster-stat { display: flex; align-items: baseline; gap: 4px; margin-top: 2px; flex-wrap: wrap; }
+.roster-stat-val { font-family: var(--mono); font-size: 13px; font-weight: 800; color: var(--accent); }
+.roster-stat-lbl { font-size: 9px; color: var(--text-muted); white-space: nowrap; }
+.roster-total { font-size: 9px; color: var(--text-secondary); }
+.roster-arrow { color: var(--text-muted); flex-shrink: 0; transition: color .15s; }
+
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
+/* Desktop large → laptop */
+@media (max-width: 1200px) {
+  .roster-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
 @media (max-width: 900px) {
-  .player-hero {
-    grid-template-columns: 200px 1fr;
-    gap: 24px;
-  }
+  .roster-grid { grid-template-columns: repeat(3, 1fr); }
+  .player-hero { grid-template-columns: 200px 1fr; gap: 24px; }
   .hero-content { padding: 24px 24px 24px 0; }
   .hero-name { font-size: 28px; }
   .hero-kpi-value { font-size: 28px; }
+}
+
+@media (max-width: 768px) {
+  /* Info card */
+  .lb-info-card { flex-direction: column; align-items: stretch; gap: 16px; padding: 20px; }
+  .lb-info-badge { min-width: unset; text-align: left; display: flex; align-items: center; gap: 10px; }
+  .lb-badge-label { margin-bottom: 0; }
+
+  /* Filter pills — horizontal scroll */
+  .filter-group { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .filter-group::-webkit-scrollbar { display: none; }
+
+  /* Top 3 carousel */
+  .top3-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    padding: 4px 2px 8px;
+  }
+  .top3-grid::-webkit-scrollbar { display: none; }
+  .top3-card {
+    scroll-snap-align: start;
+    flex: 0 0 88%;
+    min-width: 280px;
+    max-width: 420px;
+    height: 140px;
+  }
+  .carousel-dots { display: flex; }
+
+  /* Roster */
+  .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Controls meta */
+  .controls-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
 }
 
 @media (max-width: 640px) {
   .site-header { padding: 0 16px; }
   .header-nav { display: none; }
   .page { padding: 20px 16px 48px; }
-  .player-hero {
-    grid-template-columns: 1fr;
-  }
+  .player-hero { grid-template-columns: 1fr; }
   .hero-photo-wrap { aspect-ratio: 4/3; }
   .hero-content { padding: 20px 20px 24px; }
   .hero-name { font-size: 26px; }
   .hero-kpis { gap: 16px; }
   .hero-kpi-value { font-size: 26px; }
   .controls { gap: 8px; }
-  .search-wrap { max-width: 100%; }
-  .player-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .stat-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (max-width: 380px) {
-  .player-grid { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  .roster-grid { grid-template-columns: 1fr; }
+  .roster-card { padding: 12px 12px; }
 }

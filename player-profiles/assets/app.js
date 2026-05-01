@@ -134,30 +134,51 @@ function primaryRow(player) {
   return player.rows[0];
 }
 
-/* ─── Index page ─────────────────────────────────────────────────────────── */
+/* ─── Leaderboard — Index page ───────────────────────────────────────────── */
+let _activeSortKey = 'points_pg';
+
+const SORT_LABELS = {
+  points_pg:   'Puncte pe meci',
+  pir:         'Eficiență (PIR)',
+  assists_pg:  'Pase decisive pe meci',
+  rebounds_pg: 'Recuperări pe meci',
+  blocks_pg:   'Blocaje pe meci',
+  minutes_pg:  'Minute jucate pe meci',
+  player_name: 'Nume A–Z',
+};
+
 function initIndex(rows) {
   const players = groupPlayers(rows);
 
   let filteredComp = 'all';
   let sortKey      = 'points_pg';
-  let searchQ      = '';
+  _activeSortKey   = sortKey;
 
-  const grid       = document.getElementById('player-grid');
-  const countEl    = document.getElementById('results-count');
+  // Season badge
+  const seasons = [...new Set(rows.map(r => r.season).filter(Boolean))].sort();
+  const seasonLabel = seasons.map(s => `${s - 1}/${s}`).join(' · ');
+  const seasonEl = document.getElementById('info-season');
+  if (seasonEl) seasonEl.textContent = `Sezon ${seasonLabel}`;
 
-  function filtered() {
+  const top3El    = document.getElementById('top3-grid');
+  const rosterEl  = document.getElementById('roster-grid');
+  const countEl   = document.getElementById('results-count');
+  const sortLblEl = document.getElementById('sort-label');
+  const titleEl   = document.getElementById('top3-title');
+
+  function getStatRow(p) {
+    return filteredComp !== 'all'
+      ? (p.rows.find(r => r.competition_key === filteredComp) || primaryRow(p))
+      : (p.rows.length > 1 ? _aggregateRows(p.rows) : primaryRow(p));
+  }
+
+  function sorted() {
     return players
-      .filter(p => {
-        if (filteredComp !== 'all' && !p.rows.some(r => r.competition_key === filteredComp)) return false;
-        if (searchQ && !p.name.toLowerCase().includes(searchQ)) return false;
-        return true;
-      })
+      .filter(p => filteredComp === 'all' || p.rows.some(r => r.competition_key === filteredComp))
       .sort((a, b) => {
         if (sortKey === 'player_name') return a.name.localeCompare(b.name);
         const getVal = p => {
-          const r = filteredComp !== 'all'
-            ? (p.rows.find(r => r.competition_key === filteredComp) || primaryRow(p))
-            : (p.rows.length > 1 ? _aggregateRows(p.rows) : primaryRow(p));
+          const r = getStatRow(p);
           return sortKey === 'pir' ? (r.pir ?? -Infinity) : (r[sortKey] ?? -Infinity);
         };
         return getVal(b) - getVal(a);
@@ -165,20 +186,22 @@ function initIndex(rows) {
   }
 
   function render() {
-    const list = filtered();
-    countEl.textContent = `${list.length} jucători`;
+    _activeSortKey = sortKey;
+    const list  = sorted();
+    const label = SORT_LABELS[sortKey] || sortKey;
 
-    if (!list.length) {
-      grid.innerHTML = `
-        <div class="state-empty">
-          <div class="state-empty-icon">🏀</div>
-          <div class="state-empty-title">Niciun jucător găsit</div>
-          <div class="state-empty-sub">Încearcă alt filtru sau termen de căutare.</div>
-        </div>`;
-      return;
-    }
+    if (countEl)   countEl.textContent   = `${list.length} jucători`;
+    if (sortLblEl) sortLblEl.textContent = sortKey === 'player_name'
+      ? 'Sortare curentă: Nume A–Z'
+      : `Sortare curentă: ${label} (descrescător)`;
+    if (titleEl)   titleEl.textContent   = `⭐ TOP 3 – după ${label}`;
 
-    grid.innerHTML = list.map(p => buildCard(p, sortKey, filteredComp)).join('');
+    const top3 = list.slice(0, 3);
+    const rest = list.slice(3);
+
+    if (top3El)   top3El.innerHTML   = top3.map((p, i) => buildTop3Card(p, i + 1, getStatRow(p))).join('');
+    updateCarouselDots(top3.length);
+    if (rosterEl) rosterEl.innerHTML = rest.map((p, i) => buildRosterCard(p, i + 4, getStatRow(p))).join('');
   }
 
   // Filter buttons
@@ -197,52 +220,116 @@ function initIndex(rows) {
     render();
   });
 
-  // Search
-  document.getElementById('search-input').addEventListener('input', e => {
-    searchQ = e.target.value.toLowerCase().trim();
-    render();
-  });
-
   render();
+
+  // Carousel scroll → update dots (added once)
+  const grid = document.getElementById('top3-grid');
+  if (grid) {
+    grid.addEventListener('scroll', () => {
+      const cards = grid.querySelectorAll('.top3-card');
+      if (!cards.length) return;
+      const cardWidth = cards[0].offsetWidth + 16;
+      const idx = Math.min(Math.round(grid.scrollLeft / cardWidth), cards.length - 1);
+      document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }, { passive: true });
+  }
 }
 
-function buildCard(player, sortKey = 'points_pg', filteredComp = 'all') {
-  const photoRow  = primaryRow(player);   // always EuroCup photo
-  const statsRow  = filteredComp !== 'all'
-    ? (player.rows.find(r => r.competition_key === filteredComp) || photoRow)
-    : (player.rows.length > 1 ? _aggregateRows(player.rows) : photoRow);
-  const row = statsRow;
-  const name = player.name;
-
-  const meta   = SORT_META[sortKey] || SORT_META['points_pg'];
-  const pgVal  = meta.pgKey ? row[meta.pgKey] : (row.pir != null ? row.pir / (row.games_played || 1) : null);
-  const totVal = row[meta.totalKey];
+function buildTop3Card(player, rank, row) {
+  const isFirst  = rank === 1;
+  const meta     = SORT_META[_activeSortKey] || SORT_META['points_pg'];
+  const pgVal    = meta.pgKey ? row[meta.pgKey] : (row.pir != null ? row.pir / (row.games_played || 1) : null);
+  const totVal   = row[meta.totalKey];
+  const photoRow = primaryRow(player);
+  const name     = player.name;
 
   return `
-    <article class="player-card" onclick="location.href='player.html?id=${player.id}'" role="button" tabindex="0" aria-label="${name}">
-      <div class="card-photo-wrap" id="photo-${player.id}">
+    <article class="top3-card${isFirst ? ' rank-1' : ''}"
+             onclick="location.href='player.html?id=${player.id}'"
+             role="button" tabindex="0" aria-label="${name}">
+      <div class="top3-card-photo">
         <img src="${photoRow.image_url || ''}" alt="${name}"
+             referrerpolicy="no-referrer"
              onload="this.style.opacity=1"
-             onerror="document.getElementById('photo-${player.id}').classList.add('no-photo')"
+             onerror="this.closest('.top3-card-photo').classList.add('no-photo')"
              style="opacity:0;transition:opacity .3s">
-        <div class="card-photo-placeholder">${getInitials(name)}</div>
-        <div class="card-gradient"></div>
+        <div class="top3-card-photo-placeholder">${getInitials(name)}</div>
+        <div class="top3-card-photo-gradient"></div>
+        <span class="top3-rank-badge${isFirst ? ' rank-1' : ''}">${rank}</span>
+        ${isFirst ? '<span class="top3-performer-badge">⭐ Top performer</span>' : ''}
       </div>
-      <div class="card-body">
-        <h3 class="card-name" title="${name}">${name}</h3>
-        <div class="card-stats">
-          <div class="card-stat card-stat-main">
-            <span class="card-stat-value">${meta.pgFmt(pgVal)}</span>
-            <span class="card-stat-label">${meta.pgLabel}</span>
+      <div class="top3-card-content">
+        <h3 class="top3-name" title="${name}">${name}</h3>
+        <div class="top3-stats-row">
+          <div class="top3-stat-block">
+            <span class="top3-stat-val">${meta.pgFmt(pgVal)}</span>
+            <span class="top3-stat-lbl">${meta.pgLabel}</span>
           </div>
-          <div class="card-stat-sep"></div>
-          <div class="card-stat card-stat-total">
-            <span class="card-stat-value card-stat-value-total">${meta.totalFmt(totVal)}</span>
-            <span class="card-stat-label">${meta.totalLabel}</span>
-          </div>
+          ${totVal != null ? `
+          <div class="top3-stats-sep"></div>
+          <div class="top3-stat-block">
+            <span class="top3-total-val">${meta.totalFmt(totVal)}</span>
+            <span class="top3-stat-lbl">${meta.totalLabel}</span>
+          </div>` : ''}
+        </div>
+        <div class="top3-see-profile">
+          <span>Vezi profil complet</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </article>`;
+}
+
+function buildRosterCard(player, rank, row) {
+  const meta     = SORT_META[_activeSortKey] || SORT_META['points_pg'];
+  const pgVal    = meta.pgKey ? row[meta.pgKey] : (row.pir != null ? row.pir / (row.games_played || 1) : null);
+  const totVal   = row[meta.totalKey];
+  const photoRow = primaryRow(player);
+  const name     = player.name;
+
+  return `
+    <article class="roster-card"
+             onclick="location.href='player.html?id=${player.id}'"
+             role="button" tabindex="0" aria-label="${name}">
+      <span class="roster-rank">${rank}</span>
+      <div class="roster-photo-wrap" id="rphoto-${player.id}">
+        <img src="${photoRow.image_url || ''}" alt="${name}"
+             referrerpolicy="no-referrer"
+             onload="this.style.opacity=1"
+             onerror="document.getElementById('rphoto-${player.id}').classList.add('no-photo')"
+             style="opacity:0;transition:opacity .3s">
+        <div class="roster-photo-placeholder">${getInitials(name)}</div>
+      </div>
+      <div class="roster-info">
+        <div class="roster-name" title="${name}">${name}</div>
+        <div class="roster-stat">
+          <span class="roster-stat-val">${meta.pgFmt(pgVal)}</span>
+          <span class="roster-stat-lbl">${meta.pgLabel}</span>
+          ${totVal != null ? `<span class="roster-total">· ${meta.totalFmt(totVal)} total</span>` : ''}
+        </div>
+      </div>
+      <div class="roster-arrow">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </article>`;
+}
+
+function updateCarouselDots(count) {
+  const el = document.getElementById('carousel-dots');
+  if (!el) return;
+  el.innerHTML = Array.from({ length: count }, (_, i) =>
+    `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="scrollTop3To(${i})" aria-label="Card ${i + 1}"></button>`
+  ).join('');
+}
+
+function scrollTop3To(index) {
+  const grid = document.getElementById('top3-grid');
+  if (!grid) return;
+  const cards = grid.querySelectorAll('.top3-card');
+  if (!cards[index]) return;
+  const cardWidth = cards[0].offsetWidth + 16;
+  grid.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === index));
 }
 
 /* ─── Player page ────────────────────────────────────────────────────────── */
@@ -799,14 +886,23 @@ function buildRadarChart(canvas, allPlayers, target) {
 /* ─── Bootstrap ──────────────────────────────────────────────────────────── */
 (async function init() {
   const isPlayer = document.body.dataset.page === 'player';
-  const mountId  = isPlayer ? 'player-content' : 'player-grid';
-  const mount    = document.getElementById(mountId);
 
-  mount.innerHTML = `
-    <div class="loading-spinner" ${!isPlayer ? 'style="grid-column:1/-1"' : ''}>
-      <div class="spinner"></div>
-      <span>Se încarcă datele…</span>
-    </div>`;
+  // Loading spinner
+  if (isPlayer) {
+    const mount = document.getElementById('player-content');
+    if (mount) mount.innerHTML = `
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <span>Se încarcă datele…</span>
+      </div>`;
+  } else {
+    const top3 = document.getElementById('top3-grid');
+    if (top3) top3.innerHTML = `
+      <div class="loading-spinner" style="grid-column:1/-1">
+        <div class="spinner"></div>
+        <span>Se încarcă datele…</span>
+      </div>`;
+  }
 
   try {
     const rows = await loadData();
@@ -814,10 +910,17 @@ function buildRadarChart(canvas, allPlayers, target) {
     else          initIndex(rows);
   } catch (err) {
     console.error(err);
-    mount.innerHTML = `
-      <div class="error-state" ${!isPlayer ? 'style="grid-column:1/-1"' : ''}>
+    const errHtml = `
+      <div class="error-state">
         <div class="error-state-title">Eroare la încărcarea datelor</div>
         <div class="error-state-sub">${err.message ?? String(err)}</div>
       </div>`;
+    if (isPlayer) {
+      const m = document.getElementById('player-content');
+      if (m) m.innerHTML = errHtml;
+    } else {
+      const m = document.getElementById('top3-grid');
+      if (m) m.innerHTML = errHtml;
+    }
   }
 })();
