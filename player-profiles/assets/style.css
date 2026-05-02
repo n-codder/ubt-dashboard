@@ -551,8 +551,19 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
+  opacity: 0.75;
   text-transform: uppercase;
   letter-spacing: 0.6px;
+}
+
+/* Primary stat box — Puncte/meci */
+.stat-box-primary {
+  border-color: var(--accent-border);
+  background: linear-gradient(135deg, var(--bg-card) 60%, rgba(194,106,46,0.06) 100%);
+}
+.stat-box-primary .stat-box-value {
+  font-size: 34px;
+  color: var(--accent);
 }
 
 /* ─── Shooting section ───────────────────────────────────────────────────── */
@@ -566,12 +577,25 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .shooting-row {
   display: grid;
-  grid-template-columns: 60px 1fr 52px;
+  grid-template-columns: 52px 1fr 58px 62px;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 .shooting-row:last-child { margin-bottom: 0; }
+.shooting-context {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  opacity: 0.75;
+}
+.chart-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  opacity: 0.8;
+}
 .shooting-label {
   font-size: 12px;
   font-weight: 700;
@@ -605,6 +629,102 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .val-avg  { color: var(--yellow); }
 .val-poor { color: var(--red); }
 .val-none { color: var(--text-muted); }
+
+/* ─── Best game ──────────────────────────────────────────────────────────── */
+.bestgame-section { margin-bottom: 28px; }
+.bestgame-card {
+  background: var(--bg-card);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-card), 0 0 20px rgba(194,106,46,0.06);
+}
+.bestgame-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 24px;
+  border-right: 1px solid var(--border-subtle);
+  min-width: 64px;
+}
+.bestgame-pts {
+  font-family: var(--mono);
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.bestgame-pts-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 4px;
+}
+.bestgame-info { flex: 1; min-width: 0; }
+.bestgame-opp {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bestgame-opp strong { font-weight: 700; }
+.bestgame-result {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+}
+.bestgame-result.win  { background: rgba(34,197,94,0.15);  color: var(--green); }
+.bestgame-result.loss { background: rgba(230,57,70,0.15);  color: var(--red);   }
+.bestgame-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bestgame-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.bestgame-secondary {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.bestgame-sec-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.bestgame-sec-val {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.bestgame-sec-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 
 /* ─── Chart section ──────────────────────────────────────────────────────── */
 .chart-section {
@@ -702,7 +822,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .comp-table th:first-child { text-align: left; }
 .comp-table td {
-  padding: 12px 16px;
+  padding: 14px 16px;
   text-align: right;
   border-top: 1px solid var(--border-subtle);
   font-family: var(--mono);
@@ -715,6 +835,10 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   color: var(--text-primary);
 }
 .comp-table tr:hover td { background: var(--accent-soft); }
+.comp-table td.best-cell {
+  color: var(--accent);
+  font-weight: 700;
+}
 
 /* ─── Empty / loading states ─────────────────────────────────────────────── */
 .state-empty {

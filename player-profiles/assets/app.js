@@ -538,8 +538,19 @@ function buildCompTable(rows) {
 
   const cols = mode === 'medii' ? COLS_MEDII : COLS_TOTAL;
   const headers = cols.map(c => `<th>${c.label}</th>`).join('');
+
+  // Find best numeric value per column for highlighting
+  const colMaxes = cols.map(col =>
+    Math.max(...sorted.map(r => parseFloat(col.fmt(r)) || 0))
+  );
+
   const trows = sorted.map(r => {
-    const cells = cols.map(c => `<td>${c.fmt(r)}</td>`).join('');
+    const cells = cols.map((c, ci) => {
+      const val = c.fmt(r);
+      const num = parseFloat(val) || 0;
+      const isBest = sorted.length > 1 && num > 0 && num === colMaxes[ci];
+      return `<td${isBest ? ' class="best-cell"' : ''}>${val}</td>`;
+    }).join('');
     return `<tr>
       <td><span class="comp-badge comp-${r.competition_key}">${COMP_LABEL[r.competition_key] ?? r.competition_key}</span></td>
       ${cells}
@@ -638,26 +649,93 @@ function filterByComp(key) {
 }
 
 
+function shootLabel(cls) {
+  if (cls.bar === 'bar-good') return 'Excelent';
+  if (cls.bar === 'bar-avg')  return 'Bun';
+  if (cls.bar === 'bar-poor') return 'Slab';
+  return '';
+}
+
+function buildBestGame(gamesForComp) {
+  if (!gamesForComp || !gamesForComp.length) return '';
+  const best = gamesForComp.reduce((b, g) => {
+    const pts = Number(g.points) || 0, bPts = Number(b.points) || 0;
+    if (pts > bPts) return g;
+    if (pts === bPts) return (Number(g.pir) || 0) > (Number(b.pir) || 0) ? g : b;
+    return b;
+  }, gamesForComp[0]);
+
+  const pts  = Number(best.points)   || 0;
+  const reb  = Number(best.rebounds) || 0;
+  const ast  = Number(best.assists)  || 0;
+  const pir  = Number(best.pir)      || 0;
+  const opp  = best.opponent         || '—';
+  const comp = best.competition_key  || '';
+  const compLabel = COMP_LABEL[comp] || comp || '—';
+  const date = best.date
+    ? new Date(best.date).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '';
+  const res = best.result || '';
+  const resBadge = res
+    ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'V' : 'Î'}</span>`
+    : '';
+
+  return `
+    <div class="bestgame-section">
+      <p class="section-title" style="margin-bottom:14px">⭐ Cel mai bun meci</p>
+      <div class="bestgame-card">
+        <div class="bestgame-primary">
+          <div class="bestgame-pts">${pts}</div>
+          <div class="bestgame-pts-lbl">puncte</div>
+        </div>
+        <div class="bestgame-info">
+          <div class="bestgame-opp">vs <strong>${opp}</strong> ${resBadge}</div>
+          <div class="bestgame-meta-row">
+            <span class="comp-badge comp-${comp}">${compLabel}</span>
+            ${date ? `<span class="bestgame-date">${date}</span>` : ''}
+          </div>
+        </div>
+        <div class="bestgame-secondary">
+          <div class="bestgame-sec-item">
+            <span class="bestgame-sec-val">${reb}</span>
+            <span class="bestgame-sec-lbl">Rec.</span>
+          </div>
+          <div class="bestgame-sec-item">
+            <span class="bestgame-sec-val">${ast}</span>
+            <span class="bestgame-sec-lbl">Pase</span>
+          </div>
+          <div class="bestgame-sec-item">
+            <span class="bestgame-sec-val">${pir}</span>
+            <span class="bestgame-sec-lbl">PIR</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function _renderStatsBody(row, player, gamesForComp) {
   const gp = Number(row.games_played) || 0;
 
-  const statBoxes = [
-    { v: fmt(row.points_pg,   1), l: 'Puncte / meci',         h: true  },
-    { v: fmt(row.rebounds_pg, 1), l: 'Recuperări / meci',     h: false },
-    { v: fmt(row.assists_pg,  1), l: 'Pase decisive / meci',  h: false },
-    { v: fmt(row.steals_pg,   1), l: 'Intercepţii / meci',    h: false },
-    { v: fmt(row.blocks_pg,   1), l: 'Blocaje / meci',        h: false },
-    { v: fmt(row.turnovers_pg,1), l: 'Mingi pierdute / meci', h: false },
-    { v: fmtMinutes(row.minutes_pg), l: 'Minute / meci',      h: false },
-    { v: gp,                      l: 'Meciuri jucate',        h: false },
+  // Stat boxes — Puncte/meci is primary (larger, accented)
+  const statDefs = [
+    { v: fmt(row.points_pg,   1), l: 'Puncte / meci',         primary: true  },
+    { v: fmt(row.rebounds_pg, 1), l: 'Recuperări / meci',     primary: false },
+    { v: fmt(row.assists_pg,  1), l: 'Pase decisive / meci',  primary: false },
+    { v: fmt(row.steals_pg,   1), l: 'Intercepţii / meci',    primary: false },
+    { v: fmt(row.blocks_pg,   1), l: 'Blocaje / meci',        primary: false },
+    { v: fmt(row.turnovers_pg,1), l: 'Mingi pierdute / meci', primary: false },
+    { v: fmtMinutes(row.minutes_pg), l: 'Minute / meci',      primary: false },
+    { v: gp,                         l: 'Meciuri jucate',     primary: false },
     { v: row.pir !== null && row.pir !== undefined && !isNaN(row.pir)
-        ? fmt(row.pir / (gp || 1), 1) : '—',                  l: 'PIR / meci', h: false },
-  ].map(s => `
-    <div class="stat-box">
-      <div class="stat-box-value${s.h ? ' highlight' : ''}">${s.v}</div>
+        ? fmt(row.pir / (gp || 1), 1) : '—',                  l: 'PIR / meci', primary: false },
+  ];
+  const statBoxes = statDefs.map(s => `
+    <div class="stat-box${s.primary ? ' stat-box-primary' : ''}">
+      <div class="stat-box-value">${s.v}</div>
       <div class="stat-box-label">${s.l}</div>
     </div>`).join('');
 
+  // Shooting rows — with context label
   const shootingRows = [
     { label: 'FG2%', rawPct: fmtPct(row.fg2_pct), maxPct: 70,  cls: shootClass(fmtPct(row.fg2_pct) !== null ? +fmtPct(row.fg2_pct) : null) },
     { label: 'FG3%', rawPct: fmtPct(row.fg3_pct), maxPct: 60,  cls: shootClass(fmtPct(row.fg3_pct) !== null ? +fmtPct(row.fg3_pct) : null, true) },
@@ -665,6 +743,7 @@ function _renderStatsBody(row, player, gamesForComp) {
   ].map(({ label, rawPct, maxPct, cls }) => {
     const pct    = rawPct !== null ? +rawPct : null;
     const barPct = pct !== null ? Math.min((pct / maxPct) * 100, 100) : 0;
+    const ctxLbl = shootLabel(cls);
     return `
       <div class="shooting-row">
         <span class="shooting-label">${label}</span>
@@ -672,23 +751,29 @@ function _renderStatsBody(row, player, gamesForComp) {
           <div class="shooting-bar-fill ${cls.bar}" data-pct="${barPct}"></div>
         </div>
         <span class="shooting-value ${cls.val}">${pct !== null ? pct.toFixed(1) + '%' : '—'}</span>
+        <span class="shooting-context ${cls.val}">${ctxLbl}</span>
       </div>`;
   }).join('');
 
   const compTable = player.rows.length > 1 ? buildCompTable(player.rows) : '';
+  const bestGame  = buildBestGame(gamesForComp);
 
   return `
     <p class="section-title">Statistici per meci</p>
     <div class="stat-grid">${statBoxes}</div>
 
+    ${bestGame}
+
     <div class="shooting-section">
-      <p class="section-title" style="margin-bottom:18px">Eficiență la aruncare</p>
+      <p class="section-title" style="margin-bottom:6px">Eficiență la aruncare</p>
+      <p class="chart-subtitle">Bare proporționale față de benchmark per tip de aruncare</p>
       ${shootingRows}
     </div>
 
     <div class="chart-section">
-      <p class="section-title" style="margin-bottom:16px">Profil statistic față de echipă</p>
-      <div class="chart-wrap"><canvas id="radar-chart"></canvas></div>
+      <p class="section-title" style="margin-bottom:4px">Profil statistic față de echipă</p>
+      <p class="chart-subtitle">Procentaje față de maximul din lot, pe fiecare categorie</p>
+      <div class="chart-wrap" style="margin-top:12px"><canvas id="radar-chart"></canvas></div>
     </div>
 
     ${gamesForComp.length >= 2 ? buildEvolutionSection() : ''}
