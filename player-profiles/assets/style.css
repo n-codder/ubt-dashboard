@@ -998,10 +998,14 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .carousel-dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--border-strong); border: none;
-  cursor: pointer; transition: background .15s, transform .15s; padding: 0;
+  background: var(--accent); border: none;
+  opacity: 0.35;
+  cursor: pointer; transition: background .2s, transform .2s, opacity .2s; padding: 0;
 }
-.carousel-dot.active { background: var(--accent); transform: scale(1.3); }
+.carousel-dot.active { opacity: 1; transform: scale(1.25); }
+
+/* ─── Mobile-only total line (hidden on desktop) ────────────────────────── */
+.top3-mobile-total { display: none; }
 
 /* ─── Separator ──────────────────────────────────────────────────────────── */
 .lb-separator {
@@ -1085,8 +1089,8 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 
 @media (max-width: 768px) {
-  /* Info card */
-  .lb-info-card { flex-direction: column; align-items: stretch; gap: 16px; padding: 20px; }
+  /* Info card — compact */
+  .lb-info-card { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 16px; }
   .lb-info-badge { min-width: unset; text-align: left; display: flex; align-items: center; gap: 10px; }
   .lb-badge-label { margin-bottom: 0; }
 
@@ -1103,20 +1107,38 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 12px;
-    padding: 4px 2px 8px;
+    padding: 4px 2px 10px;
   }
   .top3-grid::-webkit-scrollbar { display: none; }
   .top3-card {
     scroll-snap-align: start;
-    flex: 0 0 88%;
+    flex: 0 0 91%;
     min-width: 280px;
-    max-width: 420px;
-    height: 140px;
+    max-width: 440px;
+    height: 148px;
+    transform: scale(0.97);
+    transition: transform .3s, border-color .2s, box-shadow .2s;
   }
-  .carousel-dots { display: flex; }
+  .top3-card.is-active { transform: scale(1); }
+  .carousel-dots { display: flex; margin-top: 22px; }
+
+  /* Stats layout — desktop: value | sep | total side-by-side
+                    mobile:  value+label stacked, total on its own line */
+  .top3-stats-sep { display: none; }
+  .top3-stat-block--total { display: none; }
+  .top3-mobile-total {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.65;
+    margin-top: 3px;
+  }
 
   /* Roster */
-  .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .roster-total { flex-basis: 100%; margin-top: 1px; opacity: 0.65; }
+  .roster-rank { min-width: 14px; }
+  .roster-arrow { color: var(--text-secondary); }
 
   /* Controls meta */
   .controls-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
