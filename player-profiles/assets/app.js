@@ -156,12 +156,8 @@ function initIndex(rows) {
 
   // Season badge
   const seasons = [...new Set(rows.map(r => r.season).filter(Boolean))].sort();
-  const seasonParts = seasons.map(s => `${s - 1}/${s}`);
-  const seasonLabel = seasonParts.length > 1
-    ? `Sezoane: ${seasonParts.join(' & ')}`
-    : `Sezon ${seasonParts[0] || '—'}`;
   const seasonEl = document.getElementById('info-season');
-  if (seasonEl) seasonEl.textContent = seasonLabel;
+  if (seasonEl) seasonEl.textContent = 'Sezon: 2025-2026';
 
   const top3El    = document.getElementById('top3-grid');
   const rosterEl  = document.getElementById('roster-grid');
