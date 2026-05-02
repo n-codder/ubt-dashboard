@@ -198,7 +198,10 @@ function initIndex(rows) {
     const top3 = list.slice(0, 3);
     const rest = list.slice(3);
 
-    if (top3El)   top3El.innerHTML   = top3.map((p, i) => buildTop3Card(p, i + 1, getStatRow(p))).join('');
+    if (top3El) {
+      top3El.innerHTML = top3.map((p, i) => buildTop3Card(p, i + 1, getStatRow(p))).join('');
+      top3El.querySelector('.top3-card')?.classList.add('is-active');
+    }
     updateCarouselDots(top3.length);
     if (rosterEl) rosterEl.innerHTML = rest.map((p, i) => buildRosterCard(p, i + 4, getStatRow(p))).join('');
   }
@@ -221,15 +224,16 @@ function initIndex(rows) {
 
   render();
 
-  // Carousel scroll → update dots (added once)
+  // Carousel scroll → update dots + active card (added once)
   const grid = document.getElementById('top3-grid');
   if (grid) {
     grid.addEventListener('scroll', () => {
       const cards = grid.querySelectorAll('.top3-card');
       if (!cards.length) return;
-      const cardWidth = cards[0].offsetWidth + 16;
+      const cardWidth = cards[0].offsetWidth + 12; // gap 12px
       const idx = Math.min(Math.round(grid.scrollLeft / cardWidth), cards.length - 1);
       document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
     }, { passive: true });
   }
 }
@@ -266,11 +270,12 @@ function buildTop3Card(player, rank, row) {
           </div>
           ${totVal != null ? `
           <div class="top3-stats-sep"></div>
-          <div class="top3-stat-block">
+          <div class="top3-stat-block top3-stat-block--total">
             <span class="top3-total-val">${meta.totalFmt(totVal)}</span>
             <span class="top3-stat-lbl">${meta.totalLabel}</span>
           </div>` : ''}
         </div>
+        ${totVal != null ? `<div class="top3-mobile-total">${meta.totalFmt(totVal)} total</div>` : ''}
         <div class="top3-see-profile">
           <span>Vezi profil complet</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
