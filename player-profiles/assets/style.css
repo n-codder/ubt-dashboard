@@ -835,7 +835,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 
 /* ─── Top 3 section ──────────────────────────────────────────────────────── */
-.lb-top3-section { margin-bottom: 8px; }
+.lb-top3-section { margin-bottom: 20px; }
 
 .lb-section-title {
   font-size: 15px;
@@ -872,11 +872,11 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .top3-card.rank-1 {
   border-color: var(--accent-border);
-  box-shadow: var(--shadow-card), 0 0 24px rgba(194,106,46,0.10);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(194,106,46,0.08), inset 0 0 0 0 transparent;
 }
 .top3-card.rank-1:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 32px rgba(194,106,46,0.18);
+  box-shadow: var(--shadow-card), 0 0 28px rgba(194,106,46,0.14);
 }
 
 /* ── Photo side ── */
@@ -914,14 +914,15 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   position: absolute;
   top: 10px; left: 10px;
   z-index: 2;
-  background: var(--bg-card);
-  color: var(--text-secondary);
+  background: rgba(23,26,33,0.80);
+  color: var(--text-primary);
   font-family: var(--mono);
   font-size: 12px; font-weight: 800;
   padding: 4px 8px;
   border-radius: 6px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-strong);
   line-height: 1;
+  backdrop-filter: blur(4px);
 }
 .top3-rank-badge.rank-1 {
   background: var(--accent);
@@ -932,16 +933,17 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 /* ── Top performer badge ── */
 .top3-performer-badge {
   position: absolute;
-  bottom: 10px; left: 8px;
+  bottom: 8px; left: 8px;
   z-index: 2;
-  background: var(--accent);
+  background: rgba(194,106,46,0.82);
   color: #fff;
-  font-size: 9px; font-weight: 800;
+  font-size: 8px; font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 3px 8px;
+  letter-spacing: 0.07em;
+  padding: 2px 7px;
   border-radius: 20px;
   white-space: nowrap;
+  backdrop-filter: blur(4px);
 }
 
 /* ── Stats side ── */
@@ -1004,12 +1006,13 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 /* ─── Separator ──────────────────────────────────────────────────────────── */
 .lb-separator {
   display: flex; align-items: center; gap: 14px;
-  margin: 24px 0 20px;
+  margin: 0 0 20px;
+  padding: 14px 0;
   color: var(--text-muted); font-size: 10px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 0.10em;
 }
 .lb-separator::before,
-.lb-separator::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+.lb-separator::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); opacity: 0.45; }
 
 /* ─── Roster grid ────────────────────────────────────────────────────────── */
 .roster-grid {
@@ -1031,13 +1034,15 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .roster-card:hover {
   transform: translateY(-2px);
-  border-color: var(--border-strong);
+  border-color: var(--accent-border);
   background: var(--bg-card-alt);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 .roster-card:hover .roster-arrow { color: var(--accent); }
+.roster-card:hover .roster-stat-val { color: var(--accent); }
 .roster-rank {
   font-family: var(--mono); font-size: 11px; font-weight: 800;
-  color: var(--text-muted); min-width: 18px; text-align: center;
+  color: var(--text-secondary); min-width: 18px; text-align: center;
 }
 .roster-photo-wrap {
   width: 38px; height: 38px; border-radius: 50%;
@@ -1059,10 +1064,10 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-size: 12px; font-weight: 600; color: var(--text-primary);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.roster-stat { display: flex; align-items: baseline; gap: 4px; margin-top: 2px; flex-wrap: wrap; }
-.roster-stat-val { font-family: var(--mono); font-size: 13px; font-weight: 800; color: var(--accent); }
-.roster-stat-lbl { font-size: 9px; color: var(--text-muted); white-space: nowrap; }
-.roster-total { font-size: 9px; color: var(--text-secondary); }
+.roster-stat { display: flex; align-items: baseline; gap: 4px; margin-top: 3px; flex-wrap: wrap; }
+.roster-stat-val { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--accent); }
+.roster-stat-lbl { font-size: 9px; color: var(--text-muted); opacity: 0.75; white-space: nowrap; }
+.roster-total { font-size: 9px; color: var(--text-muted); opacity: 0.6; }
 .roster-arrow { color: var(--text-muted); flex-shrink: 0; transition: color .15s; }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
