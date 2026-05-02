@@ -1293,3 +1293,89 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   .roster-grid { grid-template-columns: 1fr; }
   .roster-card { padding: 12px 12px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PLAYER PAGE — MOBILE POLISH
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Radar mobile bars — hidden on desktop */
+.radar-mobile-bars { display: none; padding: 4px 0; }
+.radar-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.radar-bar-row:last-child { margin-bottom: 0; }
+.radar-bar-lbl { font-size: 12px; color: var(--text-secondary); min-width: 115px; flex-shrink: 0; }
+.radar-bar-track { flex: 1; height: 5px; background: var(--border-subtle); border-radius: 99px; overflow: hidden; }
+.radar-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-dark), var(--accent)); border-radius: 99px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+.radar-bar-pct { font-size: 11px; font-family: var(--mono); color: var(--text-muted); min-width: 34px; text-align: right; }
+
+/* Competition mobile cards — hidden on desktop */
+.comp-mobile-cards { display: none; gap: 10px; flex-direction: column; padding: 16px; }
+.comp-mobile-card { background: var(--bg-card-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px 16px; }
+.comp-mobile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.comp-mobile-gp { font-size: 12px; color: var(--text-muted); }
+.comp-mobile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
+.comp-mobile-stat { display: flex; flex-direction: column; gap: 3px; }
+.comp-mobile-stat-val { font-size: 15px; font-weight: 700; font-family: var(--mono); color: var(--text-primary); line-height: 1; }
+.comp-mobile-stat-val.best { color: var(--accent); }
+.comp-mobile-stat-lbl { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+@media (max-width: 768px) {
+
+  /* 1. Hero — mai compact */
+  .player-hero { grid-template-columns: 1fr; gap: 0; margin-bottom: 20px; }
+  .hero-photo-wrap { aspect-ratio: unset !important; height: 240px; }
+  .hero-content { padding: 16px 20px 20px; justify-content: flex-start; }
+  .hero-name { font-size: 26px; letter-spacing: -.5px; margin-bottom: 4px; }
+  .hero-meta { font-size: 13px; margin-bottom: 4px; }
+  .hero-meta:last-of-type { margin-bottom: 10px; }
+  .hero-comp-filter { margin-top: 10px; gap: 6px; }
+
+  /* 3. Best game — vertical stack */
+  .bestgame-card {
+    flex-direction: column; align-items: flex-start;
+    gap: 12px; padding: 16px 18px;
+  }
+  .bestgame-primary {
+    flex-direction: row; align-items: baseline; gap: 10px;
+    border-right: none; padding-right: 0; min-width: unset;
+    border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; width: 100%;
+  }
+  .bestgame-pts { font-size: 44px; }
+  .bestgame-pts-lbl { margin-top: 0; align-self: flex-end; padding-bottom: 6px; }
+  .bestgame-info { width: 100%; }
+  .bestgame-opp { font-size: 14px; flex-wrap: wrap; }
+  .bestgame-secondary {
+    border-top: 1px solid var(--border-subtle); padding-top: 12px;
+    width: 100%; justify-content: flex-start; gap: 24px;
+  }
+
+  /* 5. Radar → mobile bars */
+  .radar-section .chart-wrap { display: none; }
+  .radar-mobile-bars { display: block; }
+
+  /* 7. Competition table → cards */
+  .comp-table-scroll { display: none; }
+  .comp-mobile-cards { display: flex; }
+
+  /* Secțiuni mai puțin spațiate */
+  .bestgame-section,
+  .shooting-section,
+  .chart-section,
+  .comp-table-section { margin-bottom: 20px; }
+}
+
+@media (max-width: 640px) {
+  /* 2. Stats grid — primary full-width */
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .stat-box-primary { grid-column: 1 / -1; }
+  .stat-box-primary .stat-box-value { font-size: 42px; }
+
+  /* 4. Shooting — label+valoare pe rândul 1, bara pe rândul 2 */
+  .shooting-row {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto;
+    gap: 4px 12px;
+    margin-bottom: 16px;
+  }
+  .shooting-bar-track { grid-column: 1 / -1; grid-row: 2; height: 6px; }
+  .shooting-value-wrap { grid-column: 2; grid-row: 1; }
+}
