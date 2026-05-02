@@ -304,7 +304,7 @@ function buildRosterCard(player, rank, row) {
         <div class="roster-stat">
           <span class="roster-stat-val">${meta.pgFmt(pgVal)}</span>
           <span class="roster-stat-lbl">${meta.pgLabel}</span>
-          ${totVal != null ? `<span class="roster-total">· ${meta.totalFmt(totVal)} total</span>` : ''}
+          ${totVal != null ? `<span class="roster-total">${meta.totalFmt(totVal)} total</span>` : ''}
         </div>
       </div>
       <div class="roster-arrow">
