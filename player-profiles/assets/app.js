@@ -156,9 +156,12 @@ function initIndex(rows) {
 
   // Season badge
   const seasons = [...new Set(rows.map(r => r.season).filter(Boolean))].sort();
-  const seasonLabel = seasons.map(s => `${s - 1}/${s}`).join(' · ');
+  const seasonParts = seasons.map(s => `${s - 1}/${s}`);
+  const seasonLabel = seasonParts.length > 1
+    ? `Sezoane: ${seasonParts.join(' & ')}`
+    : `Sezon ${seasonParts[0] || '—'}`;
   const seasonEl = document.getElementById('info-season');
-  if (seasonEl) seasonEl.textContent = `Sezon ${seasonLabel}`;
+  if (seasonEl) seasonEl.textContent = seasonLabel;
 
   const top3El    = document.getElementById('top3-grid');
   const rosterEl  = document.getElementById('roster-grid');
@@ -190,7 +193,7 @@ function initIndex(rows) {
     const list  = sorted();
     const label = SORT_LABELS[sortKey] || sortKey;
 
-    if (countEl)   countEl.textContent   = `${list.length} jucători`;
+    if (countEl)   countEl.textContent   = `${list.length} jucători în lot`;
     if (sortLblEl) sortLblEl.textContent = sortKey === 'player_name'
       ? 'Sortare curentă: Nume A–Z'
       : `Sortare curentă: ${label} (descrescător)`;
