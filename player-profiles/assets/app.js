@@ -557,6 +557,40 @@ function buildCompTable(rows) {
     </tr>`;
   }).join('');
 
+  // Mobile cards (one per competition)
+  const mobileCards = sorted.map(r => {
+    const gp = r.games_played ?? '—';
+    const mStats = mode === 'medii' ? [
+      { val: fmt(r.points_pg,   1), lbl: 'Puncte/meci' },
+      { val: fmt(r.rebounds_pg, 1), lbl: 'Rec./meci'   },
+      { val: fmt(r.assists_pg,  1), lbl: 'Pase/meci'   },
+      { val: fmt(r.steals_pg,   1), lbl: 'Intercepții' },
+      { val: fmt(r.blocks_pg,   1), lbl: 'Blocaje'     },
+      { val: fmtMinutes(r.minutes_pg), lbl: 'Minute/meci' },
+    ] : [
+      { val: fmt(r.points,   0), lbl: 'Puncte'      },
+      { val: fmt(r.rebounds, 0), lbl: 'Recuperări'  },
+      { val: fmt(r.assists,  0), lbl: 'Pase'        },
+      { val: fmt(r.steals,   0), lbl: 'Intercepții' },
+      { val: fmt(r.blocks,   0), lbl: 'Blocaje'     },
+      { val: fmtMinutes(r.minutes != null ? r.minutes : (r.minutes_pg != null ? r.minutes_pg * (r.games_played || 1) : null)), lbl: 'Minute' },
+    ];
+    return `
+      <div class="comp-mobile-card">
+        <div class="comp-mobile-header">
+          <span class="comp-badge comp-${r.competition_key}">${COMP_LABEL[r.competition_key] ?? r.competition_key}</span>
+          <span class="comp-mobile-gp">${gp} meciuri</span>
+        </div>
+        <div class="comp-mobile-stats">
+          ${mStats.map(s => `
+            <div class="comp-mobile-stat">
+              <span class="comp-mobile-stat-val">${s.val}</span>
+              <span class="comp-mobile-stat-lbl">${s.lbl}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
   return `
     <div class="comp-table-section">
       <div class="comp-table-header">
@@ -566,10 +600,13 @@ function buildCompTable(rows) {
           <button class="${mode === 'total' ? 'active' : ''}" onclick="toggleCompTableMode()">Total</button>
         </div>
       </div>
-      <table class="comp-table">
-        <thead><tr><th>Competiție</th>${headers}</tr></thead>
-        <tbody>${trows}</tbody>
-      </table>
+      <div class="comp-table-scroll">
+        <table class="comp-table">
+          <thead><tr><th>Competiție</th>${headers}</tr></thead>
+          <tbody>${trows}</tbody>
+        </table>
+      </div>
+      <div class="comp-mobile-cards">${mobileCards}</div>
     </div>`;
 }
 
@@ -772,10 +809,11 @@ function _renderStatsBody(row, player, gamesForComp) {
       ${shootingRows}
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section radar-section">
       <p class="section-title" style="margin-bottom:4px">Profil statistic față de echipă</p>
       <p class="chart-subtitle">Procentaje față de maximul din lot, pe fiecare categorie</p>
       <div class="chart-wrap" style="margin-top:12px"><canvas id="radar-chart"></canvas></div>
+      <div class="radar-mobile-bars" id="radar-mobile-bars"></div>
     </div>
 
     ${gamesForComp.length >= 2 ? buildEvolutionSection() : ''}
@@ -828,8 +866,8 @@ function buildEvolutionChart(games, statKey) {
           borderWidth:           2.5,
           tension:               0.35,
           fill:                  true,
-          pointRadius:           5,
-          pointHoverRadius:      8,
+          pointRadius:           4,
+          pointHoverRadius:      7,
           pointBackgroundColor:  pointColors,
           pointBorderColor:      '#0F1115',
           pointBorderWidth:      2,
@@ -853,12 +891,12 @@ function buildEvolutionChart(games, statKey) {
       interaction: { mode: 'index', intersect: false },
       scales: {
         x: {
-          grid:  { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0 },
+          grid:  { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 9 },
         },
         y: {
           beginAtZero: true,
-          grid:  { color: 'rgba(255,255,255,0.05)' },
+          grid:  { color: 'rgba(255,255,255,0.04)' },
           ticks: { color: '#6B7280', font: { size: 11 } },
         },
       },
@@ -925,6 +963,20 @@ function buildRadarChart(canvas, allPlayers, target) {
     pct('blocks_pg'),
     pct('minutes_pg'),
   ];
+
+  // Populate mobile bar list (shown instead of radar on small screens)
+  const mobileEl = document.getElementById('radar-mobile-bars');
+  if (mobileEl) {
+    const radarLabels = ['Puncte înscrise', 'Recuperări', 'Pase decisive', 'Mingi furate', 'Blocaje', 'Minute/meci'];
+    mobileEl.innerHTML = radarLabels.map((lbl, i) => `
+      <div class="radar-bar-row">
+        <span class="radar-bar-lbl">${lbl}</span>
+        <div class="radar-bar-track">
+          <div class="radar-bar-fill" style="width:${data[i].toFixed(0)}%"></div>
+        </div>
+        <span class="radar-bar-pct">${data[i].toFixed(0)}%</span>
+      </div>`).join('');
+  }
 
   new Chart(canvas, {
     type: 'radar',
