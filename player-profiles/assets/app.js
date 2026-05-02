@@ -677,7 +677,7 @@ function buildBestGame(gamesForComp) {
     : '';
   const res = best.result || '';
   const resBadge = res
-    ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'V' : 'Î'}</span>`
+    ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'Victorie' : 'Înfrângere'}</span>`
     : '';
 
   return `
@@ -750,8 +750,10 @@ function _renderStatsBody(row, player, gamesForComp) {
         <div class="shooting-bar-track">
           <div class="shooting-bar-fill ${cls.bar}" data-pct="${barPct}"></div>
         </div>
-        <span class="shooting-value ${cls.val}">${pct !== null ? pct.toFixed(1) + '%' : '—'}</span>
-        <span class="shooting-context ${cls.val}">${ctxLbl}</span>
+        <div class="shooting-value-wrap">
+          <span class="shooting-value ${cls.val}">${pct !== null ? pct.toFixed(1) + '%' : '—'}</span>
+          ${ctxLbl ? `<span class="shooting-context ${cls.val}">${ctxLbl}</span>` : ''}
+        </div>
       </div>`;
   }).join('');
 

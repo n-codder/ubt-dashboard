@@ -577,17 +577,22 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .shooting-row {
   display: grid;
-  grid-template-columns: 52px 1fr 58px 62px;
+  grid-template-columns: 52px 1fr auto;
   align-items: center;
   gap: 14px;
   margin-bottom: 14px;
 }
 .shooting-row:last-child { margin-bottom: 0; }
+.shooting-value-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
 .shooting-context {
   font-size: 11px;
   font-weight: 600;
-  text-align: left;
-  white-space: nowrap;
   opacity: 0.75;
 }
 .chart-subtitle {
@@ -683,10 +688,12 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px; height: 20px;
-  border-radius: 50%;
+  padding: 2px 8px;
+  border-radius: 20px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 .bestgame-result.win  { background: rgba(34,197,94,0.15);  color: var(--green); }
 .bestgame-result.loss { background: rgba(230,57,70,0.15);  color: var(--red);   }
