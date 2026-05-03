@@ -387,13 +387,17 @@ function renderScoreChart(games) {
               return `${COMP_LABEL[g.competition_key] ?? g.competition_key} · ${fmtDate(g._date)}`;
             },
             label(item) {
-              if (item.datasetIndex > 1) return null;
               const g = sorted[item.dataIndex];
-              const result = g.result === 'W' ? 'Victorie' : 'Înfrângere';
-              const diff   = g.score_diff > 0 ? `+${g.score_diff}` : `${g.score_diff}`;
-              return ` U-BT ${g.ubt_score} – ${g.opp_score}  ·  ${result}  ·  ${diff}`;
+              if (item.datasetIndex === 0) return ` U-BT: ${g.ubt_score}`;
+              if (item.datasetIndex === 1) return ` Adversar: ${g.opp_score}`;
+              return null;
             },
-            afterLabel() { return null; },
+            afterBody(items) {
+              const g = sorted[items[0].dataIndex];
+              const result = g.result === 'W' ? 'Victorie ✓' : 'Înfrângere';
+              const diff   = g.score_diff > 0 ? `+${g.score_diff}` : `${g.score_diff}`;
+              return [``, ` Rezultat: ${result}`, ` Diferență: ${diff}`];
+            },
           },
           filter(item) { return item.datasetIndex <= 1; },
         },
