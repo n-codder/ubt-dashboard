@@ -717,10 +717,14 @@ function buildBestGame(gamesForComp) {
     ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'Victorie' : 'Înfrângere'}</span>`
     : '';
 
+  const gameLink = best.game_code
+    ? `onclick="location.href='game.html?id=${best.game_code}'" style="cursor:pointer"`
+    : '';
+
   return `
     <div class="bestgame-section">
       <p class="section-title" style="margin-bottom:14px">⭐ Cel mai bun meci</p>
-      <div class="bestgame-card">
+      <div class="bestgame-card" ${gameLink}>
         <div class="bestgame-primary">
           <div class="bestgame-pts">${pts}</div>
           <div class="bestgame-pts-lbl">puncte</div>
