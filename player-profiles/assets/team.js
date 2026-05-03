@@ -431,17 +431,17 @@ function renderWinCondition(games) {
       <div class="wincond-scenario">
         <div class="wincond-label">Când marchează ${threshold}+ puncte</div>
         <div class="wincond-rate" style="color:${aboveColor}">${wrAbove.toFixed(0)}%</div>
-        <div class="wincond-sub">win rate · ${above.length} meciuri</div>
+        <div class="wincond-sub">din ${above.length} meciuri</div>
       </div>
       <div class="wincond-divider"></div>
       <div class="wincond-scenario">
         <div class="wincond-label">Sub ${threshold} puncte</div>
         <div class="wincond-rate" style="color:${belowColor}">${wrBelow.toFixed(0)}%</div>
-        <div class="wincond-sub">win rate · ${below.length} meciuri</div>
+        <div class="wincond-sub">din ${below.length} meciuri</div>
       </div>
     </div>
     <div class="wincond-insight">
-      Diferență: <span style="color:${ppColor};font-weight:600">${ppDiff >= 0 ? '+' : ''}${ppDiff}pp</span> față de meciurile sub prag
+      <span style="color:${ppColor};font-weight:600">${ppDiff >= 0 ? '+' : ''}${Math.abs(ppDiff)}% mai multe șanse de victorie</span> când depășește pragul de ${threshold} puncte.
     </div>
   `;
 }
@@ -476,23 +476,23 @@ function renderConsistency(games) {
 
   el.innerHTML = `
     <div class="team-card-header" style="margin-bottom:12px">
-      <p class="section-title" style="margin:0">📊 Consistență echipă</p>
+      <p class="section-title" style="margin:0">📊 Consistența echipei</p>
     </div>
     <p class="consistency-subtitle">Cât de mult variază scorul de la meci la meci.</p>
     <div class="consistency-dual">
       <div class="consistency-period">
         <div class="consistency-period-lbl">Sezon</div>
-        <div class="consistency-period-val" style="color:${seasonColor}">±${seasonSd.toFixed(1)}</div>
+        <div class="consistency-period-val" style="color:${seasonColor}">±${Math.round(seasonSd)}<span class="consistency-unit"> pct</span></div>
         <div class="consistency-period-sub" style="color:${seasonColor}">${seasonLabel}</div>
       </div>
       <div class="consistency-sep"></div>
       <div class="consistency-period">
-        <div class="consistency-period-lbl">Ultimele ${recentN}</div>
-        <div class="consistency-period-val" style="color:${recentColor}">±${recentSd.toFixed(1)}</div>
+        <div class="consistency-period-lbl">Ultimele ${recentN} meciuri</div>
+        <div class="consistency-period-val" style="color:${recentColor}">±${Math.round(recentSd)}<span class="consistency-unit"> pct</span></div>
         <div class="consistency-period-sub" style="color:${recentColor}">${recentLabel}</div>
       </div>
     </div>
-    <div class="consistency-minmax">${minS} puncte minim · ${maxS} maxim</div>
+    <div class="consistency-minmax">Între ${minS} și ${maxS} puncte marcate</div>
     <div class="consistency-trend">${trendIcon} ${trendText}</div>
   `;
 }
@@ -564,7 +564,7 @@ function renderCompTable(games) {
         <table class="comp-table">
           <thead>
             <tr>
-              <th>Competiție</th><th>Meciuri</th><th>V / Î</th>
+              <th>Competiție</th><th>Meciuri</th><th>Victorii / Înfrângeri</th>
               <th>Marcate/meci</th><th>Primite/meci</th><th>Diferență</th>
             </tr>
           </thead>
