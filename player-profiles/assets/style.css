@@ -1619,7 +1619,105 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-style: italic;
 }
 
-/* Comp table section (reuses existing .comp-table-section, .comp-table etc.) */
+/* Snapshot insight sentence */
+.team-snapshot-insight {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
+
+/* Momentum legend + streak */
+.momentum-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.momentum-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+.momentum-legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 3px;
+}
+.momentum-legend-dot.win  { background: var(--green); }
+.momentum-legend-dot.loss { background: var(--red); }
+.momentum-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.momentum-streak {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Consistency refactor */
+.consistency-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.consistency-dual {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 16px;
+}
+.consistency-period {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+.consistency-period:first-child { padding-left: 0; }
+.consistency-period-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.consistency-period-val {
+  font-size: 30px;
+  font-weight: 800;
+  font-family: var(--mono);
+  line-height: 1;
+}
+.consistency-period-sub {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.consistency-sep {
+  width: 1px;
+  background: var(--border-subtle);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+.consistency-minmax {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.consistency-trend {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
 
 /* ─── TEAM PAGE — Mobile ────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -1631,9 +1729,13 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   .team-filter-wrap { align-items: flex-start; }
   .team-hero-title { font-size: 26px; }
   .team-snapshot-grid { grid-template-columns: 1fr 1fr; }
+  .momentum-right { align-items: flex-start; }
+  .team-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
 @media (max-width: 480px) {
   .team-snapshot-grid { grid-template-columns: 1fr; }
   .team-snapshot-grid .stat-box-primary { grid-column: 1; }
+  .consistency-dual { flex-direction: column; gap: 16px; }
+  .consistency-sep { width: 100%; height: 1px; margin: 0; }
 }
