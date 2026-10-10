@@ -101,6 +101,12 @@ function fmtPct(val) {
   return (Number(val) * 100).toFixed(1);
 }
 
+function seasonLabel(s) {
+  if (s == null) return 'Toate sezoanele';
+  const n = +s;
+  return `${n}–${n + 1}`;
+}
+
 function shootClass(pct, fg3 = false, ft = false) {
   if (pct === null) return { bar: 'bar-none', val: 'val-none' };
   if (ft)  return pct >= 78 ? { bar: 'bar-good', val: 'val-good' }
@@ -148,16 +154,32 @@ const SORT_LABELS = {
 };
 
 function initIndex(rows) {
-  const players = groupPlayers(rows);
+  // Season setup
+  const allSeasons = [...new Set(rows.map(r => r.season).filter(Boolean))].map(Number).sort((a, b) => b - a);
+  let activeSeason  = allSeasons[0] ?? null;
+
+  // Populate #season-select
+  const seasonSel = document.getElementById('season-select');
+  if (seasonSel && allSeasons.length > 0) {
+    seasonSel.innerHTML = allSeasons.map(s =>
+      `<option value="${s}">${seasonLabel(s)}</option>`
+    ).join('');
+    seasonSel.value = String(activeSeason);
+  }
+
+  const seasonEl = document.getElementById('info-season');
+  function updateBadge() {
+    if (seasonEl) seasonEl.textContent = `Sezon: ${seasonLabel(activeSeason)}`;
+  }
+  updateBadge();
+
+  function seasonRows() {
+    return activeSeason == null ? rows : rows.filter(r => +r.season === activeSeason);
+  }
 
   let filteredComp = 'all';
   let sortKey      = 'points_pg';
   _activeSortKey   = sortKey;
-
-  // Season badge
-  const seasons = [...new Set(rows.map(r => r.season).filter(Boolean))].sort();
-  const seasonEl = document.getElementById('info-season');
-  if (seasonEl) seasonEl.textContent = 'Sezon: 2025-2026';
 
   const top3El    = document.getElementById('top3-grid');
   const rosterEl  = document.getElementById('roster-grid');
@@ -172,6 +194,8 @@ function initIndex(rows) {
   }
 
   function sorted() {
+    const sRows   = seasonRows();
+    const players = groupPlayers(sRows);
     return players
       .filter(p => filteredComp === 'all' || p.rows.some(r => r.competition_key === filteredComp))
       .sort((a, b) => {
@@ -221,6 +245,15 @@ function initIndex(rows) {
     sortKey = e.target.value;
     render();
   });
+
+  // Season
+  if (seasonSel) {
+    seasonSel.addEventListener('change', e => {
+      activeSeason = +e.target.value;
+      updateBadge();
+      render();
+    });
+  }
 
   render();
 
@@ -354,6 +387,11 @@ async function initPlayer(rows) {
 
   const row = primaryRow(player);
 
+  // Set active season to newest the player appears in
+  const playerSeasons = [...new Set(player.rows.map(r => r.season).filter(Boolean))]
+    .map(Number).sort((a, b) => b - a);
+  _activePlayerSeason = playerSeasons[0] ?? null;
+
   // Load per-game data and player details in parallel
   let perGameRows = [], detailRows = [];
   try {
@@ -373,9 +411,10 @@ async function initPlayer(rows) {
     document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
       el.style.width = el.dataset.pct + '%';
     });
-    const multiComp  = player.rows.length > 1;
-    const activeRow  = multiComp ? _aggregateRows(player.rows) : row;
-    const initGames  = multiComp ? playerGames : playerGames.filter(g => g.competition_key === row.competition_key);
+    const { sRows, sGames } = _playerCtx;
+    const multiComp  = sRows.length > 1;
+    const activeRow  = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
+    const initGames  = multiComp ? sGames : sGames.filter(g => g.competition_key === (sRows[0]?.competition_key || row.competition_key));
     buildRadarChart(document.getElementById('radar-chart'), groupPlayers(rows), { rows: [activeRow] });
     if (initGames.length >= 2) buildEvolutionChart(initGames, 'points');
   });
@@ -402,17 +441,20 @@ function loadDetails() {
 }
 
 function buildProfile(player, row, allRows, playerGames = [], detail = null) {
-  const multiComp = player.rows.length > 1;
+  // Season filtering
+  const s      = _activePlayerSeason;
+  const sRows  = s === null ? player.rows : player.rows.filter(r => +r.season === s);
+  const sGames = s === null ? playerGames : playerGames.filter(g => +g.season === s);
 
-  // Default: 'all' când jucătorul are mai multe competiții
-  _playerCtx     = { player, allRows, playerGames, detail };
-  _activeCompKey = multiComp ? 'all' : row.competition_key;
+  const multiComp = sRows.length > 1;
 
-  // Rândul inițial (agregat sau competiție unică)
-  const activeRow = multiComp ? _aggregateRows(player.rows) : row;
+  _playerCtx     = { player, allRows, playerGames, detail, sRows, sGames };
+  _activeCompKey = multiComp ? 'all' : (sRows[0]?.competition_key || row.competition_key);
+
+  const activeRow = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
 
   const name = player.name;
-  const compKeys = [...new Set(player.rows.map(r => r.competition_key))]
+  const compKeys = [...new Set(sRows.map(r => r.competition_key))]
     .sort((a, b) => COMP_ORDER.indexOf(a) - COMP_ORDER.indexOf(b));
 
   // Butoane filtre: "Toate" + fiecare competiție
@@ -427,9 +469,9 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
   }).join('');
   const badges = allBtn + compBtns;
 
-  // Total meciuri + breakdown per competiție
-  const totalGP = player.rows.reduce((s, r) => s + (Number(r.games_played) || 0), 0);
-  const gpBreakdown = player.rows
+  // Total meciuri + breakdown per competiție (din sezonul activ)
+  const totalGP = sRows.reduce((sum, r) => sum + (Number(r.games_played) || 0), 0);
+  const gpBreakdown = sRows
     .filter(r => Number(r.games_played) > 0)
     .sort((a, b) => COMP_ORDER.indexOf(a.competition_key) - COMP_ORDER.indexOf(b.competition_key))
     .map(r => `${Number(r.games_played)} în ${COMP_LABEL[r.competition_key] ?? r.competition_key}`)
@@ -443,13 +485,35 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
     age ? `${age} ani` : (detail?.birth_year ? `n. ${detail.birth_year}` : null),
   ].filter(Boolean).join(' · ');
 
-  const gamesForComp = multiComp ? playerGames : playerGames.filter(g => g.competition_key === _activeCompKey);
+  const gamesForComp = multiComp ? sGames : sGames.filter(g => g.competition_key === _activeCompKey);
+
+  // Season selector (only if player has multiple seasons at U-BT)
+  const playerSeasons = [...new Set(player.rows.map(r => r.season).filter(Boolean))]
+    .map(Number).sort((a, b) => b - a);
+  const hasMultiSeason = playerSeasons.length > 1;
+
+  let seasonSelectorHTML = '';
+  if (hasMultiSeason) {
+    const opts = playerSeasons.map(ps =>
+      `<option value="${ps}"${ps === s ? ' selected' : ''}>${seasonLabel(ps)}</option>`
+    ).join('');
+    const allOpt = `<option value="null"${s === null ? ' selected' : ''}>Toate sezoanele la U-BT</option>`;
+    seasonSelectorHTML = `
+      <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text-secondary)">Sezon:</span>
+        <select class="sort-select" style="font-size:12px;padding:4px 8px"
+                onchange="filterBySeason(this.value === 'null' ? null : +this.value)">
+          ${opts}
+          ${allOpt}
+        </select>
+      </div>`;
+  }
 
   return `
     <!-- Hero (static) -->
     <div class="player-hero">
       <div class="hero-photo-wrap" id="hero-photo">
-        <img src="${row.image_url || ''}" alt="${name}"
+        <img src="${activeRow.image_url || row.image_url || ''}" alt="${name}"
              onload="this.style.opacity=1"
              onerror="document.getElementById('hero-photo').classList.add('no-photo')"
              style="opacity:0;transition:opacity .4s">
@@ -459,6 +523,7 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
         <h1 class="hero-name">${name}</h1>
         ${natLine ? `<p class="hero-meta hero-meta-nat">${natLine}</p>` : ''}
         <p class="hero-meta"><span>${totalGP}</span> meciuri${gpBreakdown ? ` <span class="hero-meta-gp-detail">(${gpBreakdown})</span>` : ''}</p>
+        ${seasonSelectorHTML}
         ${multiComp ? `
         <div class="hero-comp-filter">
           <span class="hero-comp-filter-label">Performanțe pe competiție:</span>
@@ -468,7 +533,7 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
     </div>
 
     <!-- Stats body (re-rendered on filter change) -->
-    <div id="stats-body">${_renderStatsBody(activeRow, player, gamesForComp)}</div>`;
+    <div id="stats-body">${_renderStatsBody(activeRow, player, gamesForComp, sRows)}</div>`;
 }
 
 function buildEvolutionSection() {
@@ -500,7 +565,7 @@ function toggleCompTableMode() {
   _compTableMode = _compTableMode === 'medii' ? 'total' : 'medii';
   if (_playerCtx) {
     const section = document.querySelector('.comp-table-section');
-    if (section) section.outerHTML = buildCompTable(_playerCtx.player.rows);
+    if (section) section.outerHTML = buildCompTable(_playerCtx.sRows);
   }
 }
 
@@ -611,8 +676,9 @@ function buildCompTable(rows) {
 }
 
 /* ─── Player page state ──────────────────────────────────────────────────── */
-let _playerCtx     = null;   // { player, allRows, playerGames, detail }
-let _activeCompKey = null;
+let _playerCtx          = null;   // { player, allRows, playerGames, detail, sRows, sGames }
+let _activeCompKey      = null;
+let _activePlayerSeason = null;   // null = toate sezoanele, number = sezon specific
 
 /* Agregă toate rândurile unui jucător într-un singur rând combinat */
 function _aggregateRows(rows) {
@@ -652,7 +718,6 @@ function _aggregateRows(rows) {
 
 function filterByComp(key) {
   if (!_playerCtx || _activeCompKey === key) return;
-  console.trace('[filterByComp]', key, 'prev:', _activeCompKey);
   _activeCompKey = key;
 
   // Update badge active state
@@ -660,16 +725,18 @@ function filterByComp(key) {
     btn.classList.toggle('active', btn.dataset.key === key);
   });
 
+  const { sRows, sGames } = _playerCtx;
+
   const row = key === 'all'
-    ? _aggregateRows(_playerCtx.player.rows)
-    : (_playerCtx.player.rows.find(r => r.competition_key === key) || primaryRow(_playerCtx.player));
+    ? _aggregateRows(sRows)
+    : (sRows.find(r => r.competition_key === key) || sRows[0] || primaryRow(_playerCtx.player));
 
   // Re-render stats body
   const gamesForComp = key === 'all'
-    ? _playerCtx.playerGames
-    : _playerCtx.playerGames.filter(g => g.competition_key === key);
+    ? sGames
+    : sGames.filter(g => g.competition_key === key);
   document.getElementById('stats-body').innerHTML =
-    _renderStatsBody(row, _playerCtx.player, gamesForComp);
+    _renderStatsBody(row, _playerCtx.player, gamesForComp, sRows);
 
   // Re-animate bars + rebuild charts
   requestAnimationFrame(() => {
@@ -682,6 +749,25 @@ function filterByComp(key) {
       : _playerCtx.allRows.filter(r => r.competition_key === key);
     buildRadarChart(document.getElementById('radar-chart'), groupPlayers(compRows), { rows: [row] });
     if (gamesForComp.length >= 2) buildEvolutionChart(gamesForComp, 'points');
+  });
+}
+
+function filterBySeason(season) {
+  if (!_playerCtx) return;
+  _activePlayerSeason = season;
+  const { player, allRows, playerGames, detail } = _playerCtx;
+  const row = primaryRow(player);
+  document.getElementById('player-content').innerHTML = buildProfile(player, row, allRows, playerGames, detail);
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+    const { sRows, sGames } = _playerCtx;
+    const multiComp = sRows.length > 1;
+    const activeRow = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
+    const initGames = multiComp ? sGames : sGames.filter(g => g.competition_key === (sRows[0]?.competition_key || row.competition_key));
+    buildRadarChart(document.getElementById('radar-chart'), groupPlayers(allRows), { rows: [activeRow] });
+    if (initGames.length >= 2) buildEvolutionChart(initGames, 'points');
   });
 }
 
@@ -754,7 +840,7 @@ function buildBestGame(gamesForComp) {
     </div>`;
 }
 
-function _renderStatsBody(row, player, gamesForComp) {
+function _renderStatsBody(row, player, gamesForComp, sRows = null) {
   const gp = Number(row.games_played) || 0;
 
   // Stat boxes — Puncte/meci is primary (larger, accented)
@@ -798,7 +884,8 @@ function _renderStatsBody(row, player, gamesForComp) {
       </div>`;
   }).join('');
 
-  const compTable = player.rows.length > 1 ? buildCompTable(player.rows) : '';
+  const activeRows = sRows ?? player.rows;
+  const compTable = activeRows.length > 1 ? buildCompTable(activeRows) : '';
   const bestGame  = buildBestGame(gamesForComp);
 
   return `
