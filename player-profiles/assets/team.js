@@ -10,9 +10,16 @@ const COMP_LABEL = {
 const COMP_ORDER = ['eurocup', 'aba_league', 'liga_nationala'];
 
 /* ─── State ────────────────────────────────────────────────────────────────── */
-let _allGames   = [];
-let _activeComp = 'all';
-let _scoreChart = null;
+let _allGames    = [];
+let _activeComp  = 'all';
+let _activeSeason = null; // null = toate sezoanele, number = sezon specific
+let _scoreChart  = null;
+
+function seasonLabel(s) {
+  if (s == null) return 'Toate sezoanele';
+  const n = +s;
+  return `${n}–${n + 1}`;
+}
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 function compKey(raw) {
@@ -86,10 +93,15 @@ Papa.parse(GAMES_URL, {
         _date:      new Date(r.date),
         opponent:   toTitleCase(String(r.opponent)),
         is_home:    String(r.ubt_is_home) === 'True',
+        season:     r.season != null ? +r.season : null,
       }))
       .sort((a, b) => a._date - b._date);
 
-    document.getElementById('team-page').innerHTML = buildPageHTML();
+    // Default: newest season
+    const allSeasons = [...new Set(_allGames.map(g => g.season).filter(s => s != null))].sort((a, b) => b - a);
+    _activeSeason = allSeasons[0] ?? null;
+
+    document.getElementById('team-page').innerHTML = buildPageHTML(allSeasons);
     attachFilterListeners();
     renderDynamic(filtered());
   },
@@ -101,8 +113,11 @@ Papa.parse(GAMES_URL, {
 
 /* ─── Filter ───────────────────────────────────────────────────────────────── */
 function filtered() {
-  if (_activeComp === 'all') return _allGames;
-  return _allGames.filter(g => g.competition_key === _activeComp);
+  let games = _activeSeason == null
+    ? _allGames
+    : _allGames.filter(g => g.season === _activeSeason);
+  if (_activeComp !== 'all') games = games.filter(g => g.competition_key === _activeComp);
+  return games;
 }
 
 function setFilter(key) {
@@ -113,20 +128,37 @@ function setFilter(key) {
   renderDynamic(filtered());
 }
 
+function setSeason(season) {
+  _activeSeason = season;
+  const sel = document.getElementById('team-season-select');
+  if (sel) sel.value = season == null ? 'null' : String(season);
+  renderDynamic(filtered());
+}
+
 function attachFilterListeners() {
   document.querySelectorAll('.team-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => setFilter(btn.dataset.comp));
   });
+  const sel = document.getElementById('team-season-select');
+  if (sel) {
+    sel.addEventListener('change', e => {
+      setSeason(e.target.value === 'null' ? null : +e.target.value);
+    });
+  }
 }
 
 /* ─── Static HTML scaffold ─────────────────────────────────────────────────── */
-function buildPageHTML() {
+function buildPageHTML(allSeasons = []) {
+  const seasonOpts = allSeasons.map(s =>
+    `<option value="${s}"${s === _activeSeason ? ' selected' : ''}>${seasonLabel(s)}</option>`
+  ).join('');
+
   return `
     <!-- 1. Hero -->
     <div class="team-hero">
       <div class="team-hero-title-wrap">
         <h1 class="team-hero-title">U-BT Cluj-Napoca</h1>
-        <div class="team-hero-season">Sezon 2025–2026</div>
+        <div class="team-hero-season">${seasonLabel(_activeSeason)}</div>
       </div>
       <div class="team-filter-wrap">
         <div class="filter-group">
@@ -135,6 +167,12 @@ function buildPageHTML() {
           <button class="filter-btn team-filter-btn" data-comp="aba_league">ABA</button>
           <button class="filter-btn team-filter-btn" data-comp="liga_nationala">LN</button>
         </div>
+        ${allSeasons.length > 1 ? `
+        <div class="sort-wrap">
+          <select id="team-season-select" class="sort-select">
+            ${seasonOpts}
+          </select>
+        </div>` : ''}
         <div id="team-record" class="team-record"></div>
       </div>
     </div>

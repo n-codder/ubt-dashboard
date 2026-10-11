@@ -6,9 +6,9 @@
   "competitions": {
     "eurocup": {
       "team_code": "CLU",
-      "season_code": "E2025",
+      "season_code": "E2026",
       "competition_code": "EC",
-      "status": "finished"
+      "status": "active"
     },
     "aba_league": {
       "team_id": 59003,
