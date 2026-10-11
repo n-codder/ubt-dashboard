@@ -549,8 +549,8 @@ function buildEvolutionSection() {
         </select>
       </div>
       <div class="evo-legend">
-        <div class="evo-legend-item"><div class="evo-dot evo-dot-win"></div> Victorie</div>
-        <div class="evo-legend-item"><div class="evo-dot evo-dot-loss"></div> Înfrângere</div>
+        <div class="evo-legend-item"><div class="evo-dot" style="background:rgba(34,197,94,0.8)"></div> Victorie</div>
+        <div class="evo-legend-item"><div class="evo-dot" style="background:rgba(230,57,70,0.8)"></div> Înfrângere</div>
         <div class="evo-legend-item" style="margin-left:auto;color:rgba(246,168,0,0.7)">--- Medie sezon</div>
       </div>
       <div class="chart-wrap" style="height:260px">
@@ -919,25 +919,20 @@ function buildEvolutionChart(games, statKey) {
   if (!canvas || !window.Chart) return;
 
   const statLabel = EVOLUTION_STATS.find(s => s.key === statKey)?.label ?? statKey;
+  const isMin     = statKey === 'minutes_played';
 
-  const labels = games.map((g, i) => {
-    const opp   = (g.opponent || '?').split(' ').slice(0, 2).join(' ');
-    const round = g.round ? `R${g.round}` : `M${i + 1}`;
-    return `${round}`;
-  });
+  const labels = games.map((g, i) => g.round ? `R${g.round}` : `M${i + 1}`);
 
   const values = games.map(g => {
     const v = parseFloat(g[statKey]);
     return isNaN(v) ? null : +v.toFixed(2);
   });
 
-  const avg = values.filter(v => v !== null).reduce((s, v) => s + v, 0) /
-              (values.filter(v => v !== null).length || 1);
+  const nonNull  = values.filter(v => v !== null);
+  const avgVal   = nonNull.length ? nonNull.reduce((s, v) => s + v, 0) / nonNull.length : 0;
 
-  // Result colors per point
-  const pointColors = games.map(g =>
-    g.result === 'W' ? '#22c55e' : g.result === 'L' ? '#e63946' : '#94a3b8'
-  );
+  const barColors       = games.map(g => g.result === 'W' ? 'rgba(34,197,94,0.75)'  : g.result === 'L' ? 'rgba(230,57,70,0.75)'  : 'rgba(148,163,184,0.6)');
+  const barColorsBorder = games.map(g => g.result === 'W' ? 'rgba(34,197,94,1)'     : g.result === 'L' ? 'rgba(230,57,70,1)'     : 'rgba(148,163,184,1)');
 
   if (_evolutionChart) {
     _evolutionChart.destroy();
@@ -945,29 +940,24 @@ function buildEvolutionChart(games, statKey) {
   }
 
   _evolutionChart = new Chart(canvas, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels,
       datasets: [
         {
-          label: statLabel,
-          data:  values,
-          borderColor:           '#C26A2E',
-          backgroundColor:       'rgba(194,106,46,0.08)',
-          borderWidth:           2.5,
-          tension:               0.35,
-          fill:                  true,
-          pointRadius:           4,
-          pointHoverRadius:      7,
-          pointBackgroundColor:  pointColors,
-          pointBorderColor:      '#0F1115',
-          pointBorderWidth:      2,
-          spanGaps:              true,
+          label:           statLabel,
+          data:             values,
+          backgroundColor:  barColors,
+          borderColor:      barColorsBorder,
+          borderWidth:      1.5,
+          borderRadius:     3,
+          borderSkipped:    false,
         },
         {
+          type:        'line',
           label:       'Medie',
-          data:        games.map(() => +avg.toFixed(2)),
-          borderColor: 'rgba(154,163,175,0.35)',
+          data:        games.map(() => +avgVal.toFixed(2)),
+          borderColor: 'rgba(246,168,0,0.55)',
           borderWidth: 1.5,
           borderDash:  [6, 4],
           pointRadius: 0,
@@ -1002,14 +992,11 @@ function buildEvolutionChart(games, statKey) {
           padding:         12,
           callbacks: {
             title: (items) => {
-              const g   = games[items[0].dataIndex];
-              const opp = g.opponent || '?';
-              const date = g.date ? ` · ${g.date}` : '';
-              const res  = g.result ? ` (${g.result})` : '';
-              return `${opp}${date}${res}`;
+              const g = games[items[0].dataIndex];
+              const res = g.result === 'W' ? 'Victorie' : g.result === 'L' ? 'Înfrângere' : '';
+              return [g.opponent || '?', [g.date, res].filter(Boolean).join(' · ')].filter(Boolean).join('\n');
             },
             label: (item) => {
-              const isMin = statKey === 'minutes_played';
               if (item.datasetIndex === 1) return `  Medie: ${isMin ? fmtMinutes(item.raw) : item.raw}`;
               const v = item.raw;
               return v !== null ? `  ${statLabel}: ${isMin ? fmtMinutes(v) : v}` : '  —';
