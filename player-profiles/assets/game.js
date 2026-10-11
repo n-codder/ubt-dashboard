@@ -256,7 +256,6 @@ function buildTeamComparison(gs, players, oppName) {
       to:   gs.opp_to,   fouls: gs.opp_fouls,
     };
   } else if (players.length) {
-    // Fall back to aggregated player stats (U-BT only, no opponent data)
     const s = {
       fg2m: sum(players, 'fg2_made'), fg2a: sum(players, 'fg2_att'),
       fg3m: sum(players, 'fg3_made'), fg3a: sum(players, 'fg3_att'),
@@ -288,69 +287,104 @@ function buildTeamComparison(gs, players, oppName) {
     return '';
   }
 
-  // Build comparison rows
-  const fmtN = v => (v == null || isNaN(+v)) ? '—' : (+v % 1 === 0 ? +v : (+v).toFixed(1));
-  const fmtP = (m, a) => (a > 0) ? (+m / +a * 100).toFixed(1) + '%' : '—';
+  const fmtN = v => (v == null || isNaN(+v)) ? '—' : (+v % 1 === 0 ? String(+v) : (+v).toFixed(1));
+  const fmtP = (m, a) => (+a > 0) ? (+m / +a * 100).toFixed(1) + '%' : '—';
 
-  // higher = better for most, except turnovers/fouls
-  function cmpClass(ubtVal, oppVal, higherIsBetter = true) {
-    const u = +ubtVal, o = +oppVal;
-    if (isNaN(u) || isNaN(o) || u === o) return '';
-    return (higherIsBetter ? u > o : u < o) ? 'cmp-better' : 'cmp-worse';
+  // Bar width as % of combined total (0–100); for pct stats uses the ratio of pcts
+  function barW(uv, ov) {
+    const u = +uv, o = +ov;
+    if (!isFinite(u) || !isFinite(o) || u + o === 0) return 50;
+    return Math.round(u / (u + o) * 100);
+  }
+  // For shooting, compare percentages
+  function barWpct(um, ua, om, oa) {
+    const u = +ua > 0 ? +um / +ua : 0;
+    const o = +oa > 0 ? +om / +oa : 0;
+    return barW(u, o);
   }
 
-  const hasPir = ubt.pir != null;
+  // true = higher is better for U-BT
+  function isBetter(uv, ov, higherGood = true) {
+    const u = +uv, o = +ov;
+    if (!isFinite(u) || !isFinite(o) || u === o) return null;
+    return higherGood ? u > o : u < o;
+  }
+  function isBetterPct(um, ua, om, oa) {
+    const u = +ua > 0 ? +um / +ua : 0;
+    const o = +oa > 0 ? +om / +oa : 0;
+    return isBetter(u, o);
+  }
 
+  // Build a bar row: [label, ubt_display, opp_display, ubt_bar_pct, ubt_wins (bool|null)]
+  const hasPir = ubt.pir != null && !isNaN(+ubt.pir);
   const rows = [
-    ...(hasPir ? [[
-      fmtN(ubt.pir), fmtN(opp.pir), 'PIR',
-      cmpClass(ubt.pir, opp.pir)
+    ...(hasPir ? [['PIR',
+      fmtN(ubt.pir), fmtN(opp.pir),
+      barW(ubt.pir, opp.pir), isBetter(ubt.pir, opp.pir)
     ]] : []),
-    [
-      `${fmtN(ubt.fg2m)}/${fmtN(ubt.fg2a)} (${fmtP(ubt.fg2m, ubt.fg2a)})`,
-      `${fmtN(opp.fg2m)}/${fmtN(opp.fg2a)} (${fmtP(opp.fg2m, opp.fg2a)})`,
-      '2 puncte',
-      cmpClass(ubt.fg2m / (ubt.fg2a||1), opp.fg2m / (opp.fg2a||1))
+    ['2 puncte',
+      `${fmtN(ubt.fg2m)}/${fmtN(ubt.fg2a)} (${fmtP(ubt.fg2m, ubt.fg2a)})`,
+      `${fmtN(opp.fg2m)}/${fmtN(opp.fg2a)} (${fmtP(opp.fg2m, opp.fg2a)})`,
+      barWpct(ubt.fg2m, ubt.fg2a, opp.fg2m, opp.fg2a),
+      isBetterPct(ubt.fg2m, ubt.fg2a, opp.fg2m, opp.fg2a),
     ],
-    [
-      `${fmtN(ubt.fg3m)}/${fmtN(ubt.fg3a)} (${fmtP(ubt.fg3m, ubt.fg3a)})`,
-      `${fmtN(opp.fg3m)}/${fmtN(opp.fg3a)} (${fmtP(opp.fg3m, opp.fg3a)})`,
-      '3 puncte',
-      cmpClass(ubt.fg3m / (ubt.fg3a||1), opp.fg3m / (opp.fg3a||1))
+    ['3 puncte',
+      `${fmtN(ubt.fg3m)}/${fmtN(ubt.fg3a)} (${fmtP(ubt.fg3m, ubt.fg3a)})`,
+      `${fmtN(opp.fg3m)}/${fmtN(opp.fg3a)} (${fmtP(opp.fg3m, opp.fg3a)})`,
+      barWpct(ubt.fg3m, ubt.fg3a, opp.fg3m, opp.fg3a),
+      isBetterPct(ubt.fg3m, ubt.fg3a, opp.fg3m, opp.fg3a),
     ],
-    [
-      `${fmtN(ubt.ftm)}/${fmtN(ubt.fta)} (${fmtP(ubt.ftm, ubt.fta)})`,
-      `${fmtN(opp.ftm)}/${fmtN(opp.fta)} (${fmtP(opp.ftm, opp.fta)})`,
-      'Libere',
-      cmpClass(ubt.ftm / (ubt.fta||1), opp.ftm / (opp.fta||1))
+    ['Libere',
+      `${fmtN(ubt.ftm)}/${fmtN(ubt.fta)} (${fmtP(ubt.ftm, ubt.fta)})`,
+      `${fmtN(opp.ftm)}/${fmtN(opp.fta)} (${fmtP(opp.ftm, opp.fta)})`,
+      barWpct(ubt.ftm, ubt.fta, opp.ftm, opp.fta),
+      isBetterPct(ubt.ftm, ubt.fta, opp.ftm, opp.fta),
     ],
-    [fmtN(ubt.reb),   fmtN(opp.reb),   'Recuperări',      cmpClass(ubt.reb, opp.reb)],
-    [fmtN(ubt.oreb),  fmtN(opp.oreb),  '  Ofensive',      cmpClass(ubt.oreb, opp.oreb)],
-    [fmtN(ubt.dreb),  fmtN(opp.dreb),  '  Defensive',     cmpClass(ubt.dreb, opp.dreb)],
-    [fmtN(ubt.ast),   fmtN(opp.ast),   'Pase decisive',   cmpClass(ubt.ast, opp.ast)],
-    [fmtN(ubt.stl),   fmtN(opp.stl),   'Intercepții',     cmpClass(ubt.stl, opp.stl)],
-    [fmtN(ubt.blk),   fmtN(opp.blk),   'Blocaje',         cmpClass(ubt.blk, opp.blk)],
-    [fmtN(ubt.to),    fmtN(opp.to),    'Pierderi minge',  cmpClass(ubt.to, opp.to, false)],
-    [fmtN(ubt.fouls), fmtN(opp.fouls), 'Faulturi',        cmpClass(ubt.fouls, opp.fouls, false)],
+    ['Recuperări',   fmtN(ubt.reb),   fmtN(opp.reb),   barW(ubt.reb, opp.reb),   isBetter(ubt.reb, opp.reb)],
+    ['— Ofensive',   fmtN(ubt.oreb),  fmtN(opp.oreb),  barW(ubt.oreb, opp.oreb), isBetter(ubt.oreb, opp.oreb)],
+    ['— Defensive',  fmtN(ubt.dreb),  fmtN(opp.dreb),  barW(ubt.dreb, opp.dreb), isBetter(ubt.dreb, opp.dreb)],
+    ['Pase decisive', fmtN(ubt.ast),  fmtN(opp.ast),   barW(ubt.ast, opp.ast),   isBetter(ubt.ast, opp.ast)],
+    ['Intercepții',  fmtN(ubt.stl),   fmtN(opp.stl),   barW(ubt.stl, opp.stl),   isBetter(ubt.stl, opp.stl)],
+    ['Blocaje',      fmtN(ubt.blk),   fmtN(opp.blk),   barW(ubt.blk, opp.blk),   isBetter(ubt.blk, opp.blk)],
+    ['Pierderi',     fmtN(ubt.to),    fmtN(opp.to),    barW(opp.to, ubt.to),      isBetter(ubt.to, opp.to, false)],
+    ['Faulturi',     fmtN(ubt.fouls), fmtN(opp.fouls), barW(opp.fouls, ubt.fouls),isBetter(ubt.fouls, opp.fouls, false)],
   ];
 
-  const shortOpp = oppName.split(' ').slice(0, 2).join(' ');
+  const shortOpp = oppName.split(' ').slice(0, 3).join(' ');
+
+  const rowHtml = rows.map(([label, uv, ov, uBarPct, uWins]) => {
+    const oBarPct = 100 - uBarPct;
+    const uCls = uWins === true ? 'bar-win' : uWins === false ? 'bar-loss' : 'bar-neutral';
+    const oCls = uWins === false ? 'bar-win' : uWins === true ? 'bar-loss' : 'bar-neutral';
+    const isSubrow = label.startsWith('—');
+    return `
+    <div class="cmp-row${isSubrow ? ' cmp-subrow' : ''}">
+      <div class="cmp-side cmp-side-ubt">
+        <span class="cmp-num cmp-num-ubt ${uCls}">${uv}</span>
+        <div class="cmp-bar-wrap">
+          <div class="cmp-bar cmp-bar-ubt ${uCls}" style="width:${uBarPct}%"></div>
+        </div>
+      </div>
+      <div class="cmp-label">${label}</div>
+      <div class="cmp-side cmp-side-opp">
+        <div class="cmp-bar-wrap">
+          <div class="cmp-bar cmp-bar-opp ${oCls}" style="width:${oBarPct}%"></div>
+        </div>
+        <span class="cmp-num cmp-num-opp ${oCls}">${ov}</span>
+      </div>
+    </div>`;
+  }).join('');
 
   return `
     <div class="game-section">
       <p class="section-title">Comparație echipe</p>
       <div class="game-cmp-table">
-        <div class="game-cmp-header">
-          <span class="cmp-team-label cmp-ubt">U-BT Cluj</span>
-          <span class="cmp-stat-label"></span>
-          <span class="cmp-team-label cmp-opp">${shortOpp}</span>
+        <div class="cmp-header">
+          <span class="cmp-hdr-ubt">U-BT Cluj</span>
+          <span class="cmp-hdr-center"></span>
+          <span class="cmp-hdr-opp">${shortOpp}</span>
         </div>
-        ${rows.map(([uv, ov, label, cls]) => `
-        <div class="game-cmp-row">
-          <span class="cmp-val cmp-val-ubt ${cls}">${uv}</span>
-          <span class="cmp-stat-name">${label}</span>
-          <span class="cmp-val cmp-val-opp ${cls ? (cls === 'cmp-better' ? 'cmp-worse' : 'cmp-better') : ''}">${ov}</span>
-        </div>`).join('')}
+        ${rowHtml}
       </div>
     </div>`;
 }

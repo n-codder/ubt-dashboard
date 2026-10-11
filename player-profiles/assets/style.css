@@ -1966,7 +1966,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   .game-team-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ─── Comparison table ──────────────────────────────────────────────────────── */
+/* ─── Comparison bars ───────────────────────────────────────────────────────── */
 .game-cmp-table {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -1974,57 +1974,106 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   box-shadow: var(--shadow-card);
   overflow: hidden;
 }
-.game-cmp-header,
-.game-cmp-row {
+.cmp-header {
   display: grid;
-  grid-template-columns: 1fr 140px 1fr;
+  grid-template-columns: 1fr 80px 1fr;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.cmp-hdr-ubt {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--accent);
+}
+.cmp-hdr-opp {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-muted); text-align: right;
+}
+.cmp-hdr-center { text-align: center; }
+
+.cmp-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
   align-items: center;
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--border-subtle);
   gap: 0;
 }
-.game-cmp-header {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 10px 16px;
-}
-.cmp-team-label {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
-}
-.cmp-team-label.cmp-ubt { color: var(--accent); text-align: left; }
-.cmp-team-label.cmp-opp { text-align: right; }
-.game-cmp-row {
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-.game-cmp-row:last-child { border-bottom: none; }
-.game-cmp-row:nth-child(even) { background: var(--bg-surface); }
-.cmp-val {
-  font-size: 14px;
-  font-weight: 700;
-  font-family: var(--mono);
-  color: var(--text-primary);
-}
-.cmp-val-ubt { text-align: left; }
-.cmp-val-opp { text-align: right; }
-.cmp-stat-name {
-  font-size: 11px;
+.cmp-row:last-child { border-bottom: none; }
+.cmp-row:nth-child(even) { background: rgba(255,255,255,0.015); }
+.cmp-subrow { opacity: 0.8; }
+.cmp-subrow .cmp-label { padding-left: 10px; }
+
+.cmp-label {
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.4px;
   text-align: center;
+  line-height: 1.2;
 }
-.cmp-better { color: #22c55e; }
-.cmp-worse  { color: #ef4444; }
+
+/* Each side: number + bar track */
+.cmp-side {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+}
+.cmp-side-ubt { flex-direction: row; }
+.cmp-side-opp { flex-direction: row-reverse; }
+
+.cmp-num {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 40px;
+  color: var(--text-secondary);
+}
+.cmp-num-ubt { text-align: right; }
+.cmp-num-opp { text-align: left; }
+
+/* Bar track fills remaining space */
+.cmp-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+.cmp-side-ubt .cmp-bar-wrap { justify-content: flex-end; }
+.cmp-side-opp .cmp-bar-wrap { justify-content: flex-start; }
+
+.cmp-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* U-BT bar colors */
+.cmp-bar-ubt.bar-win    { background: #22c55e; }
+.cmp-bar-ubt.bar-loss   { background: #ef4444; }
+.cmp-bar-ubt.bar-neutral{ background: var(--accent); }
+
+/* Opponent bar colors */
+.cmp-bar-opp.bar-win    { background: #22c55e; }
+.cmp-bar-opp.bar-loss   { background: #ef4444; }
+.cmp-bar-opp.bar-neutral{ background: #4B5563; }
+
+/* Number tint to match bar */
+.cmp-num.bar-win    { color: #22c55e; }
+.cmp-num.bar-loss   { color: #ef4444; }
+.cmp-num.bar-neutral{ color: var(--text-secondary); }
 
 @media (max-width: 480px) {
-  .game-cmp-header,
-  .game-cmp-row { grid-template-columns: 1fr 100px 1fr; padding: 8px 10px; }
-  .cmp-val { font-size: 12px; }
-  .cmp-stat-name { font-size: 10px; }
+  .cmp-row { padding: 6px 10px; }
+  .cmp-num { font-size: 11px; min-width: 32px; }
+  .cmp-label { font-size: 9px; }
+  .cmp-bar-wrap { height: 6px; }
 }
 
 /* ─── TEAM PAGE — Mobile ────────────────────────────────────────────────────── */
