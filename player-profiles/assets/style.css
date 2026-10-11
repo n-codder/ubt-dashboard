@@ -1966,6 +1966,67 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   .game-team-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ─── Comparison table ──────────────────────────────────────────────────────── */
+.game-cmp-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.game-cmp-header,
+.game-cmp-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 1fr;
+  align-items: center;
+  gap: 0;
+}
+.game-cmp-header {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 16px;
+}
+.cmp-team-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+.cmp-team-label.cmp-ubt { color: var(--accent); text-align: left; }
+.cmp-team-label.cmp-opp { text-align: right; }
+.game-cmp-row {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.game-cmp-row:last-child { border-bottom: none; }
+.game-cmp-row:nth-child(even) { background: var(--bg-surface); }
+.cmp-val {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: var(--text-primary);
+}
+.cmp-val-ubt { text-align: left; }
+.cmp-val-opp { text-align: right; }
+.cmp-stat-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+.cmp-better { color: #22c55e; }
+.cmp-worse  { color: #ef4444; }
+
+@media (max-width: 480px) {
+  .game-cmp-header,
+  .game-cmp-row { grid-template-columns: 1fr 100px 1fr; padding: 8px 10px; }
+  .cmp-val { font-size: 12px; }
+  .cmp-stat-name { font-size: 10px; }
+}
+
 /* ─── TEAM PAGE — Mobile ────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .team-insight-row { grid-template-columns: 1fr; }
