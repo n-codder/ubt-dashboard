@@ -190,8 +190,8 @@ function buildPageHTML(allSeasons = []) {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
         <p class="section-title" style="margin:0">Evoluție scoruri</p>
         <div class="team-chart-legend">
-          <span class="team-legend-dot" style="background:var(--accent)"></span><span>U-BT (marcate)</span>
-          <span class="team-legend-dot" style="background:rgba(154,163,175,0.5)"></span><span>Adversar (primite)</span>
+          <span class="team-legend-dot" style="background:rgba(34,197,94,0.8)"></span><span>Victorie</span>
+          <span class="team-legend-dot" style="background:rgba(230,57,70,0.8)"></span><span>Înfrângere</span>
         </div>
       </div>
       <div class="chart-wrap" style="height:260px"><canvas id="score-chart"></canvas></div>
@@ -330,66 +330,26 @@ function renderScoreChart(games) {
   if (_scoreChart) { _scoreChart.destroy(); _scoreChart = null; }
   if (!games.length) return;
 
-  const sorted    = [...games].sort((a, b) => a._date - b._date);
-  const labels    = sorted.map(g => fmtDate(g._date));
-  const ubtScores = sorted.map(g => g.ubt_score);
-  const oppScores = sorted.map(g => g.opp_score);
-  const avgUbt    = avg(ubtScores);
+  const sorted = [...games].sort((a, b) => a._date - b._date);
+  const labels = sorted.map(g => fmtDate(g._date));
+  const diffs  = sorted.map(g => g.score_diff);
 
-  // W/L point colors
-  const ptColors = sorted.map(g => g.result === 'W' ? '#22c55e' : '#e63946');
-
-  // Highlight min/max UBT scores with slightly larger radius
-  const maxVal  = Math.max(...ubtScores);
-  const minVal  = Math.min(...ubtScores);
-  const radii   = ubtScores.map(v => (v === maxVal || v === minVal) ? 7 : 4);
-  const borders = ubtScores.map(v => (v === maxVal || v === minVal) ? 2.5 : 1.5);
+  const barColors       = sorted.map(g => g.result === 'W' ? 'rgba(34,197,94,0.75)'  : 'rgba(230,57,70,0.75)');
+  const barColorsBorder = sorted.map(g => g.result === 'W' ? 'rgba(34,197,94,1)'     : 'rgba(230,57,70,1)');
 
   _scoreChart = new Chart(canvas, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels,
-      datasets: [
-        {
-          label:                'U-BT (marcate)',
-          data:                 ubtScores,
-          borderColor:          '#C26A2E',
-          backgroundColor:      'rgba(194,106,46,0.06)',
-          borderWidth:          2.5,
-          tension:              0.3,
-          fill:                 true,
-          pointRadius:          radii,
-          pointHoverRadius:     9,
-          pointBackgroundColor: ptColors,
-          pointBorderColor:     '#0F1115',
-          pointBorderWidth:     borders,
-          spanGaps:             true,
-        },
-        {
-          label:                'Adversar (primite)',
-          data:                 oppScores,
-          borderColor:          'rgba(154,163,175,0.45)',
-          borderWidth:          2,
-          tension:              0.3,
-          fill:                 false,
-          pointRadius:          3,
-          pointHoverRadius:     6,
-          pointBackgroundColor: 'rgba(154,163,175,0.45)',
-          pointBorderColor:     '#0F1115',
-          pointBorderWidth:     1,
-          spanGaps:             true,
-        },
-        {
-          label:       'Medie U-BT',
-          data:        sorted.map(() => +avgUbt.toFixed(1)),
-          borderColor: 'rgba(194,106,46,0.35)',
-          borderWidth: 1.5,
-          borderDash:  [6, 4],
-          pointRadius: 0,
-          fill:        false,
-          tension:     0,
-        },
-      ],
+      datasets: [{
+        label:           'Diferență de scor',
+        data:             diffs,
+        backgroundColor:  barColors,
+        borderColor:      barColorsBorder,
+        borderWidth:      1.5,
+        borderRadius:     3,
+        borderSkipped:    false,
+      }],
     },
     options: {
       responsive:          true,
@@ -406,9 +366,11 @@ function renderScoreChart(games) {
           ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 10 },
         },
         y: {
-          beginAtZero: false,
           grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#6B7280', font: { size: 11 } },
+          ticks: {
+            color: '#6B7280', font: { size: 11 },
+            callback: v => (v > 0 ? '+' : '') + v,
+          },
         },
       },
       plugins: {
@@ -431,18 +393,13 @@ function renderScoreChart(games) {
             },
             label(item) {
               const g = sorted[item.dataIndex];
-              if (item.datasetIndex === 0) return ` U-BT: ${g.ubt_score}`;
-              if (item.datasetIndex === 1) return ` Adversar: ${g.opp_score}`;
-              return null;
-            },
-            afterBody(items) {
-              const g = sorted[items[0].dataIndex];
-              const result = g.result === 'W' ? 'Victorie ✓' : 'Înfrângere';
-              const diff   = g.score_diff > 0 ? `+${g.score_diff}` : `${g.score_diff}`;
-              return [``, ` Rezultat: ${result}`, ` Diferență: ${diff}`];
+              const d = g.score_diff;
+              return [
+                ` ${g.result === 'W' ? 'Victorie' : 'Înfrângere'}: ${g.ubt_score}–${g.opp_score}`,
+                ` Diferență: ${d > 0 ? '+' : ''}${d}`,
+              ];
             },
           },
-          filter(item) { return item.datasetIndex <= 1; },
         },
       },
     },
