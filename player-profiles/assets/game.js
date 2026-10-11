@@ -1,8 +1,9 @@
 /* ─── Game detail page · game.js ─────────────────────────────────────────── */
 
 const _cb = Date.now();
-const GAMES_URL    = `../data/processed/games.csv?v=${_cb}`;
-const PG_STATS_URL = `../data/processed/player_stats_per_game_normalized.csv?v=${_cb}`;
+const GAMES_URL      = `../data/processed/games.csv?v=${_cb}`;
+const PG_STATS_URL   = `../data/processed/player_stats_per_game_normalized.csv?v=${_cb}`;
+const GAME_STATS_URL = `../data/processed/game_stats.csv?v=${_cb}`;
 
 const COMP_LABEL = {
   eurocup:        'EuroCup',
@@ -35,19 +36,19 @@ function sum(arr, key) {
 const gameCode = new URLSearchParams(location.search).get('id');
 
 /* ─── Load ─────────────────────────────────────────────────────────────────── */
+function parseCsv(url) {
+  return new Promise((res, rej) => Papa.parse(url, {
+    download: true, header: true, dynamicTyping: true,
+    complete: d => res(d.data.filter(r => r.game_code != null)),
+    error: rej,
+  }));
+}
+
 Promise.all([
-  new Promise((res, rej) => Papa.parse(GAMES_URL, {
-    download: true, header: true, dynamicTyping: true,
-    complete: d => res(d.data.filter(r => r.game_code != null)),
-    error: rej,
-  })),
-  new Promise((res, rej) => Papa.parse(PG_STATS_URL, {
-    download: true, header: true, dynamicTyping: true,
-    complete: d => res(d.data.filter(r => r.game_code != null)),
-    error: rej,
-  })),
-]).then(([allGames, allPlayerGames]) => {
-  // Find the game
+  parseCsv(GAMES_URL),
+  parseCsv(PG_STATS_URL),
+  parseCsv(GAME_STATS_URL).catch(() => []),
+]).then(([allGames, allPlayerGames, allGameStats]) => {
   const game = allGames.find(g => String(g.game_code) === String(gameCode));
 
   if (!game) {
@@ -59,10 +60,14 @@ Promise.all([
     return;
   }
 
-  // Per-game player stats for this game
   const gamePlayers = allPlayerGames.filter(r => String(r.game_code) === String(gameCode));
 
-  // All games for context (same competition_key)
+  // Exact team box-score stats (may be null if not in game_stats.csv)
+  const gameStats = allGameStats.find(r =>
+    String(r.game_code) === String(gameCode) &&
+    r.competition === game.competition
+  ) || null;
+
   const compKey = game.competition_key ||
     (game.competition === 'EuroCup' ? 'eurocup' :
      game.competition === 'ABA League' ? 'aba_league' : 'liga_nationala');
@@ -71,23 +76,21 @@ Promise.all([
     (g.competition_key || g.competition) === (game.competition_key || game.competition)
   );
 
-  // Season averages for context
   const seasonAvgScored   = avg(sameComp.map(g => +g.ubt_score));
   const seasonAvgConceded = avg(sameComp.map(g => +g.opp_score));
 
-  // Sorted games for streak/context
   const sortedGames = allGames
     .filter(g => g.date)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  render(game, gamePlayers, seasonAvgScored, seasonAvgConceded, sortedGames, compKey);
+  render(game, gamePlayers, gameStats, seasonAvgScored, seasonAvgConceded, sortedGames, compKey);
 }).catch(err => {
   document.getElementById('game-page').innerHTML =
     `<div class="error-state"><div class="error-state-title">Eroare la încărcare</div><div class="error-state-sub">${err}</div></div>`;
 });
 
 /* ─── Render ────────────────────────────────────────────────────────────────── */
-function render(game, players, seasonAvgScored, seasonAvgConceded, sortedGames, compKey) {
+function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, sortedGames, compKey) {
   const ubt     = +game.ubt_score;
   const opp     = +game.opp_score;
   const diff    = +game.score_diff;
@@ -111,21 +114,9 @@ function render(game, players, seasonAvgScored, seasonAvgConceded, sortedGames, 
     .slice(0, 3)
     .filter(p => (+p.points || 0) > 0);
 
-  // ── 3. Team stats (aggregate) ─────────────────────────────────────────────
-  const fg2Made = sum(players, 'fg2_made');
-  const fg2Att  = sum(players, 'fg2_att');
-  const fg3Made = sum(players, 'fg3_made');
-  const fg3Att  = sum(players, 'fg3_att');
-  const ftMade  = sum(players, 'ft_made');
-  const ftAtt   = sum(players, 'ft_att');
-  const reb     = sum(players, 'rebounds');
-  const ast     = sum(players, 'assists');
-  const tov     = sum(players, 'turnovers');
-  const stl     = sum(players, 'steals');
-  const blk     = sum(players, 'blocks');
-  const fgAll   = pct(fg2Made + fg3Made, fg2Att + fg3Att);
-  const fg3Pct  = pct(fg3Made, fg3Att);
-  const ftPct   = pct(ftMade, ftAtt);
+  // ── 3. Team stats — prefer exact data from game_stats.csv ─────────────────
+  const gs = gameStats;
+  const hasExact = gs != null;
 
   // Back link: prefer referrer, fall back to team page
   const backHref = document.referrer.includes('game.html') || !document.referrer
@@ -215,45 +206,8 @@ function render(game, players, seasonAvgScored, seasonAvgConceded, sortedGames, 
       </div>
     </div>` : ''}
 
-    <!-- 7. STATISTICI ECHIPĂ -->
-    ${players.length ? `
-    <div class="game-section">
-      <p class="section-title">Statistici U-BT</p>
-      <div class="game-team-stats-grid">
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${fgAll}</div>
-          <div class="game-team-stat-lbl">FG%</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${fg3Pct}</div>
-          <div class="game-team-stat-lbl">3PT%</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${ftPct}</div>
-          <div class="game-team-stat-lbl">FT%</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${reb}</div>
-          <div class="game-team-stat-lbl">Recuperări</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${ast}</div>
-          <div class="game-team-stat-lbl">Pase decisive</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${tov}</div>
-          <div class="game-team-stat-lbl">Pierderi minge</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${stl}</div>
-          <div class="game-team-stat-lbl">Intercepții</div>
-        </div>
-        <div class="game-team-stat">
-          <div class="game-team-stat-val">${blk}</div>
-          <div class="game-team-stat-lbl">Blocaje</div>
-        </div>
-      </div>
-    </div>` : ''}
+    <!-- 7. COMPARAȚIE ECHIPĂ -->
+    ${buildTeamComparison(gs, players, opp_name)}
   `;
 }
 
@@ -276,6 +230,129 @@ function buildPerformerCard(p, rank) {
       <div class="performer-pts">${pts}<span class="performer-pts-lbl">pct</span></div>
     </div>
   `;
+}
+
+/* ─── Team comparison ───────────────────────────────────────────────────────── */
+function buildTeamComparison(gs, players, oppName) {
+  let ubt, opp;
+
+  if (gs) {
+    ubt = {
+      pts:  gs.ubt_pts,  pir:  gs.ubt_pir,
+      fg2m: gs.ubt_fg2m, fg2a: gs.ubt_fg2a,
+      fg3m: gs.ubt_fg3m, fg3a: gs.ubt_fg3a,
+      ftm:  gs.ubt_ftm,  fta:  gs.ubt_fta,
+      oreb: gs.ubt_oreb, dreb: gs.ubt_dreb, reb: gs.ubt_reb,
+      ast:  gs.ubt_ast,  stl:  gs.ubt_stl,  blk: gs.ubt_blk,
+      to:   gs.ubt_to,   fouls: gs.ubt_fouls,
+    };
+    opp = {
+      pts:  gs.opp_pts,  pir:  gs.opp_pir,
+      fg2m: gs.opp_fg2m, fg2a: gs.opp_fg2a,
+      fg3m: gs.opp_fg3m, fg3a: gs.opp_fg3a,
+      ftm:  gs.opp_ftm,  fta:  gs.opp_fta,
+      oreb: gs.opp_oreb, dreb: gs.opp_dreb, reb: gs.opp_reb,
+      ast:  gs.opp_ast,  stl:  gs.opp_stl,  blk: gs.opp_blk,
+      to:   gs.opp_to,   fouls: gs.opp_fouls,
+    };
+  } else if (players.length) {
+    // Fall back to aggregated player stats (U-BT only, no opponent data)
+    const s = {
+      fg2m: sum(players, 'fg2_made'), fg2a: sum(players, 'fg2_att'),
+      fg3m: sum(players, 'fg3_made'), fg3a: sum(players, 'fg3_att'),
+      ftm:  sum(players, 'ft_made'),  fta:  sum(players, 'ft_att'),
+      reb:  sum(players, 'rebounds'), ast:  sum(players, 'assists'),
+      to:   sum(players, 'turnovers'),stl:  sum(players, 'steals'),
+      blk:  sum(players, 'blocks'),
+    };
+    return `
+    <div class="game-section">
+      <p class="section-title">Statistici U-BT</p>
+      <div class="game-team-stats-grid">
+        ${[
+          [pct(s.fg2m+s.fg3m, s.fg2a+s.fg3a), 'FG%'],
+          [pct(s.fg3m, s.fg3a), '3PT%'],
+          [pct(s.ftm, s.fta), 'FT%'],
+          [s.reb, 'Recuperări'],
+          [s.ast, 'Pase decisive'],
+          [s.to,  'Pierderi minge'],
+          [s.stl, 'Intercepții'],
+          [s.blk, 'Blocaje'],
+        ].map(([v, l]) => `<div class="game-team-stat">
+          <div class="game-team-stat-val">${v}</div>
+          <div class="game-team-stat-lbl">${l}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  } else {
+    return '';
+  }
+
+  // Build comparison rows
+  const fmtN = v => (v == null || isNaN(+v)) ? '—' : (+v % 1 === 0 ? +v : (+v).toFixed(1));
+  const fmtP = (m, a) => (a > 0) ? (+m / +a * 100).toFixed(1) + '%' : '—';
+
+  // higher = better for most, except turnovers/fouls
+  function cmpClass(ubtVal, oppVal, higherIsBetter = true) {
+    const u = +ubtVal, o = +oppVal;
+    if (isNaN(u) || isNaN(o) || u === o) return '';
+    return (higherIsBetter ? u > o : u < o) ? 'cmp-better' : 'cmp-worse';
+  }
+
+  const hasPir = ubt.pir != null;
+
+  const rows = [
+    ...(hasPir ? [[
+      fmtN(ubt.pir), fmtN(opp.pir), 'PIR',
+      cmpClass(ubt.pir, opp.pir)
+    ]] : []),
+    [
+      `${fmtN(ubt.fg2m)}/${fmtN(ubt.fg2a)} (${fmtP(ubt.fg2m, ubt.fg2a)})`,
+      `${fmtN(opp.fg2m)}/${fmtN(opp.fg2a)} (${fmtP(opp.fg2m, opp.fg2a)})`,
+      '2 puncte',
+      cmpClass(ubt.fg2m / (ubt.fg2a||1), opp.fg2m / (opp.fg2a||1))
+    ],
+    [
+      `${fmtN(ubt.fg3m)}/${fmtN(ubt.fg3a)} (${fmtP(ubt.fg3m, ubt.fg3a)})`,
+      `${fmtN(opp.fg3m)}/${fmtN(opp.fg3a)} (${fmtP(opp.fg3m, opp.fg3a)})`,
+      '3 puncte',
+      cmpClass(ubt.fg3m / (ubt.fg3a||1), opp.fg3m / (opp.fg3a||1))
+    ],
+    [
+      `${fmtN(ubt.ftm)}/${fmtN(ubt.fta)} (${fmtP(ubt.ftm, ubt.fta)})`,
+      `${fmtN(opp.ftm)}/${fmtN(opp.fta)} (${fmtP(opp.ftm, opp.fta)})`,
+      'Libere',
+      cmpClass(ubt.ftm / (ubt.fta||1), opp.ftm / (opp.fta||1))
+    ],
+    [fmtN(ubt.reb),   fmtN(opp.reb),   'Recuperări',      cmpClass(ubt.reb, opp.reb)],
+    [fmtN(ubt.oreb),  fmtN(opp.oreb),  '  Ofensive',      cmpClass(ubt.oreb, opp.oreb)],
+    [fmtN(ubt.dreb),  fmtN(opp.dreb),  '  Defensive',     cmpClass(ubt.dreb, opp.dreb)],
+    [fmtN(ubt.ast),   fmtN(opp.ast),   'Pase decisive',   cmpClass(ubt.ast, opp.ast)],
+    [fmtN(ubt.stl),   fmtN(opp.stl),   'Intercepții',     cmpClass(ubt.stl, opp.stl)],
+    [fmtN(ubt.blk),   fmtN(opp.blk),   'Blocaje',         cmpClass(ubt.blk, opp.blk)],
+    [fmtN(ubt.to),    fmtN(opp.to),    'Pierderi minge',  cmpClass(ubt.to, opp.to, false)],
+    [fmtN(ubt.fouls), fmtN(opp.fouls), 'Faulturi',        cmpClass(ubt.fouls, opp.fouls, false)],
+  ];
+
+  const shortOpp = oppName.split(' ').slice(0, 2).join(' ');
+
+  return `
+    <div class="game-section">
+      <p class="section-title">Comparație echipe</p>
+      <div class="game-cmp-table">
+        <div class="game-cmp-header">
+          <span class="cmp-team-label cmp-ubt">U-BT Cluj</span>
+          <span class="cmp-stat-label"></span>
+          <span class="cmp-team-label cmp-opp">${shortOpp}</span>
+        </div>
+        ${rows.map(([uv, ov, label, cls]) => `
+        <div class="game-cmp-row">
+          <span class="cmp-val cmp-val-ubt ${cls}">${uv}</span>
+          <span class="cmp-stat-name">${label}</span>
+          <span class="cmp-val cmp-val-opp ${cls ? (cls === 'cmp-better' ? 'cmp-worse' : 'cmp-better') : ''}">${ov}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
 }
 
 /* ─── Insight generators ────────────────────────────────────────────────────── */
