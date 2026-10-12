@@ -206,6 +206,9 @@ function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, so
       </div>
     </div>` : ''}
 
+    <!-- 6b. ALL PLAYERS TABLE -->
+    ${players.length ? buildPlayersTable(players) : ''}
+
     <!-- 7. COMPARAȚIE ECHIPĂ -->
     ${buildTeamComparison(gs, players, opp_name)}
   `;
@@ -219,9 +222,10 @@ function buildPerformerCard(p, rank) {
   const reb   = +p.rebounds || 0;
   const ast   = +p.assists  || 0;
   const medal = rank === 0 ? '🥇' : rank === 1 ? '🥈' : '🥉';
+  const href  = p.player_id ? `player.html?id=${p.player_id}` : null;
 
-  return `
-    <div class="game-performer">
+  const inner = `
+    <div class="game-performer${href ? ' game-performer-link' : ''}">
       <span class="performer-medal">${medal}</span>
       <div class="performer-info">
         <div class="performer-name">${name}</div>
@@ -230,6 +234,79 @@ function buildPerformerCard(p, rank) {
       <div class="performer-pts">${pts}<span class="performer-pts-lbl">pct</span></div>
     </div>
   `;
+  return href ? `<a class="performer-anchor" href="${href}">${inner}</a>` : inner;
+}
+
+/* ─── All players table ────────────────────────────────────────────────────── */
+function buildPlayersTable(players) {
+  const sorted = [...players]
+    .filter(p => (+p.minutes_played || 0) > 0)
+    .sort((a, b) => (+b.pir || 0) - (+a.pir || 0));
+
+  if (!sorted.length) return '';
+
+  const rows = sorted.map(p => {
+    const name = toTitleCase(String(p.player_name || ''));
+    const href = p.player_id ? `player.html?id=${p.player_id}` : null;
+    const nameCell = href
+      ? `<a class="ptbl-name-link" href="${href}">${name}</a>`
+      : name;
+    const minRaw = +p.minutes_played || 0;
+    const min    = minRaw > 0 ? Math.floor(minRaw) + "'" : '—';
+    const pts    = +p.points    || 0;
+    const reb    = +p.rebounds  || 0;
+    const ast    = +p.assists   || 0;
+    const stl    = +p.steals    || 0;
+    const blk    = +p.blocks    || 0;
+    const to     = +p.turnovers || 0;
+    const pm     = p.plus_minus != null && p.plus_minus !== ''
+      ? ((+p.plus_minus >= 0 ? '+' : '') + p.plus_minus) : '—';
+    const pirVal = p.pir != null && p.pir !== '' ? +p.pir : null;
+    const pir    = pirVal != null ? pirVal.toFixed(0) : '—';
+    const pirCls = pirVal == null ? '' : pirVal >= 15 ? 'pir-high' : pirVal >= 5 ? 'pir-mid' : pirVal < 0 ? 'pir-neg' : '';
+
+    return `<tr>
+      <td class="ptbl-name">${nameCell}</td>
+      <td>${min}</td>
+      <td class="ptbl-pts">${pts}</td>
+      <td>${reb}</td>
+      <td>${ast}</td>
+      <td>${stl}</td>
+      <td>${blk}</td>
+      <td>${to}</td>
+      <td>${pm}</td>
+      <td class="ptbl-pir ${pirCls}">${pir}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <div class="game-section">
+    <details class="game-players-details">
+      <summary class="game-players-summary">
+        <span class="game-players-summary-label">Toți jucătorii din meci</span>
+        <svg class="game-players-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="players-table-scroll">
+        <table class="players-table">
+          <thead>
+            <tr>
+              <th class="ptbl-name">Jucător</th>
+              <th>Min</th>
+              <th>Pct</th>
+              <th>Rec</th>
+              <th>Pase</th>
+              <th>Furt</th>
+              <th>Blk</th>
+              <th>Pierd</th>
+              <th>+/-</th>
+              <th>PIR</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </details>
+  </div>`;
 }
 
 /* ─── Team comparison ───────────────────────────────────────────────────────── */
