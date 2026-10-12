@@ -5,6 +5,7 @@ const _CB = Date.now();
 const DATA_URL          = `../data/processed/player_stats_normalized.csv?v=${_CB}`;
 const PER_GAME_DATA_URL = `../data/processed/player_stats_per_game_normalized.csv?v=${_CB}`;
 const DETAILS_URL       = `../data/processed/player_details.csv?v=${_CB}`;
+const BIO_URL           = `../config/player_bio.json?v=${_CB}`;
 
 const COMP_LABEL = {
   eurocup:        'EuroCup',
@@ -431,10 +432,10 @@ async function initPlayer(rows) {
     .map(Number).sort((a, b) => b - a);
   _activePlayerSeason = playerSeasons[0] ?? null;
 
-  // Load per-game data and player details in parallel
-  let perGameRows = [], detailRows = [];
+  // Load per-game data, player details and bio in parallel
+  let perGameRows = [], detailRows = [], bioData = { players: {} };
   try {
-    [perGameRows, detailRows] = await Promise.all([loadPerGame(), loadDetails()]);
+    [perGameRows, detailRows, bioData] = await Promise.all([loadPerGame(), loadDetails(), loadBio()]);
   } catch (_) { /* optional */ }
 
   const playerGames = perGameRows
@@ -442,9 +443,10 @@ async function initPlayer(rows) {
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const detail = detailRows.find(d => Number(d.player_id) === playerId) || null;
+  const bio    = bioData.players?.[String(playerId)] || null;
 
   document.title = `${player.name} · U-BT Stats`;
-  document.getElementById('player-content').innerHTML = buildProfile(player, row, rows, playerGames, detail);
+  document.getElementById('player-content').innerHTML = buildProfile(player, row, rows, playerGames, detail, bio);
 
   requestAnimationFrame(() => {
     document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
@@ -479,7 +481,13 @@ function loadDetails() {
   });
 }
 
-function buildProfile(player, row, allRows, playerGames = [], detail = null) {
+function loadBio() {
+  return fetch(BIO_URL)
+    .then(r => r.ok ? r.json() : { players: {} })
+    .catch(() => ({ players: {} }));
+}
+
+function buildProfile(player, row, allRows, playerGames = [], detail = null, bio = null) {
   // Season filtering
   const s      = _activePlayerSeason;
   const sRows  = s === null ? player.rows : player.rows.filter(r => +r.season === s);
@@ -487,7 +495,7 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
 
   const multiComp = sRows.length > 1;
 
-  _playerCtx     = { player, allRows, playerGames, detail, sRows, sGames };
+  _playerCtx     = { player, allRows, playerGames, detail, bio, sRows, sGames };
   _activeCompKey = multiComp ? 'all' : (sRows[0]?.competition_key || row.competition_key);
 
   const activeRow = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
@@ -516,13 +524,24 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
     .map(r => `${Number(r.games_played)} în ${COMP_LABEL[r.competition_key] ?? r.competition_key}`)
     .join(' · ');
 
-  // Vârstă + naționalitate
+  // Vârstă + bio
   const currentYear = new Date().getFullYear();
-  const age = detail?.birth_year ? currentYear - detail.birth_year : null;
-  const natLine = [
-    detail?.nationality_name || null,
-    age ? `${age} ani` : (detail?.birth_year ? `n. ${detail.birth_year}` : null),
-  ].filter(Boolean).join(' · ');
+  let age = null;
+  if (bio?.birth_date) {
+    const born = new Date(bio.birth_date);
+    const thisYearBday = new Date(currentYear, born.getMonth(), born.getDate());
+    age = currentYear - born.getFullYear() - (new Date() < thisYearBday ? 1 : 0);
+  } else if (detail?.birth_year) {
+    age = currentYear - detail.birth_year;
+  }
+
+  const bioLine1 = bio
+    ? [bio.jersey != null ? `#${bio.jersey}` : null, bio.position || null].filter(Boolean)
+    : null;
+  const bioLine2 = bio
+    ? [bio.height_cm ? `${bio.height_cm} cm` : null, age ? `${age} ani` : null, bio.birthplace || null].filter(Boolean)
+    : [detail?.nationality_name || null, age ? `${age} ani` : (detail?.birth_year ? `n. ${detail.birth_year}` : null)].filter(Boolean);
+  const natLine = !bio && bioLine2.length ? bioLine2.join(' · ') : null;
 
   const gamesForComp = multiComp ? sGames : sGames.filter(g => g.competition_key === _activeCompKey);
 
@@ -560,7 +579,8 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null) {
       </div>
       <div class="hero-content">
         <h1 class="hero-name">${name}</h1>
-        ${natLine ? `<p class="hero-meta hero-meta-nat">${natLine}</p>` : ''}
+        ${bioLine1?.length ? `<p class="hero-meta hero-bio-pos"><span class="hero-jersey">${bioLine1[0]}</span>${bioLine1[1] ? `<span class="hero-position">${bioLine1[1]}</span>` : ''}</p>` : ''}
+        ${bio && bioLine2?.length ? `<p class="hero-meta hero-bio-details">${bioLine2.join(' · ')}</p>` : (natLine ? `<p class="hero-meta hero-meta-nat">${natLine}</p>` : '')}
         <p class="hero-meta"><span>${totalGP}</span> meciuri${gpBreakdown ? ` <span class="hero-meta-gp-detail">(${gpBreakdown})</span>` : ''}</p>
         ${seasonSelectorHTML}
         ${multiComp ? `
@@ -794,9 +814,9 @@ function filterByComp(key) {
 function filterBySeason(season) {
   if (!_playerCtx) return;
   _activePlayerSeason = season;
-  const { player, allRows, playerGames, detail } = _playerCtx;
+  const { player, allRows, playerGames, detail, bio } = _playerCtx;
   const row = primaryRow(player);
-  document.getElementById('player-content').innerHTML = buildProfile(player, row, allRows, playerGames, detail);
+  document.getElementById('player-content').innerHTML = buildProfile(player, row, allRows, playerGames, detail, bio);
   requestAnimationFrame(() => {
     document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
       el.style.width = el.dataset.pct + '%';
