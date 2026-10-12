@@ -40,6 +40,12 @@ const SORT_META = {
                  totalKey: 'blocks',   totalLabel: 'Total blocaje',    totalFmt: v => fmt(v, 0) },
   minutes_pg:  { pgKey: 'minutes_pg', pgLabel: 'Min/meci',       pgFmt: v => fmtMinutes(v),
                  totalKey: 'minutes',  totalLabel: 'Min total',        totalFmt: v => fmt(v, 0) },
+  fg2_pct:     { pgKey: 'fg2_pct',   pgLabel: 'FG2%',           pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
+                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
+  fg3_pct:     { pgKey: 'fg3_pct',   pgLabel: 'FG3%',           pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
+                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
+  ft_pct:      { pgKey: 'ft_pct',    pgLabel: 'FT%',            pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
+                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
   player_name: { pgKey: 'points_pg',  pgLabel: 'Puncte/meci',   pgFmt: v => fmt(v),
                  totalKey: 'points',   totalLabel: 'Total puncte',   totalFmt: v => fmt(v, 0) },
 };
@@ -150,6 +156,9 @@ const SORT_LABELS = {
   rebounds_pg: 'Recuperări pe meci',
   blocks_pg:   'Blocaje pe meci',
   minutes_pg:  'Minute jucate pe meci',
+  fg2_pct:     'Procent din 2',
+  fg3_pct:     'Procent din 3',
+  ft_pct:      'Procent la libere',
   player_name: 'Nume A–Z',
 };
 
