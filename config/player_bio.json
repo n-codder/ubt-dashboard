@@ -1,0 +1,111 @@
+{
+  "_comment": "Date bio jucători U-BT, extrase de pe u-bt.ro/seniori. Cheie: player_id canonical.",
+  "_source": "https://www.u-bt.ro/seniori/u-banca-transilvania-cluj-napoca",
+  "_season": "2026-2027",
+  "players": {
+    "14838": {
+      "jersey": 0,
+      "position": "Point guard",
+      "birth_date": "1996-10-12",
+      "birthplace": "Illinois, SUA",
+      "nationality": "American",
+      "height_cm": 181
+    },
+    "12801": {
+      "jersey": 1,
+      "position": "Shooting guard",
+      "birth_date": "1999-06-03",
+      "birthplace": "Louisiana, SUA",
+      "nationality": "American",
+      "height_cm": 191
+    },
+    "14840": {
+      "jersey": 3,
+      "position": "Power forward",
+      "birth_date": "1998-10-06",
+      "birthplace": "Sombor, Serbia",
+      "nationality": "Sârb",
+      "height_cm": 205
+    },
+    "1949098": {
+      "jersey": 7,
+      "position": "Point guard",
+      "birth_date": "2008-10-09",
+      "birthplace": "Cluj-Napoca, România",
+      "nationality": "Român",
+      "height_cm": 185
+    },
+    "14841": {
+      "jersey": 8,
+      "position": "Power forward",
+      "birth_date": "2000-09-19",
+      "birthplace": "Georgia, SUA",
+      "nationality": "American",
+      "height_cm": 202
+    },
+    "14843": {
+      "jersey": 13,
+      "position": "Center",
+      "birth_date": "1999-06-13",
+      "birthplace": "Italia",
+      "nationality": "American",
+      "height_cm": 201
+    },
+    "13300": {
+      "jersey": 20,
+      "position": "Small forward",
+      "birth_date": "1996-04-01",
+      "birthplace": "Ohio, SUA",
+      "nationality": "American",
+      "height_cm": 198
+    },
+    "14844": {
+      "jersey": 21,
+      "position": "Small forward",
+      "birth_date": "1995-10-26",
+      "birthplace": "Missouri, SUA",
+      "nationality": "American",
+      "height_cm": 198
+    },
+    "6240": {
+      "jersey": 22,
+      "position": "Center",
+      "birth_date": "1998-12-22",
+      "birthplace": "Čačak, Serbia",
+      "nationality": "Sârb",
+      "height_cm": 216
+    },
+    "14845": {
+      "jersey": 24,
+      "position": "Small forward",
+      "birth_date": "1997-01-03",
+      "birthplace": "București, România",
+      "nationality": "Român",
+      "height_cm": 199
+    },
+    "11801": {
+      "jersey": 35,
+      "position": "Shooting guard",
+      "birth_date": "1990-01-25",
+      "birthplace": "Lafayette, Louisiana, SUA",
+      "nationality": "American",
+      "height_cm": 196
+    },
+    "7729": {
+      "jersey": 77,
+      "position": "Point guard",
+      "birth_date": "1999-05-25",
+      "birthplace": "Tallinn, Estonia",
+      "nationality": "Estonian",
+      "height_cm": 195
+    },
+    "12461": {
+      "jersey": 88,
+      "position": "Point guard",
+      "birth_date": "2007-01-08",
+      "birthplace": "Timișoara, România",
+      "nationality": "Român",
+      "height_cm": 195
+    }
+  }
+}

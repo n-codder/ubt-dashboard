@@ -482,6 +482,10 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .hero-meta span { color: var(--accent); font-weight: 600; }
 .hero-meta-nat { color: var(--text-secondary); font-size: 13px; }
 .hero-meta-gp-detail { color: var(--text-muted); font-size: 12px; font-weight: 400; }
+.hero-bio-pos { display: flex; align-items: center; gap: 8px; }
+.hero-jersey { font-family: var(--mono); font-size: 17px; font-weight: 800; color: var(--accent); }
+.hero-position { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.hero-bio-details { font-size: 13px; color: var(--text-secondary); }
 
 .hero-kpis {
   display: flex;
