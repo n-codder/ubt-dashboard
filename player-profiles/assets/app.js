@@ -923,12 +923,18 @@ function buildEvolutionChart(games, statKey) {
 
   const labels = games.map((g, i) => g.round ? `R${g.round}` : `M${i + 1}`);
 
-  const values = games.map(g => {
+  // Raw (absolute) values — used for average and tooltip display
+  const rawValues = games.map(g => {
     const v = parseFloat(g[statKey]);
     return isNaN(v) ? null : +v.toFixed(2);
   });
 
-  const nonNull  = values.filter(v => v !== null);
+  // Display values: negate for losses so bars drop below X axis
+  const displayValues = rawValues.map((v, i) =>
+    v !== null && games[i].result === 'L' ? -v : v
+  );
+
+  const nonNull  = rawValues.filter(v => v !== null);
   const avgVal   = nonNull.length ? nonNull.reduce((s, v) => s + v, 0) / nonNull.length : 0;
 
   const barColors       = games.map(g => g.result === 'W' ? 'rgba(34,197,94,0.75)'  : g.result === 'L' ? 'rgba(230,57,70,0.75)'  : 'rgba(148,163,184,0.6)');
@@ -946,7 +952,7 @@ function buildEvolutionChart(games, statKey) {
       datasets: [
         {
           label:           statLabel,
-          data:             values,
+          data:             displayValues,
           backgroundColor:  barColors,
           borderColor:      barColorsBorder,
           borderWidth:      1.5,
@@ -976,9 +982,11 @@ function buildEvolutionChart(games, statKey) {
           ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 9 },
         },
         y: {
-          beginAtZero: true,
           grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#6B7280', font: { size: 11 } },
+          ticks: {
+            color: '#6B7280', font: { size: 11 },
+            callback: v => Math.abs(v),
+          },
         },
       },
       plugins: {
@@ -998,7 +1006,7 @@ function buildEvolutionChart(games, statKey) {
             },
             label: (item) => {
               if (item.datasetIndex === 1) return `  Medie: ${isMin ? fmtMinutes(item.raw) : item.raw}`;
-              const v = item.raw;
+              const v = rawValues[item.dataIndex];
               return v !== null ? `  ${statLabel}: ${isMin ? fmtMinutes(v) : v}` : '  —';
             },
           },
