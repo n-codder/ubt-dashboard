@@ -1906,6 +1906,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   transition: border-color .15s;
 }
 .game-performer:hover { border-color: var(--accent-border); }
+.game-performer.game-performer-link { cursor: pointer; }
+.performer-anchor { display: block; text-decoration: none; }
+.performer-anchor:hover .game-performer { border-color: var(--accent-border); }
 .performer-medal { font-size: 20px; flex-shrink: 0; }
 .performer-info  { flex: 1; }
 .performer-name  { font-size: 15px; font-weight: 700; color: var(--text-primary); }
@@ -1925,6 +1928,86 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-family: var(--font);
   color: var(--text-muted);
 }
+
+/* All players table */
+.game-players-details {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.game-players-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  gap: 8px;
+}
+.game-players-summary::-webkit-details-marker { display: none; }
+.game-players-summary:hover { color: var(--accent); }
+.game-players-summary-label { flex: 1; }
+.game-players-chevron {
+  width: 18px; height: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.game-players-details[open] .game-players-chevron { transform: rotate(180deg); }
+.players-table-scroll {
+  overflow-x: auto;
+  padding: 0 0 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.players-table th {
+  padding: 8px 12px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.players-table th.ptbl-name { text-align: left; }
+.players-table td {
+  padding: 9px 12px;
+  text-align: right;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+.players-table td.ptbl-name { text-align: left; min-width: 120px; }
+.players-table tr:hover td { background: var(--accent-soft); }
+.ptbl-name-link {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.ptbl-name-link:hover { color: var(--accent); text-decoration: underline; }
+.ptbl-pts {
+  font-weight: 700;
+  font-family: var(--mono);
+  color: var(--text-primary);
+}
+.ptbl-pir {
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.ptbl-pir.pir-high { color: #22c55e; }
+.ptbl-pir.pir-mid  { color: var(--text-primary); }
+.ptbl-pir.pir-neg  { color: #ef4444; }
 
 /* Team stats grid */
 .game-team-stats-grid {
