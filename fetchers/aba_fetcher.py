@@ -339,12 +339,14 @@ def _append_raw_stats(season: int, new_rows: list[dict], overwrite: bool) -> Non
         df_new = pd.DataFrame(new_rows)
         if overwrite or not path.exists():
             df_new.to_csv(path, index=False)
+            added = len(df_new)
         else:
             df_existing = pd.read_csv(path)
             known = set(df_existing["match_id"].tolist())
             df_novel = df_new[~df_new["match_id"].isin(known)]
             pd.concat([df_existing, df_novel], ignore_index=True).to_csv(path, index=False)
-        log.info(f"Raw stats salvat → {path}  ({len(new_rows)} rânduri noi)")
+            added = len(df_novel)
+        log.info(f"Raw stats salvat → {path}  ({added} rânduri noi adăugate)")
     elif not path.exists():
         log.warning("Niciun rând nou și nu există fișier raw stats.")
 
@@ -400,9 +402,9 @@ def _aggregate_player_stats(df: pd.DataFrame, season: int) -> pd.DataFrame:
     for col in ["points", "rebounds", "assists", "steals", "blocks", "turnovers", "minutes"]:
         agg[f"{col}_pg"] = (agg[col] / agg["games_played"]).round(2)
 
-    agg["fg2_pct"] = (agg["fg2_made"] / agg["fg2_att"].replace(0, pd.NA)).round(3)
-    agg["fg3_pct"] = (agg["fg3_made"] / agg["fg3_att"].replace(0, pd.NA)).round(3)
-    agg["ft_pct"]  = (agg["ft_made"]  / agg["ft_att"].replace(0, pd.NA)).round(3)
+    agg["fg2_pct"] = (agg["fg2_made"] / agg["fg2_att"].where(agg["fg2_att"] != 0)).round(3)
+    agg["fg3_pct"] = (agg["fg3_made"] / agg["fg3_att"].where(agg["fg3_att"] != 0)).round(3)
+    agg["ft_pct"]  = (agg["ft_made"]  / agg["ft_att"].where(agg["ft_att"] != 0)).round(3)
 
     agg.sort_values("points", ascending=False, inplace=True)
     agg.reset_index(drop=True, inplace=True)
