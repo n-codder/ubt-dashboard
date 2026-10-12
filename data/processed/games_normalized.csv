@@ -48,6 +48,16 @@ EuroCup,eurocup,2025,183,19,EIGHTHFINALS,2026-03-11,KK Budućnost VOLI,BUD,U-BT 
 EuroCup,eurocup,2025,188,20,QUARTERFINALS,2026-03-17,Bahçeşehir Koleji,BAH,U-BT Cluj-Napoca,CLU,75,72,SINAN ERDEM SPORTS HALL,3248,False,72,75,Bahçeşehir Koleji,L,-3
 EuroCup,eurocup,2026,6,1,REGULAR SEASON,2026-09-30,Maxima Roma,MRO,U-BT Cluj-Napoca,CLU,89,55,PALAZZETTO DELLO SPORT,1208,False,55,89,Maxima Roma,L,-34
 EuroCup,eurocup,2026,23,2,REGULAR SEASON,2026-10-07,U-BT Cluj-Napoca,CLU,Umana Reyer Venezia,VNC,98,92,BT ARENA,6147,True,98,92,Umana Reyer Venezia,W,6
+Liga Națională,liga_nationala,2024,16035738,27,Regular Season,2026-04-24,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,101,,,False,101,94,BC CSU Sibiu,W,7
+Liga Națională,liga_nationala,2024,16035742,27,Regular Season,2026-04-26,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,87,,,False,87,84,BC CSU Sibiu,W,3
+Liga Națională,liga_nationala,2024,16035735,27,Regular Season,2026-04-30,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC CSU Sibiu,bc-csu-sibiu,87,65,,,True,87,65,BC CSU Sibiu,W,22
 Liga Națională,liga_nationala,2025,16035738,27,Regular Season,2026-04-24,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,101,,,False,101,94,BC CSU Sibiu,W,7
 Liga Națională,liga_nationala,2025,16035742,27,Regular Season,2026-04-26,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,87,,,False,87,84,BC CSU Sibiu,W,3
 Liga Națională,liga_nationala,2025,16035735,27,Regular Season,2026-04-30,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC CSU Sibiu,bc-csu-sibiu,87,65,,,True,87,65,BC CSU Sibiu,W,22
+Liga Națională,liga_nationala,2025,16158819,28,Regular Season,2026-05-14,SCM Universitatea Craiova,scm-universitatea-craiova,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,75,85,,,False,85,75,SCM Universitatea Craiova,W,10
+Liga Națională,liga_nationala,2025,16158820,28,Regular Season,2026-05-16,SCM Universitatea Craiova,scm-universitatea-craiova,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,74,85,,,False,85,74,SCM Universitatea Craiova,W,11
+Liga Națională,liga_nationala,2025,16122983,28,Regular Season,2026-05-20,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,SCM Universitatea Craiova,scm-universitatea-craiova,103,83,,,True,103,83,SCM Universitatea Craiova,W,20
+Liga Națională,liga_nationala,2025,16211433,29,Regular Season,2026-05-26,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,87,84,,,False,84,87,CSM Oradea,L,-3
+Liga Națională,liga_nationala,2025,16211436,29,Regular Season,2026-05-28,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,83,88,,,False,88,83,CSM Oradea,W,5
+Liga Națională,liga_nationala,2025,16211435,29,Regular Season,2026-06-01,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Oradea,csm-oradea,103,78,,,True,103,78,CSM Oradea,W,25
+Liga Națională,liga_nationala,2025,16249696,29,Regular Season,2026-06-03,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Oradea,csm-oradea,74,72,,,True,74,72,CSM Oradea,W,2

@@ -216,6 +216,10 @@ def normalize_games(df: pd.DataFrame) -> pd.DataFrame:
     # season — int normal
     df["season"] = df["season"].astype(int)
 
+    # LN uses end-year convention; shift by -1 to match EuroCup/ABA start-year.
+    if "competition_key" in df.columns:
+        df.loc[df["competition_key"] == "liga_nationala", "season"] -= 1
+
     # result — numai W / L / None
     df["result"] = df["result"].where(df["result"].isin(["W", "L"]), other=pd.NA)
 
