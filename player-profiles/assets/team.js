@@ -1,6 +1,6 @@
 /* ─── Team page · team.js v2 ──────────────────────────────────────────────── */
 
-const GAMES_URL = `../data/processed/games.csv?v=${Date.now()}`;
+const GAMES_URL = `../data/processed/games_normalized.csv?v=${Date.now()}`;
 
 const COMP_LABEL = {
   eurocup:        'EuroCup',

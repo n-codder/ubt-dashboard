@@ -257,9 +257,10 @@ def process_ln(season: int, full: bool) -> pd.DataFrame:
     known_codes: set[int] = set()
     if not full and OUT_PATH.exists():
         existing = pd.read_csv(OUT_PATH, usecols=["competition", "season", "game_code"])
+        # LN rows are saved with season-1 (end-year→start-year shift in save())
         known = existing[
             (existing["competition"] == "Liga Națională") &
-            (existing["season"] == season)
+            (existing["season"] == season - 1)
         ]
         known_codes = set(known["game_code"].astype(int).tolist())
 
@@ -346,6 +347,10 @@ def save(df_new: pd.DataFrame, full: bool) -> None:
         return
 
     df_new["date"] = pd.to_datetime(df_new["date"], errors="coerce").dt.strftime("%Y-%m-%d")
+
+    # LN uses end-year convention; shift by -1 to match EuroCup/ABA start-year.
+    if "competition_key" in df_new.columns:
+        df_new.loc[df_new["competition_key"] == "liga_nationala", "season"] -= 1
 
     if full or not OUT_PATH.exists():
         df_out = df_new

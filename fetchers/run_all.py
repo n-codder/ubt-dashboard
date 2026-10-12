@@ -37,8 +37,8 @@ FRESH_WINDOW = timedelta(hours=24)
 # ── Competiții definite ────────────────────────────────────────────────────
 # Fiecare intrare: (competition_key, season, fetcher_module, run_kwargs)
 COMPETITIONS = [
-    ("eurocup",        2025, "fetchers.eurocup_fetcher", {"season": 2025}),
-    ("aba_league",     2025, "fetchers.aba_fetcher",     {"season": 2025, "full": False}),
+    ("eurocup",        2026, "fetchers.eurocup_fetcher", {"season": 2026}),
+    ("aba_league",     2026, "fetchers.aba_fetcher",     {"season": 2026, "full": False}),
     ("liga_nationala", 2026, "fetchers.ln_fetcher",      {"season": 2026, "full": False}),
 ]
 
@@ -119,6 +119,13 @@ def _run_processors(season: int, full: bool) -> None:
             pgs.run(season=s, full=full)
     except Exception as exc:
         log.error(f"Per-game stats eroare: {exc}")
+
+    log.info("Rulez processors/dedup_players.py ...")
+    try:
+        dedup = importlib.import_module("processors.dedup_players")
+        dedup.run()
+    except Exception as exc:
+        log.error(f"Dedup eroare: {exc}")
 
 
 def _summary() -> None:
