@@ -2046,7 +2046,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   display: flex;
 }
 .cmp-side-ubt .cmp-bar-wrap { justify-content: flex-end; }
-.cmp-side-opp .cmp-bar-wrap { justify-content: flex-end; }
+.cmp-side-opp .cmp-bar-wrap { justify-content: flex-start; }
 
 .cmp-bar {
   height: 100%;
