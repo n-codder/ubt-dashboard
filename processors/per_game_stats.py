@@ -257,9 +257,10 @@ def process_ln(season: int, full: bool) -> pd.DataFrame:
     known_codes: set[int] = set()
     if not full and OUT_PATH.exists():
         existing = pd.read_csv(OUT_PATH, usecols=["competition", "season", "game_code"])
+        # LN rows are saved with season-1 (end-year→start-year shift in save())
         known = existing[
             (existing["competition"] == "Liga Națională") &
-            (existing["season"] == season)
+            (existing["season"] == season - 1)
         ]
         known_codes = set(known["game_code"].astype(int).tolist())
 

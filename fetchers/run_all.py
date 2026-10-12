@@ -37,8 +37,8 @@ FRESH_WINDOW = timedelta(hours=24)
 # ── Competiții definite ────────────────────────────────────────────────────
 # Fiecare intrare: (competition_key, season, fetcher_module, run_kwargs)
 COMPETITIONS = [
-    ("eurocup",        2025, "fetchers.eurocup_fetcher", {"season": 2025}),
-    ("aba_league",     2025, "fetchers.aba_fetcher",     {"season": 2025, "full": False}),
+    ("eurocup",        2026, "fetchers.eurocup_fetcher", {"season": 2026}),
+    ("aba_league",     2026, "fetchers.aba_fetcher",     {"season": 2026, "full": False}),
     ("liga_nationala", 2026, "fetchers.ln_fetcher",      {"season": 2026, "full": False}),
 ]
 
