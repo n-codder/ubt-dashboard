@@ -217,6 +217,25 @@ function initIndex(rows) {
       });
   }
 
+  // Assigns proper ranks — tied values get the same rank number.
+  // Players with null/missing stat for the active sort key are pushed to rest.
+  function rankedList(list) {
+    if (sortKey === 'player_name') {
+      return list.map((p, i) => ({ player: p, rank: i + 1, val: p.name }));
+    }
+    const getVal = p => {
+      const r = getStatRow(p);
+      const v = sortKey === 'pir' ? r.pir : r[sortKey];
+      return (v != null && !isNaN(v)) ? +v : null;
+    };
+    const withVals = list.map(p => ({ player: p, val: getVal(p) }));
+    let rank = 1;
+    return withVals.map(({ player, val }, i) => {
+      if (i > 0 && val !== withVals[i - 1].val) rank = i + 1;
+      return { player, rank, val };
+    });
+  }
+
   function render() {
     _activeSortKey = sortKey;
     const list  = sorted();
@@ -226,17 +245,28 @@ function initIndex(rows) {
     if (sortLblEl) sortLblEl.textContent = sortKey === 'player_name'
       ? 'Sortare curentă: Nume A–Z'
       : `Sortare curentă: ${label} (descrescător)`;
-    if (titleEl)   titleEl.textContent   = `⭐ TOP 3 – după ${label}`;
 
-    const top3 = list.slice(0, 3);
-    const rest = list.slice(3);
+    const ranked = rankedList(list);
+    // Top section: rank ≤ 3 with actual data (null-stat players go to rest)
+    const topN = ranked.filter(({ rank, val }) =>
+      rank <= 3 && (sortKey === 'player_name' || val !== null)
+    );
+    const rest = ranked.filter(({ rank, val }) =>
+      rank > 3 || (sortKey !== 'player_name' && val === null)
+    );
+
+    if (titleEl) titleEl.textContent = `⭐ TOP ${topN.length} – după ${label}`;
 
     if (top3El) {
-      top3El.innerHTML = top3.map((p, i) => buildTop3Card(p, i + 1, getStatRow(p))).join('');
+      top3El.innerHTML = topN.map(({ player, rank }) =>
+        buildTop3Card(player, rank, getStatRow(player))
+      ).join('');
       top3El.querySelector('.top3-card')?.classList.add('is-active');
     }
-    updateCarouselDots(top3.length);
-    if (rosterEl) rosterEl.innerHTML = rest.map((p, i) => buildRosterCard(p, i + 4, getStatRow(p))).join('');
+    updateCarouselDots(topN.length);
+    if (rosterEl) rosterEl.innerHTML = rest.map(({ player, rank }) =>
+      buildRosterCard(player, rank, getStatRow(player))
+    ).join('');
   }
 
   // Filter buttons
