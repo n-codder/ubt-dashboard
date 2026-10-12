@@ -2022,7 +2022,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   height: 28px;
 }
 .cmp-side-ubt { flex-direction: row; }
-.cmp-side-opp { flex-direction: row-reverse; }
+.cmp-side-opp { flex-direction: row; }
 
 .cmp-num {
   font-size: 12px;
@@ -2046,7 +2046,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   display: flex;
 }
 .cmp-side-ubt .cmp-bar-wrap { justify-content: flex-end; }
-.cmp-side-opp .cmp-bar-wrap { justify-content: flex-start; }
+.cmp-side-opp .cmp-bar-wrap { justify-content: flex-end; }
 
 .cmp-bar {
   height: 100%;
