@@ -264,6 +264,11 @@ def normalize_players(df: pd.DataFrame) -> pd.DataFrame:
     # season — int
     df["season"] = df["season"].astype(int)
 
+    # LN uses end-year convention (season 2026 = 2025-2026 competitive year).
+    # EuroCup/ABA use start-year. Shift LN season by -1 to unify.
+    if "competition_key" in df.columns:
+        df.loc[df["competition_key"] == "liga_nationala", "season"] -= 1
+
     # Coloane întregi
     for col in ("games_played", "fg2_made", "fg2_att", "fg3_made", "fg3_att",
                 "ft_made", "ft_att", "points", "rebounds", "off_rebounds",

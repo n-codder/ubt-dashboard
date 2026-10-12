@@ -187,5 +187,46 @@ def main():
         print(f'  {path.name}: {changed} {status}')
 
 
+def run(threshold: float = THRESHOLD, dry_run: bool = False) -> None:
+    """Entry point apelabil programatic (fără argparse)."""
+    stats_path = STATS_FILES[0]
+    if not stats_path.exists():
+        print(f'Fișier lipsă: {stats_path}')
+        return
+
+    rows = list(csv.DictReader(stats_path.open()))
+    duplicates = find_duplicates(rows, threshold)
+
+    if not duplicates:
+        print('Niciun duplicat detectat.')
+        return
+
+    prefix = 'DRY RUN — ' if dry_run else ''
+    print(f'{prefix}Duplicați detectați ({len(duplicates)}):')
+    pid_to_name = {r['player_id']: r['player_name'] for r in rows}
+    for old_id, can_id, can_name, sim in duplicates:
+        old_name = pid_to_name.get(old_id, '?')
+        print(f'  [{sim:.2f}] "{old_name}" (id={old_id})  →  "{can_name}" (id={can_id})')
+
+    pid_to_rows = defaultdict(list)
+    for r in rows:
+        pid_to_rows[r['player_id']].append(r)
+
+    merge_map = {}
+    for old_id, can_id, can_name, _ in duplicates:
+        all_rows = pid_to_rows[old_id] + pid_to_rows[can_id]
+        photo = best_photo(all_rows)
+        merge_map[old_id] = (can_id, can_name, photo)
+
+    print()
+    for path in STATS_FILES:
+        if not path.exists():
+            print(f'  LIPSĂ: {path.name}')
+            continue
+        changed = apply_merge(path, merge_map, dry_run)
+        status = '(dry-run, neschimbat)' if dry_run else 'rânduri actualizate'
+        print(f'  {path.name}: {changed} {status}')
+
+
 if __name__ == '__main__':
     main()

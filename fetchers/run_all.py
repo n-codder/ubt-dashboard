@@ -120,6 +120,13 @@ def _run_processors(season: int, full: bool) -> None:
     except Exception as exc:
         log.error(f"Per-game stats eroare: {exc}")
 
+    log.info("Rulez processors/dedup_players.py ...")
+    try:
+        dedup = importlib.import_module("processors.dedup_players")
+        dedup.run()
+    except Exception as exc:
+        log.error(f"Dedup eroare: {exc}")
+
 
 def _summary() -> None:
     log.info("─" * 60)
