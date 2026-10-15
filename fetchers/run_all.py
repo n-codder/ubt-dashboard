@@ -104,6 +104,14 @@ def _run_fetcher(module_path: str, kwargs: dict) -> bool:
 def _run_processors(season: int, full: bool) -> None:
     import importlib
     log.info("─" * 60)
+    log.info("Rulez fetchers/team_stats_fetcher.py ...")
+    try:
+        tsf = importlib.import_module("fetchers.team_stats_fetcher")
+        tsf.run()
+        log.info("Team stats fetcher — done.")
+    except Exception as exc:
+        log.error(f"Team stats fetcher eroare: {exc}")
+
     log.info("Rulez processors/normalizer.py ...")
     try:
         norm = importlib.import_module("processors.normalizer")
