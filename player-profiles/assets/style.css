@@ -1762,7 +1762,6 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 .game-venue {
   font-size: 12px;
   color: var(--text-muted);
-  opacity: 0.65;
 }
 .game-score-block {
   display: flex;
@@ -1801,7 +1800,7 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 .game-vs-dash {
   font-size: 32px;
   font-weight: 300;
-  color: var(--border-strong);
+  color: var(--text-muted);
   line-height: 1;
 }
 .game-result-pill {
@@ -1812,14 +1811,14 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
   letter-spacing: 0.3px;
 }
 .game-result-pill.result-win  { background: rgba(34,197,94,0.15);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-.game-result-pill.result-loss { background: rgba(230,57,70,0.12);  color: var(--red);   border: 1px solid rgba(230,57,70,0.25); }
+.game-result-pill.result-loss { background: rgba(230,57,70,0.12);  color: var(--red-text);   border: 1px solid rgba(230,57,70,0.25); }
 .game-diff {
   font-size: 13px;
   font-weight: 600;
   font-family: var(--mono);
 }
 .game-diff.diff-pos { color: var(--green); }
-.game-diff.diff-neg { color: var(--red); }
+.game-diff.diff-neg { color: var(--red-text); }
 
 /* Takeaway */
 .game-takeaway {
@@ -1891,7 +1890,14 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
   align-items: flex-start;
   box-shadow: var(--shadow-card);
 }
-.game-insight-icon { font-size: 18px; flex-shrink: 0; }
+.game-insight-card { flex-direction: column; gap: 6px; }
+.game-insight-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
 .game-insight-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 
 /* Sections */
@@ -1918,7 +1924,18 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 .game-performer.game-performer-link { cursor: pointer; }
 .performer-anchor { display: block; text-decoration: none; }
 .performer-anchor:hover .game-performer { border-color: var(--accent-border); }
-.performer-medal { font-size: 20px; flex-shrink: 0; }
+.performer-rank {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+.performer-rank.rank-1 { background: var(--accent-dark); border-color: transparent; color: #fff; }
 .performer-info  { flex: 1; }
 .performer-name  { font-size: 15px; font-weight: 700; color: var(--text-primary); }
 .performer-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -2014,9 +2031,9 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
   font-weight: 700;
   font-family: var(--mono);
 }
-.ptbl-pir.pir-high { color: #22c55e; }
+.ptbl-pir.pir-high { color: var(--green); }
 .ptbl-pir.pir-mid  { color: var(--text-primary); }
-.ptbl-pir.pir-neg  { color: #ef4444; }
+.ptbl-pir.pir-neg  { color: var(--red-text); }
 
 /* Team stats grid */
 .game-team-stats-grid {
@@ -2075,7 +2092,7 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 }
 .cmp-hdr-ubt {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.5px; color: var(--accent);
+  letter-spacing: 0.5px; color: var(--accent-text);
 }
 .cmp-hdr-opp {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
@@ -2093,7 +2110,6 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 }
 .cmp-row:last-child { border-bottom: none; }
 .cmp-row:nth-child(even) { background: rgba(255,255,255,0.015); }
-.cmp-subrow { opacity: 0.8; }
 .cmp-subrow .cmp-label { padding-left: 10px; }
 
 .cmp-label {
@@ -2147,18 +2163,18 @@ a.momentum-badge-wrap:hover .momentum-badge { transform: translateY(-2px); }
 }
 
 /* U-BT bar colors */
-.cmp-bar-ubt.bar-win    { background: #22c55e; }
-.cmp-bar-ubt.bar-loss   { background: #ef4444; }
+.cmp-bar-ubt.bar-win    { background: var(--green); }
+.cmp-bar-ubt.bar-loss   { background: var(--red); }
 .cmp-bar-ubt.bar-neutral{ background: var(--accent); }
 
 /* Opponent bar colors */
-.cmp-bar-opp.bar-win    { background: #22c55e; }
-.cmp-bar-opp.bar-loss   { background: #ef4444; }
+.cmp-bar-opp.bar-win    { background: var(--green); }
+.cmp-bar-opp.bar-loss   { background: var(--red); }
 .cmp-bar-opp.bar-neutral{ background: #4B5563; }
 
 /* Number tint to match bar */
-.cmp-num.bar-win    { color: #22c55e; }
-.cmp-num.bar-loss   { color: #ef4444; }
+.cmp-num.bar-win    { color: var(--green); }
+.cmp-num.bar-loss   { color: var(--red-text); }
 .cmp-num.bar-neutral{ color: var(--text-secondary); }
 
 @media (max-width: 480px) {

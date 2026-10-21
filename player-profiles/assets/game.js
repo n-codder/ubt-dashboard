@@ -13,7 +13,7 @@ const COMP_LABEL = {
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 function toTitleCase(str) {
-  return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  return str.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, sep, c) => sep + c.toUpperCase());
 }
 function avg(arr) {
   if (!arr.length) return 0;
@@ -126,7 +126,7 @@ function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, so
 
     <!-- Back -->
     <a class="back-btn" href="${backHref}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M19 12H5M12 19l-7-7 7-7"/>
       </svg>
       Înapoi
@@ -146,7 +146,7 @@ function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, so
           <div class="game-score ${isWin ? 'score-win' : 'score-loss'}">${ubt}</div>
         </div>
         <div class="game-score-sep">
-          <div class="game-vs-dash">–</div>
+          <div class="game-vs-dash" aria-hidden="true">–</div>
           <div class="game-result-pill ${isWin ? 'result-win' : 'result-loss'}">
             ${isWin ? 'Victorie' : 'Înfrângere'}
           </div>
@@ -161,7 +161,7 @@ function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, so
 
     <!-- 2. KEY TAKEAWAY -->
     <div class="game-takeaway ${isWin ? 'takeaway-win' : 'takeaway-loss'}">
-      <span class="takeaway-icon">${isWin ? '✓' : '✗'}</span>
+      <span class="takeaway-icon" aria-hidden="true">${isWin ? '✓' : '✗'}</span>
       ${takeaway}
     </div>
 
@@ -188,11 +188,11 @@ function render(game, players, gameStats, seasonAvgScored, seasonAvgConceded, so
     <!-- 5. MOMENT CHEIE + 8. CONTEXT -->
     <div class="game-insight-row">
       <div class="game-insight-card">
-        <div class="game-insight-icon">⚡</div>
+        <div class="game-insight-label">Moment cheie</div>
         <div class="game-insight-text">${moment}</div>
       </div>
       ${context ? `<div class="game-insight-card">
-        <div class="game-insight-icon">📊</div>
+        <div class="game-insight-label">Context</div>
         <div class="game-insight-text">${context}</div>
       </div>` : ''}
     </div>
@@ -221,12 +221,11 @@ function buildPerformerCard(p, rank) {
   const pir   = p.pir != null ? (+p.pir).toFixed(0) : '—';
   const reb   = +p.rebounds || 0;
   const ast   = +p.assists  || 0;
-  const medal = rank === 0 ? '🥇' : rank === 1 ? '🥈' : '🥉';
   const href  = p.player_id ? `player.html?id=${p.player_id}` : null;
 
   const inner = `
     <div class="game-performer${href ? ' game-performer-link' : ''}">
-      <span class="performer-medal">${medal}</span>
+      <span class="performer-rank${rank === 0 ? ' rank-1' : ''}" aria-label="Locul ${rank + 1}">${rank + 1}</span>
       <div class="performer-info">
         <div class="performer-name">${name}</div>
         <div class="performer-sub">${reb > 0 ? reb + ' rec' : ''} ${ast > 0 ? ast + ' pase' : ''} · PIR ${pir}</div>
@@ -284,7 +283,7 @@ function buildPlayersTable(players) {
     <details class="game-players-details">
       <summary class="game-players-summary">
         <span class="game-players-summary-label">Toți jucătorii din meci</span>
-        <svg class="game-players-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <svg class="game-players-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <div class="players-table-scroll">
         <table class="players-table">

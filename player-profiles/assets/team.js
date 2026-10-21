@@ -29,7 +29,7 @@ function compKey(raw) {
 }
 
 function toTitleCase(str) {
-  return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  return str.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, sep, c) => sep + c.toUpperCase());
 }
 
 function avg(arr) {
