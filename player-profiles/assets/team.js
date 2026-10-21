@@ -60,8 +60,8 @@ function getConsistencyLabel(sd) {
 
 function getConsistencyColor(sd) {
   if (sd < 7)  return 'var(--green)';
-  if (sd < 12) return 'var(--accent)';
-  return 'var(--red)';
+  if (sd < 12) return 'var(--accent-text)';
+  return 'var(--red-text)';
 }
 
 /* Calculate current streak from sorted games array */
@@ -169,7 +169,7 @@ function buildPageHTML(allSeasons = []) {
         </div>
         ${allSeasons.length > 1 ? `
         <div class="sort-wrap">
-          <select id="team-season-select" class="sort-select">
+          <select id="team-season-select" class="sort-select" aria-label="Sezon">
             ${seasonOpts}
           </select>
         </div>` : ''}
@@ -248,7 +248,7 @@ function renderSnapshot(games) {
   const w          = games.filter(g => g.result === 'W').length;
   const l          = gp - w;
   const wr         = (w / gp * 100);
-  const diffColor  = avgDiff >= 0 ? 'var(--accent)' : 'var(--red)';
+  const diffColor  = avgDiff >= 0 ? 'var(--green)' : 'var(--red)';
 
   el.innerHTML = `
     <div class="stat-box stat-box-primary">
@@ -298,12 +298,14 @@ function renderMomentum(games) {
   }
 
   const badges = last5.map(g => `
-    <div class="momentum-badge-wrap" ${g.game_code ? `onclick="location.href='game.html?id=${g.game_code}'" style="cursor:pointer"` : ''}>
-      <div class="momentum-badge ${g.result === 'W' ? 'win' : 'loss'}" title="${g.opponent} (${fmtDate(g._date)})">
+    <${g.game_code ? `a href="game.html?id=${g.game_code}"` : 'div'} class="momentum-badge-wrap"
+       title="${g.opponent} (${fmtDate(g._date)})"
+       aria-label="${g.result === 'W' ? 'Victorie' : 'Înfrângere'} cu ${g.opponent}, ${g.ubt_score}–${g.opp_score}, ${fmtDate(g._date)}">
+      <div class="momentum-badge ${g.result === 'W' ? 'win' : 'loss'}" aria-hidden="true">
         ${g.result === 'W' ? 'V' : 'Î'}
       </div>
-      <div class="momentum-opp">${g.opponent.split(' ')[0]}</div>
-    </div>
+      <div class="momentum-opp" aria-hidden="true">${g.opponent.split(' ')[0]}</div>
+    </${g.game_code ? 'a' : 'div'}>
   `).join('');
 
   el.innerHTML = `
@@ -317,7 +319,7 @@ function renderMomentum(games) {
       </div>
       <div class="momentum-right">
         <span class="team-momentum-summary">${wins} victorii din ultimele ${last5.length}</span>
-        <span class="momentum-streak">Streak: ${streakText}</span>
+        <span class="momentum-streak">Serie: ${streakText}</span>
       </div>
     </div>
     <div class="momentum-row">${badges}</div>
@@ -363,12 +365,12 @@ function renderScoreChart(games) {
       scales: {
         x: {
           grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 10 },
+          ticks: { color: '#848C99', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 10 },
         },
         y: {
           grid:  { color: 'rgba(255,255,255,0.04)' },
           ticks: {
-            color: '#6B7280', font: { size: 11 },
+            color: '#848C99', font: { size: 11 },
             callback: v => (v > 0 ? '+' : '') + v,
           },
         },
@@ -429,7 +431,7 @@ function renderWinCondition(games) {
 
   el.innerHTML = `
     <div class="team-card-header">
-      <p class="section-title" style="margin:0">🎯 Win condition</p>
+      <p class="section-title" style="margin:0">Condiția de victorie</p>
     </div>
     <div class="wincond-row">
       <div class="wincond-scenario">
@@ -480,7 +482,7 @@ function renderConsistency(games) {
 
   el.innerHTML = `
     <div class="team-card-header" style="margin-bottom:12px">
-      <p class="section-title" style="margin:0">📊 Consistența echipei</p>
+      <p class="section-title" style="margin:0">Consistența echipei</p>
     </div>
     <p class="consistency-subtitle">Cât de mult variază scorul de la meci la meci.</p>
     <div class="consistency-dual">
@@ -524,11 +526,11 @@ function renderCompTable(games) {
     });
 
   const tableRows = rows.map(r => {
-    const dc = r.avgDiff >= 0 ? 'var(--accent)' : 'var(--red)';
+    const dc = r.avgDiff >= 0 ? 'var(--green)' : 'var(--red-text)';
     return `<tr>
       <td><span class="comp-badge comp-${r.key}">${COMP_LABEL[r.key]}</span></td>
       <td>${r.gp}</td>
-      <td><span style="color:var(--green);font-weight:700">${r.w}</span> / <span style="color:var(--red)">${r.l}</span></td>
+      <td><span style="color:var(--green);font-weight:700">${r.w}</span> / <span style="color:var(--red-text)">${r.l}</span></td>
       <td>${r.avgScored.toFixed(1)}</td>
       <td>${r.avgAllowed.toFixed(1)}</td>
       <td style="color:${dc};font-weight:700">${fmtDiff(r.avgDiff)}</td>
@@ -536,11 +538,11 @@ function renderCompTable(games) {
   }).join('');
 
   const mobileCards = rows.map(r => {
-    const dc = r.avgDiff >= 0 ? 'var(--accent)' : 'var(--red)';
+    const dc = r.avgDiff >= 0 ? 'var(--green)' : 'var(--red-text)';
     return `<div class="comp-mobile-card">
       <div class="comp-mobile-header">
         <span class="comp-badge comp-${r.key}">${COMP_LABEL[r.key]}</span>
-        <span class="comp-mobile-gp">${r.gp} meciuri · <span style="color:var(--green)">${r.w}V</span> <span style="color:var(--red)">${r.l}Î</span></span>
+        <span class="comp-mobile-gp">${r.gp} meciuri · <span style="color:var(--green)">${r.w}V</span> <span style="color:var(--red-text)">${r.l}Î</span></span>
       </div>
       <div class="comp-mobile-stats">
         <div class="comp-mobile-stat">
