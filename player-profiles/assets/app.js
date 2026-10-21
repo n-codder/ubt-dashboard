@@ -554,8 +554,8 @@ function buildProfile(player, row, allRows, playerGames = [], detail = null, bio
     const allOpt = `<option value="null"${s === null ? ' selected' : ''}>Toate sezoanele la U-BT</option>`;
     seasonSelectorHTML = `
       <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-        <span style="font-size:12px;color:var(--text-secondary)">Sezon:</span>
-        <select class="sort-select" style="font-size:12px;padding:4px 8px"
+        <label for="player-season-select" style="font-size:12px;color:var(--text-secondary)">Sezon:</label>
+        <select id="player-season-select" class="sort-select" style="font-size:12px;padding:4px 8px"
                 onchange="filterBySeason(this.value === 'null' ? null : +this.value)">
           ${opts}
           ${allOpt}
@@ -599,7 +599,7 @@ function buildEvolutionSection() {
     <div class="chart-section" id="evolution-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
         <p class="section-title" style="margin:0">Evoluție per meci</p>
-        <select id="evolution-stat-select" class="sort-select" style="font-size:12px;padding:6px 10px">
+        <select id="evolution-stat-select" class="sort-select" aria-label="Statistica afișată" style="font-size:12px;padding:6px 10px">
           ${opts}
         </select>
       </div>
@@ -858,14 +858,12 @@ function buildBestGame(gamesForComp) {
     ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'Victorie' : 'Înfrângere'}</span>`
     : '';
 
-  const gameLink = best.game_code
-    ? `onclick="location.href='game.html?id=${best.game_code}'" style="cursor:pointer"`
-    : '';
+  const cardTag = best.game_code ? `a href="game.html?id=${best.game_code}"` : 'div';
 
   return `
     <div class="bestgame-section">
-      <p class="section-title" style="margin-bottom:14px">⭐ Cel mai bun meci</p>
-      <div class="bestgame-card" ${gameLink}>
+      <p class="section-title" style="margin-bottom:14px">Cel mai bun meci</p>
+      <${cardTag} class="bestgame-card">
         <div class="bestgame-primary">
           <div class="bestgame-pts">${pts}</div>
           <div class="bestgame-pts-lbl">puncte</div>
@@ -891,7 +889,7 @@ function buildBestGame(gamesForComp) {
             <span class="bestgame-sec-lbl">PIR</span>
           </div>
         </div>
-      </div>
+      </${best.game_code ? 'a' : 'div'}>
     </div>`;
 }
 

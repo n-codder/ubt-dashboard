@@ -379,12 +379,15 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .comp-filter-btn {
   cursor: pointer;
   font-family: var(--font);
-  transition: opacity .15s, box-shadow .15s, transform .1s;
-  opacity: .5;
+  transition: color .15s, background .15s, border-color .15s, box-shadow .15s, transform .1s;
 }
-.comp-filter-btn:hover  { opacity: .8; }
+.comp-filter-btn:not(.active) {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+.comp-filter-btn:not(.active):hover { color: var(--text-primary); }
 .comp-filter-btn.active {
-  opacity: 1;
   box-shadow: 0 0 0 2px currentColor;
   transform: scale(1.05);
 }
@@ -484,12 +487,12 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   margin-bottom: 6px;
 }
 .hero-meta:last-of-type { margin-bottom: 32px; }
-.hero-meta span { color: var(--accent); font-weight: 600; }
+.hero-meta span { color: var(--accent-text); font-weight: 600; }
 .hero-meta-nat { color: var(--text-secondary); font-size: 13px; }
-.hero-meta-gp-detail { color: var(--text-muted); font-size: 12px; font-weight: 400; }
+.hero-meta .hero-meta-gp-detail { color: var(--text-muted); font-size: 12px; font-weight: 400; }
 .hero-bio-pos { display: flex; align-items: center; gap: 8px; }
-.hero-jersey { font-family: var(--mono); font-size: 17px; font-weight: 800; color: var(--accent); }
-.hero-position { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.hero-jersey { font-family: var(--mono); font-size: 17px; font-weight: 800; color: var(--accent-text); }
+.hero-meta .hero-position { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
 .hero-bio-details { font-size: 13px; color: var(--text-secondary); }
 
 .hero-kpis {
@@ -601,13 +604,11 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .shooting-context {
   font-size: 11px;
   font-weight: 600;
-  opacity: 0.75;
 }
 .chart-subtitle {
   font-size: 12px;
   color: var(--text-muted);
   margin-bottom: 18px;
-  opacity: 0.8;
 }
 .shooting-label {
   font-size: 12px;
@@ -638,13 +639,15 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-family: var(--mono);
   text-align: right;
 }
-.val-good { color: var(--accent); }
+.val-good { color: var(--accent-text); }
 .val-avg  { color: var(--yellow); }
-.val-poor { color: var(--red); }
+.val-poor { color: var(--red-text); }
 .val-none { color: var(--text-muted); }
 
 /* ─── Best game ──────────────────────────────────────────────────────────── */
 .bestgame-section { margin-bottom: 28px; }
+a.bestgame-card { transition: border-color .15s; }
+a.bestgame-card:hover { border-color: var(--accent); }
 .bestgame-card {
   background: var(--bg-card);
   border: 1px solid var(--accent-border);
@@ -806,7 +809,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .comp-table-toggle button.active {
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .comp-table-toggle button:hover:not(.active) {
   color: var(--text-secondary);
@@ -851,7 +854,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .comp-table tr:hover td { background: var(--accent-soft); }
 .comp-table td.best-cell {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
 }
 
@@ -1322,7 +1325,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .comp-mobile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
 .comp-mobile-stat { display: flex; flex-direction: column; gap: 3px; }
 .comp-mobile-stat-val { font-size: 15px; font-weight: 700; font-family: var(--mono); color: var(--text-primary); line-height: 1; }
-.comp-mobile-stat-val.best { color: var(--accent); }
+.comp-mobile-stat-val.best { color: var(--accent-text); }
 .comp-mobile-stat-lbl { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
 @media (max-width: 768px) {
