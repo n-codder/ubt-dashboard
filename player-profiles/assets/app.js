@@ -256,7 +256,7 @@ function initIndex(rows) {
       rank > 3 || (sortKey !== 'player_name' && val === null)
     );
 
-    if (titleEl) titleEl.textContent = `⭐ TOP ${topN.length} – după ${label}`;
+    if (titleEl) titleEl.textContent = `Top ${topN.length} – după ${label}`;
 
     if (top3El) {
       top3El.innerHTML = topN.map(({ player, rank }) =>
@@ -320,19 +320,17 @@ function buildTop3Card(player, rank, row) {
   const name     = player.name;
 
   return `
-    <article class="top3-card${isFirst ? ' rank-1' : ''}"
-             onclick="location.href='player.html?id=${player.id}'"
-             role="button" tabindex="0" aria-label="${name}">
+    <a class="top3-card${isFirst ? ' rank-1' : ''}" href="player.html?id=${player.id}">
       <div class="top3-card-photo">
-        <img src="${photoRow.image_url || ''}" alt="${name}"
+        <img src="${photoRow.image_url || ''}" alt=""
              referrerpolicy="no-referrer"
              onload="this.style.opacity=1"
              onerror="this.closest('.top3-card-photo').classList.add('no-photo')"
              style="opacity:0;transition:opacity .3s">
         <div class="top3-card-photo-placeholder">${getInitials(name)}</div>
         <div class="top3-card-photo-gradient"></div>
-        <span class="top3-rank-badge${isFirst ? ' rank-1' : ''}">${rank}</span>
-        ${isFirst ? '<span class="top3-performer-badge">⭐ Top performer</span>' : ''}
+        <span class="top3-rank-badge${isFirst ? ' rank-1' : ''}" aria-label="Locul ${rank}">${rank}</span>
+        ${isFirst ? '<span class="top3-performer-badge">Cel mai bun</span>' : ''}
       </div>
       <div class="top3-card-content">
         <h3 class="top3-name" title="${name}">${name}</h3>
@@ -351,10 +349,10 @@ function buildTop3Card(player, rank, row) {
         ${totVal != null ? `<div class="top3-mobile-total">${meta.totalFmt(totVal)} total</div>` : ''}
         <div class="top3-see-profile">
           <span>Vezi profil complet</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-    </article>`;
+    </a>`;
 }
 
 function buildRosterCard(player, rank, row) {
@@ -365,12 +363,10 @@ function buildRosterCard(player, rank, row) {
   const name     = player.name;
 
   return `
-    <article class="roster-card"
-             onclick="location.href='player.html?id=${player.id}'"
-             role="button" tabindex="0" aria-label="${name}">
-      <span class="roster-rank">${rank}</span>
+    <a class="roster-card" href="player.html?id=${player.id}">
+      <span class="roster-rank" aria-label="Locul ${rank}">${rank}</span>
       <div class="roster-photo-wrap" id="rphoto-${player.id}">
-        <img src="${photoRow.image_url || ''}" alt="${name}"
+        <img src="${photoRow.image_url || ''}" alt=""
              referrerpolicy="no-referrer"
              onload="this.style.opacity=1"
              onerror="document.getElementById('rphoto-${player.id}').classList.add('no-photo')"
@@ -386,9 +382,9 @@ function buildRosterCard(player, rank, row) {
         </div>
       </div>
       <div class="roster-arrow">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
-    </article>`;
+    </a>`;
 }
 
 function updateCarouselDots(count) {
@@ -1038,12 +1034,12 @@ function buildEvolutionChart(games, statKey) {
       scales: {
         x: {
           grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#6B7280', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 9 },
+          ticks: { color: '#848C99', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 9 },
         },
         y: {
           grid:  { color: 'rgba(255,255,255,0.04)' },
           ticks: {
-            color: '#6B7280', font: { size: 11 },
+            color: '#848C99', font: { size: 11 },
             callback: v => Math.abs(v),
           },
         },

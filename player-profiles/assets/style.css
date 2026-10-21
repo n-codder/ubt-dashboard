@@ -955,7 +955,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .lb-badge-season {
   font-size: 14px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-text);
   font-family: var(--mono);
 }
 
@@ -1064,7 +1064,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   backdrop-filter: blur(4px);
 }
 .top3-rank-badge.rank-1 {
-  background: var(--accent);
+  background: var(--accent-dark);
   color: #fff;
   border-color: transparent;
 }
@@ -1074,9 +1074,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   position: absolute;
   bottom: 8px; left: 8px;
   z-index: 2;
-  background: rgba(194,106,46,0.82);
+  background: var(--accent-dark);
   color: #fff;
-  font-size: 8px; font-weight: 700;
+  font-size: 9px; font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding: 2px 7px;
@@ -1182,7 +1182,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 .roster-card:hover .roster-arrow { color: var(--accent); }
-.roster-card:hover .roster-stat-val { color: var(--accent); }
+.roster-card:hover .roster-stat-val { color: var(--accent-text); }
 .roster-rank {
   font-family: var(--mono); font-size: 11px; font-weight: 800;
   color: var(--text-secondary); min-width: 18px; text-align: center;
@@ -1208,9 +1208,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .roster-stat { display: flex; align-items: baseline; gap: 4px; margin-top: 3px; flex-wrap: wrap; }
-.roster-stat-val { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--accent); }
-.roster-stat-lbl { font-size: 9px; color: var(--text-muted); opacity: 0.75; white-space: nowrap; }
-.roster-total { font-size: 9px; color: var(--text-muted); opacity: 0.6; }
+.roster-stat-val { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--accent-text); }
+.roster-stat-lbl { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.roster-total { font-size: 10px; color: var(--text-muted); }
 .roster-arrow { color: var(--text-muted); flex-shrink: 0; transition: color .15s; }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -1269,13 +1269,12 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
     display: block;
     font-size: 11px;
     color: var(--text-muted);
-    opacity: 0.65;
     margin-top: 3px;
   }
 
   /* Roster */
   .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .roster-total { flex-basis: 100%; margin-top: 1px; opacity: 0.65; }
+  .roster-total { flex-basis: 100%; margin-top: 1px; }
   .roster-rank { min-width: 14px; }
   .roster-arrow { color: var(--text-secondary); }
 
