@@ -199,14 +199,14 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
     existing_keys: set = set()
     if OUTPUT_PATH.exists() and not full:
         df_existing = pd.read_csv(OUTPUT_PATH)
-        existing_keys = set(zip(df_existing["game_code"].astype(str), df_existing["competition"]))
+        existing_keys = set(zip(df_existing["game_code"].astype(str), df_existing["season"].astype(str), df_existing["competition"]))
         log.info(f"game_stats.csv existent: {len(df_existing)} rânduri, {len(existing_keys)} chei.")
 
     new_rows = []
     for _, game in df_games.iterrows():
         comp       = game["competition"]
         gc         = str(game["game_code"])
-        key        = (gc, comp)
+        key        = (gc, str(game["season"]), comp)
         ubt_home   = bool(game["ubt_is_home"]) if isinstance(game["ubt_is_home"], bool) else str(game["ubt_is_home"]).lower() == "true"
 
         if key in existing_keys:

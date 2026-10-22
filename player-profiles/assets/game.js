@@ -72,6 +72,7 @@ Promise.all([
   // Exact team box-score stats (may be null if not in game_stats.csv)
   const gameStats = allGameStats.find(r =>
     String(r.game_code) === String(gameCode) &&
+    String(r.season) === String(game.season) &&
     r.competition === game.competition
   ) || null;
 
