@@ -858,7 +858,7 @@ function buildBestGame(gamesForComp) {
     ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'Victorie' : 'Înfrângere'}</span>`
     : '';
 
-  const cardTag = best.game_code ? `a href="game.html?id=${best.game_code}"` : 'div';
+  const cardTag = best.game_code ? `a href="game.html?id=${best.game_code}&season=${best.season}"` : 'div';
 
   return `
     <div class="bestgame-section">

@@ -298,10 +298,8 @@ function renderMomentum(games) {
   }
 
   const badges = last5.map(g => `
-    <${g.game_code ? `a href="game.html?id=${g.game_code}"` : 'div'} class="momentum-badge-wrap"
-       title="${g.opponent} (${fmtDate(g._date)})"
-       aria-label="${g.result === 'W' ? 'Victorie' : 'Înfrângere'} cu ${g.opponent}, ${g.ubt_score}–${g.opp_score}, ${fmtDate(g._date)}">
-      <div class="momentum-badge ${g.result === 'W' ? 'win' : 'loss'}" aria-hidden="true">
+    <div class="momentum-badge-wrap" ${g.game_code ? `onclick="location.href='game.html?id=${g.game_code}&season=${g.season}'" style="cursor:pointer"` : ''}>
+      <div class="momentum-badge ${g.result === 'W' ? 'win' : 'loss'}" title="${g.opponent} (${fmtDate(g._date)})">
         ${g.result === 'W' ? 'V' : 'Î'}
       </div>
       <div class="momentum-opp" aria-hidden="true">${g.opponent.split(' ')[0]}</div>
@@ -360,7 +358,7 @@ function renderScoreChart(games) {
       onClick(evt, elements) {
         if (!elements.length) return;
         const g = sorted[elements[0].index];
-        if (g && g.game_code) window.location.href = `game.html?id=${g.game_code}`;
+        if (g && g.game_code) window.location.href = `game.html?id=${g.game_code}&season=${g.season}`;
       },
       scales: {
         x: {
