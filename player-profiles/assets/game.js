@@ -64,7 +64,10 @@ Promise.all([
     return;
   }
 
-  const gamePlayers = allPlayerGames.filter(r => String(r.game_code) === String(gameCode));
+  const gamePlayers = allPlayerGames.filter(r =>
+    String(r.game_code) === String(gameCode) &&
+    String(r.season) === String(game.season)
+  );
 
   // Exact team box-score stats (may be null if not in game_stats.csv)
   const gameStats = allGameStats.find(r =>
