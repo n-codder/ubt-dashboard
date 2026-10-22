@@ -33,7 +33,8 @@ function sum(arr, key) {
 }
 
 /* ─── URL param ────────────────────────────────────────────────────────────── */
-const gameCode = new URLSearchParams(location.search).get('id');
+const gameCode   = new URLSearchParams(location.search).get('id');
+const gameSeason = new URLSearchParams(location.search).get('season');
 
 /* ─── Load ─────────────────────────────────────────────────────────────────── */
 function parseCsv(url) {
@@ -49,7 +50,10 @@ Promise.all([
   parseCsv(PG_STATS_URL),
   parseCsv(GAME_STATS_URL).catch(() => []),
 ]).then(([allGames, allPlayerGames, allGameStats]) => {
-  const game = allGames.find(g => String(g.game_code) === String(gameCode));
+  const game = allGames.find(g =>
+    String(g.game_code) === String(gameCode) &&
+    (!gameSeason || String(g.season) === String(gameSeason))
+  );
 
   if (!game) {
     document.getElementById('game-page').innerHTML = `

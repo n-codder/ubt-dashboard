@@ -863,7 +863,7 @@ function buildBestGame(gamesForComp) {
     : '';
 
   const gameLink = best.game_code
-    ? `onclick="location.href='game.html?id=${best.game_code}'" style="cursor:pointer"`
+    ? `onclick="location.href='game.html?id=${best.game_code}&season=${best.season}'" style="cursor:pointer"`
     : '';
 
   return `
