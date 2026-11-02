@@ -265,6 +265,8 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
     return df_out
 
 
+run = fetch_team_stats
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fetch team box-score stats per game")
     parser.add_argument("--season", type=int, default=None,
