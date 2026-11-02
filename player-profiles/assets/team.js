@@ -310,7 +310,7 @@ function renderMomentum(games) {
         ${g.result === 'W' ? 'V' : 'Î'}
       </div>
       <div class="momentum-opp" aria-hidden="true">${oppShort(g.opponent)}</div>
-    </${g.game_code ? 'a' : 'div'}>
+    </div>
   `).join('');
 
   el.innerHTML = `
