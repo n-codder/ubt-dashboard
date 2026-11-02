@@ -1,4 +1,4 @@
-/* ─── Team page · team.js v2 ──────────────────────────────────────────────── */
+/* ─── Team page · team.js v6 ──────────────────────────────────────────────── */
 
 const GAMES_URL = `../data/processed/games_normalized.csv?v=${Date.now()}`;
 
@@ -30,6 +30,13 @@ function compKey(raw) {
 
 function toTitleCase(str) {
   return str.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, sep, c) => sep + c.toUpperCase());
+}
+
+function oppShort(name) {
+  const PREFIXES = new Set(['KK', 'BC', 'SC', 'FK', 'BK', 'SK', 'RK', 'NK', 'SD']);
+  const parts = name.split(' ');
+  const first = parts[0].toUpperCase();
+  return (PREFIXES.has(first) && parts.length > 1) ? parts[1] : parts[0];
 }
 
 function avg(arr) {
@@ -302,7 +309,7 @@ function renderMomentum(games) {
       <div class="momentum-badge ${g.result === 'W' ? 'win' : 'loss'}" title="${g.opponent} (${fmtDate(g._date)})">
         ${g.result === 'W' ? 'V' : 'Î'}
       </div>
-      <div class="momentum-opp" aria-hidden="true">${g.opponent.split(' ')[0]}</div>
+      <div class="momentum-opp" aria-hidden="true">${oppShort(g.opponent)}</div>
     </${g.game_code ? 'a' : 'div'}>
   `).join('');
 
