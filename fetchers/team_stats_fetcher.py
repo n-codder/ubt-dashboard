@@ -192,6 +192,20 @@ def _fetch_aba_game(match_id: int, ubt_is_home: bool, folder: str = "aba") -> di
     return result
 
 
+def _fill_pir(df: pd.DataFrame) -> pd.DataFrame:
+    """Completează eficiența (PIR) de echipă unde lipsește (ABA / LN: lineups nu o dau).
+    PIR = puncte + recuperări + pase + furate + capace + faulturi primite
+          − aruncări ratate − mingi pierdute − capace primite − faulturi comise.
+    Faulturile primite / capacele primite = faulturile / capacele adversarului.
+    Pe EuroCup formula reproduce valoarea oficială cu ±2."""
+    for us, them in (("ubt_", "opp_"), ("opp_", "ubt_")):
+        calc = (df[us + "pts"] + df[us + "reb"] + df[us + "ast"] + df[us + "stl"] + df[us + "blk"] + df[them + "fouls"]
+                - (df[us + "fg2a"] - df[us + "fg2m"]) - (df[us + "fg3a"] - df[us + "fg3m"]) - (df[us + "fta"] - df[us + "ftm"])
+                - df[us + "to"] - df[them + "blk"] - df[us + "fouls"])
+        df[us + "pir"] = df[us + "pir"].fillna(calc)
+    return df
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def fetch_team_stats(season: int | None = None, full: bool = False, competition: str | None = None) -> pd.DataFrame:
@@ -266,7 +280,13 @@ def fetch_team_stats(season: int | None = None, full: bool = False, competition:
     if not new_rows:
         log.info("Niciun rând nou de adăugat.")
         if OUTPUT_PATH.exists():
-            return pd.read_csv(OUTPUT_PATH)
+            df_out = pd.read_csv(OUTPUT_PATH)
+            missing = df_out[["ubt_pir", "opp_pir"]].isna().any(axis=1).sum()
+            if missing:
+                df_out = _fill_pir(df_out)
+                df_out.to_csv(OUTPUT_PATH, index=False)
+                log.info(f"Eficiență de echipă completată la {missing} meciuri.")
+            return df_out
         return pd.DataFrame()
 
     df_new = pd.DataFrame(new_rows)
@@ -281,6 +301,7 @@ def fetch_team_stats(season: int | None = None, full: bool = False, competition:
     else:
         df_out = df_new
 
+    df_out = _fill_pir(df_out)
     DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(OUTPUT_PATH, index=False)
     log.info(f"Exportat → {OUTPUT_PATH}  ({len(df_new)} rânduri noi, {len(df_out)} total)")
