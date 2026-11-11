@@ -27,6 +27,29 @@ ABA League,aba_league,2025,16086669,27,Regular Season,2026-05-05,KK Budućnost V
 ABA League,aba_league,2026,16943051,2,Regular Season,2026-10-03,BC Vienna,bc-vienna,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,95,,,False,95,84,BC Vienna,W,11
 ABA League,aba_league,2026,16943064,3,Regular Season,2026-10-11,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC Dubai,bc-dubai,85,92,,,True,85,92,BC Dubai,L,-7
 ABA League,aba_league,2026,16943080,4,Regular Season,2026-10-18,KK Spartak Office Shoes,kk-spartak-office-shoes-subotica,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,89,75,,,False,75,89,KK Spartak Office Shoes,L,-14
+ABA League,aba_league,2026,16943243,5,Regular Season,2026-10-23,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK SC Derby,kk-sc-derby,100,78,,,True,100,78,KK SC Derby,W,22
+ABA League,aba_league,2026,16943103,6,Regular Season,2026-11-02,KK Partizan,kk-partizan-mozzart-bet,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,97,77,,,False,77,97,KK Partizan,L,-20
+ABA League,aba_league,2026,16943114,7,Regular Season,2026-11-08,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,KK Bosna,kk-bosna-meridianbet,91,93,,,True,91,93,KK Bosna,L,-2
+EuroCup,eurocup,2024,8,1,REGULAR SEASON,2024-09-25,U-BT Cluj-Napoca,CLU,KK Cedevita Olimpija,LJU,86,93,BT-Arena,6100,True,86,93,KK Cedevita Olimpija,L,-7
+EuroCup,eurocup,2024,19,2,REGULAR SEASON,2024-10-02,Cosea JL Bourg-en-bresse,BOU,U-BT Cluj-Napoca,CLU,84,73,EKINOX,0,False,73,84,Cosea JL Bourg-en-bresse,L,-11
+EuroCup,eurocup,2024,27,3,REGULAR SEASON,2024-10-09,U-BT Cluj-Napoca,CLU,Valencia Basket,PAM,96,105,BT-Arena,9600,True,96,105,Valencia Basket,L,-9
+EuroCup,eurocup,2024,40,4,REGULAR SEASON,2024-10-15,Hamburg Towers,HAM,U-BT Cluj-Napoca,CLU,67,103,INSELPARK ARENA,1571,False,103,67,Hamburg Towers,W,36
+EuroCup,eurocup,2024,46,5,REGULAR SEASON,2024-10-23,Hapoel Bank Yahav Jerusalem,JER,U-BT Cluj-Napoca,CLU,73,81,SAMOKOV ARENA,120,False,81,73,Hapoel Bank Yahav Jerusalem,W,8
+EuroCup,eurocup,2024,60,6,REGULAR SEASON,2024-10-30,U-BT Cluj-Napoca,CLU,Umana Reyer Venezia,VNC,86,78,BT-Arena,7623,True,86,78,Umana Reyer Venezia,W,8
+EuroCup,eurocup,2024,67,7,REGULAR SEASON,2024-11-06,Turk Telekom Ankara,TTK,U-BT Cluj-Napoca,CLU,99,80,ANKARA SPOR SALONU,4461,False,80,99,Turk Telekom Ankara,L,-19
+EuroCup,eurocup,2024,79,8,REGULAR SEASON,2024-11-13,U-BT Cluj-Napoca,CLU,7bet-lietkabelis Panevezys,LKB,100,93,BT-Arena,7150,True,100,93,7bet-lietkabelis Panevezys,W,7
+EuroCup,eurocup,2024,88,9,REGULAR SEASON,2024-11-28,U-BT Cluj-Napoca,CLU,Aris Midea Thessaloniki,ARI,87,79,BT-Arena,8113,True,87,79,Aris Midea Thessaloniki,W,8
+EuroCup,eurocup,2024,98,10,REGULAR SEASON,2024-12-03,KK Cedevita Olimpija,LJU,U-BT Cluj-Napoca,CLU,103,96,ARENA STOZICE,1433,False,96,103,KK Cedevita Olimpija,L,-7
+EuroCup,eurocup,2024,109,11,REGULAR SEASON,2024-12-11,U-BT Cluj-Napoca,CLU,Cosea JL Bourg-en-bresse,BOU,89,86,BT-Arena,7023,True,89,86,Cosea JL Bourg-en-bresse,W,3
+EuroCup,eurocup,2024,117,12,REGULAR SEASON,2024-12-18,Valencia Basket,PAM,U-BT Cluj-Napoca,CLU,108,80,PABELLON FUENTE DE SAN LUIS,4576,False,80,108,Valencia Basket,L,-28
+EuroCup,eurocup,2024,130,13,REGULAR SEASON,2025-01-03,U-BT Cluj-Napoca,CLU,Hamburg Towers,HAM,104,83,BT-Arena,6112,True,104,83,Hamburg Towers,W,21
+EuroCup,eurocup,2024,136,14,REGULAR SEASON,2025-01-08,U-BT Cluj-Napoca,CLU,Hapoel Bank Yahav Jerusalem,JER,79,91,BT-Arena,5995,True,79,91,Hapoel Bank Yahav Jerusalem,L,-12
+EuroCup,eurocup,2024,150,15,REGULAR SEASON,2025-01-15,Umana Reyer Venezia,VNC,U-BT Cluj-Napoca,CLU,77,88,PALASPORT TALIERCIO,2728,False,88,77,Umana Reyer Venezia,W,11
+EuroCup,eurocup,2024,157,16,REGULAR SEASON,2025-01-21,U-BT Cluj-Napoca,CLU,Turk Telekom Ankara,TTK,94,81,BT-Arena,9877,True,94,81,Turk Telekom Ankara,W,13
+EuroCup,eurocup,2024,169,17,REGULAR SEASON,2025-01-29,7bet-lietkabelis Panevezys,LKB,U-BT Cluj-Napoca,CLU,92,91,KALNAPILIO ARENA,1491,False,91,92,7bet-lietkabelis Panevezys,L,-1
+EuroCup,eurocup,2024,178,18,REGULAR SEASON,2025-02-05,Aris Midea Thessaloniki,ARI,U-BT Cluj-Napoca,CLU,74,89,PALAIS DE SPORTS,568,False,89,74,Aris Midea Thessaloniki,W,15
+EuroCup,eurocup,2024,184,19,EIGHTHFINALS,2025-03-04,Wolves Twinsbet Vilnius,WOL,U-BT Cluj-Napoca,CLU,99,100,TWINSBET ARENA,4416,False,100,99,Wolves Twinsbet Vilnius,W,1
+EuroCup,eurocup,2024,187,20,QUARTERFINALS,2025-03-12,Valencia Basket,PAM,U-BT Cluj-Napoca,CLU,98,74,PABELLON FUENTE DE SAN LUIS,6722,False,74,98,Valencia Basket,L,-24
 EuroCup,eurocup,2025,2,1,REGULAR SEASON,2025-10-01,U-BT Cluj-Napoca,CLU,Bahçeşehir Koleji,BAH,90,98,BT ARENA,6881,True,90,98,Bahçeşehir Koleji,L,-8
 EuroCup,eurocup,2025,15,2,REGULAR SEASON,2025-10-07,Klaipėdos Neptūnas,KLA,U-BT Cluj-Napoca,CLU,102,107,SVYTURIO ARENA,2087,False,107,102,Klaipėdos Neptūnas,W,5
 EuroCup,eurocup,2025,21,3,REGULAR SEASON,2025-10-15,Śląsk Wrocław,WRO,U-BT Cluj-Napoca,CLU,94,93,HALA ORBITA,2417,False,93,94,Śląsk Wrocław,L,-1
@@ -51,9 +74,49 @@ EuroCup,eurocup,2026,6,1,REGULAR SEASON,2026-09-30,Maxima Roma,MRO,U-BT Cluj-Nap
 EuroCup,eurocup,2026,23,2,REGULAR SEASON,2026-10-07,U-BT Cluj-Napoca,CLU,Umana Reyer Venezia,VNC,98,92,BT ARENA,6147,True,98,92,Umana Reyer Venezia,W,6
 EuroCup,eurocup,2026,39,3,REGULAR SEASON,2026-10-14,Siauliai Basketball,SIA,U-BT Cluj-Napoca,CLU,75,94,SIAULIAI ARENA,2041,False,94,75,Siauliai Basketball,W,19
 EuroCup,eurocup,2026,54,4,REGULAR SEASON,2026-10-21,U-BT Cluj-Napoca,CLU,London Lions,LLI,72,89,BT ARENA,5987,True,72,89,London Lions,L,-17
-Liga Națională,liga_nationala,2024,16035738,27,Regular Season,2026-04-24,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,101,,,False,101,94,BC CSU Sibiu,W,7
-Liga Națională,liga_nationala,2024,16035742,27,Regular Season,2026-04-26,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,87,,,False,87,84,BC CSU Sibiu,W,3
-Liga Națională,liga_nationala,2024,16035735,27,Regular Season,2026-04-30,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC CSU Sibiu,bc-csu-sibiu,87,65,,,True,87,65,BC CSU Sibiu,W,22
+EuroCup,eurocup,2026,72,5,REGULAR SEASON,2026-10-27,Skyliners Frankfurt,FRA,U-BT Cluj-Napoca,CLU,113,97,SUWAG ENERGIE ARENA,1145,False,97,113,Skyliners Frankfurt,L,-16
+EuroCup,eurocup,2026,85,6,REGULAR SEASON,2026-11-05,La Laguna Tenerife,TNF,U-BT Cluj-Napoca,CLU,113,73,PABELLON SANTIAGO MARTIN,2769,False,73,113,La Laguna Tenerife,L,-40
+EuroCup,eurocup,2026,104,7,REGULAR SEASON,2026-11-10,U-BT Cluj-Napoca,CLU,Turk Telekom Ankara,TTK,81,89,BT ARENA,5802,True,81,89,Turk Telekom Ankara,L,-8
+Liga Națională,liga_nationala,2024,12850814,2,Regular Season,2024-09-29,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Oradea,csm-oradea,61,72,,,True,61,72,CSM Oradea,L,-11
+Liga Națională,liga_nationala,2024,12850810,3,Regular Season,2024-10-04,CSO Voluntari,cso-voluntari,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,87,102,,,False,102,87,CSO Voluntari,W,15
+Liga Națională,liga_nationala,2024,12850798,4,Regular Season,2024-10-12,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,FC Argeș Basketball,fc-arges-basketball,81,67,,,True,81,67,FC Argeș Basketball,W,14
+Liga Națională,liga_nationala,2024,12850797,5,Regular Season,2024-10-19,CSM Constanța,csm-abc-athletic-constanta,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,85,114,,,False,114,85,CSM Constanța,W,29
+Liga Națională,liga_nationala,2024,12850664,6,Regular Season,2024-10-26,CS Rapid București,cs-rapid-bucuresti,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,75,91,,,False,91,75,CS Rapid București,W,16
+Liga Națională,liga_nationala,2024,12850778,7,Regular Season,2024-11-02,CS Dinamo București,cs-dinamo-bucuresti,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,93,88,,,False,88,93,CS Dinamo București,L,-5
+Liga Națională,liga_nationala,2024,12850769,8,Regular Season,2024-11-09,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC CSU Sibiu,bc-csu-sibiu,100,60,,,True,100,60,BC CSU Sibiu,W,40
+Liga Națională,liga_nationala,2024,12850760,9,Regular Season,2024-11-15,CSM Corona Brașov,csm-corona-brasov,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,67,107,,,False,107,67,CSM Corona Brașov,W,40
+Liga Națională,liga_nationala,2024,12850743,11,Regular Season,2024-12-07,SCM Universitatea Craiova,scm-universitatea-craiova,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,73,65,,,False,65,73,SCM Universitatea Craiova,L,-8
+Liga Națională,liga_nationala,2024,12850619,12,Regular Season,2024-12-14,CSM Galați,csm-galati,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,77,109,,,False,109,77,CSM Galați,W,32
+Liga Națională,liga_nationala,2024,12850728,13,Regular Season,2024-12-21,CS SCM Politehnica Timișoara,scm-ohma-mozzart-bet-timisoara,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,85,90,,,False,90,85,CS SCM Politehnica Timișoara,W,5
+Liga Națională,liga_nationala,2024,13184433,10,Regular Season,2024-12-23,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Târgu Mureș,csm-targu-mures,102,73,,,True,102,73,CSM Târgu Mureș,W,29
+Liga Națională,liga_nationala,2024,12850709,16,Regular Season,2025-01-11,CSM Baschet Petrolul Ploiești,csm-baschet-petrolul-ploiesti,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,66,88,,,False,88,66,CSM Baschet Petrolul Ploiești,W,22
+Liga Națională,liga_nationala,2024,12850691,17,Regular Season,2025-01-18,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,73,92,,,False,92,73,CSM Oradea,W,19
+Liga Națională,liga_nationala,2024,12850693,18,Regular Season,2025-01-25,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSO Voluntari,cso-voluntari,104,84,,,True,104,84,CSO Voluntari,W,20
+Liga Națională,liga_nationala,2024,12850680,19,Regular Season,2025-02-01,FC Argeș Basketball,fc-arges-basketball,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,75,84,,,False,84,75,FC Argeș Basketball,W,9
+Liga Națională,liga_nationala,2024,12850675,20,Regular Season,2025-02-08,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Constanța,csm-abc-athletic-constanta,108,59,,,True,108,59,CSM Constanța,W,49
+Liga Națională,liga_nationala,2024,12850710,15,Regular Season,2025-02-26,CSA Steaua București,csa-steaua-bucuresti,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,90,116,,,False,116,90,CSA Steaua București,W,26
+Liga Națională,liga_nationala,2024,12850781,21,Regular Season,2025-03-01,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CS Rapid București,cs-rapid-bucuresti,92,65,,,True,92,65,CS Rapid București,W,27
+Liga Națională,liga_nationala,2024,12850658,22,Regular Season,2025-03-08,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CS Dinamo București,cs-dinamo-bucuresti,99,79,,,True,99,79,CS Dinamo București,W,20
+Liga Națională,liga_nationala,2024,12850649,23,Regular Season,2025-03-16,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,88,83,,,False,83,88,BC CSU Sibiu,L,-5
+Liga Națională,liga_nationala,2024,12848434,1,Regular Season,2025-03-19,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Baschet Petrolul Ploiești,csm-baschet-petrolul-ploiesti,100,64,,,True,100,64,CSM Baschet Petrolul Ploiești,W,36
+Liga Națională,liga_nationala,2024,12850643,24,Regular Season,2025-03-22,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Corona Brașov,csm-corona-brasov,96,84,,,True,96,84,CSM Corona Brașov,W,12
+Liga Națională,liga_nationala,2024,12850640,25,Regular Season,2025-03-29,CSM Târgu Mureș,csm-targu-mures,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,102,104,,,False,104,102,CSM Târgu Mureș,W,2
+Liga Națională,liga_nationala,2024,12850626,26,Regular Season,2025-04-05,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,SCM Universitatea Craiova,scm-universitatea-craiova,98,79,,,True,98,79,SCM Universitatea Craiova,W,19
+Liga Națională,liga_nationala,2024,12850737,27,Regular Season,2025-04-12,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Galați,csm-galati,109,78,,,True,109,78,CSM Galați,W,31
+Liga Națională,liga_nationala,2024,12850612,28,Regular Season,2025-04-18,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CS SCM Politehnica Timișoara,scm-ohma-mozzart-bet-timisoara,70,74,,,True,70,74,CS SCM Politehnica Timișoara,L,-4
+Liga Națională,liga_nationala,2024,12850605,29,Regular Season,2025-04-23,Clubul Sportiv Vâlcea 1924,cs-valcea-1924-rm-valcea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,88,92,,,False,92,88,Clubul Sportiv Vâlcea 1924,W,4
+Liga Națională,liga_nationala,2024,12850590,30,Regular Season,2025-04-26,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSA Steaua București,csa-steaua-bucuresti,95,86,,,True,95,86,CSA Steaua București,W,9
+Liga Națională,liga_nationala,2024,13831216,27,Regular Season,2025-05-01,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CS Rapid București,cs-rapid-bucuresti,107,66,,,True,107,66,CS Rapid București,W,41
+Liga Națională,liga_nationala,2024,13826733,27,Regular Season,2025-05-03,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CS Rapid București,cs-rapid-bucuresti,86,67,,,True,86,67,CS Rapid București,W,19
+Liga Națională,liga_nationala,2024,13826730,27,Regular Season,2025-05-07,CS Rapid București,cs-rapid-bucuresti,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,73,91,,,False,91,73,CS Rapid București,W,18
+Liga Națională,liga_nationala,2024,13876771,28,Regular Season,2025-05-16,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,Clubul Sportiv Vâlcea 1924,cs-valcea-1924-rm-valcea,105,85,,,True,105,85,Clubul Sportiv Vâlcea 1924,W,20
+Liga Națională,liga_nationala,2024,13876770,28,Regular Season,2025-05-18,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,Clubul Sportiv Vâlcea 1924,cs-valcea-1924-rm-valcea,93,73,,,True,93,73,Clubul Sportiv Vâlcea 1924,W,20
+Liga Națională,liga_nationala,2024,13876772,28,Regular Season,2025-05-22,Clubul Sportiv Vâlcea 1924,cs-valcea-1924-rm-valcea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,77,81,,,False,81,77,Clubul Sportiv Vâlcea 1924,W,4
+Liga Națională,liga_nationala,2024,13950784,29,Regular Season,2025-06-02,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,82,89,,,False,89,82,CSM Oradea,W,7
+Liga Națională,liga_nationala,2024,13950785,29,Regular Season,2025-06-04,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,80,68,,,False,68,80,CSM Oradea,L,-12
+Liga Națională,liga_nationala,2024,13950786,29,Regular Season,2025-06-08,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Oradea,csm-oradea,68,74,,,True,68,74,CSM Oradea,L,-6
+Liga Națională,liga_nationala,2024,13973389,29,Regular Season,2025-06-10,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,CSM Oradea,csm-oradea,92,83,,,True,92,83,CSM Oradea,W,9
+Liga Națională,liga_nationala,2024,13992883,29,Regular Season,2025-06-13,CSM Oradea,csm-oradea,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,67,68,,,False,68,67,CSM Oradea,W,1
 Liga Națională,liga_nationala,2025,16035738,27,Regular Season,2026-04-24,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,94,101,,,False,101,94,BC CSU Sibiu,W,7
 Liga Națională,liga_nationala,2025,16035742,27,Regular Season,2026-04-26,BC CSU Sibiu,bc-csu-sibiu,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,84,87,,,False,87,84,BC CSU Sibiu,W,3
 Liga Națională,liga_nationala,2025,16035735,27,Regular Season,2026-04-30,U-BT Cluj-Napoca,u-banca-transilvania-cluj-napoca,BC CSU Sibiu,bc-csu-sibiu,87,65,,,True,87,65,BC CSU Sibiu,W,22

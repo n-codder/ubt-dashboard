@@ -70,6 +70,7 @@ TEAM_CANONICAL: dict[str, str] = {
     "ubt cluj-napoca":                               "U-BT Cluj-Napoca",
 
     # EuroCup — versiuni UPPERCASE din euroleague_api
+    "la laguna tenerife":                            "La Laguna Tenerife",
     "bahcesehir college istanbul":                   "Bahçeşehir Koleji",
     "neptunas klaipeda":                             "Klaipėdos Neptūnas",
     "klaipedos neptunas":                            "Klaipėdos Neptūnas",
@@ -230,6 +231,19 @@ def normalize_games(df: pd.DataFrame) -> pd.DataFrame:
     extra = [c for c in df.columns if c not in GAMES_COLUMN_ORDER]
     final_cols = [c for c in GAMES_COLUMN_ORDER if c in df.columns] + extra
     df = df[final_cols]
+
+    # games.csv poate conține același meci LN de două ori (rânduri vechi deja
+    # etichetate cu anul de început + rânduri noi cu anul de final). După shift,
+    # cele vechi ajung pe sezonul anterior (ex. „2024” pentru 2025–2026).
+    # La LN game_code e un id global (unic), deci păstrăm eticheta cea mai nouă.
+    # (La EuroCup game_code se reia de la 1 în fiecare sezon — nu deduplicăm acolo.)
+    before = len(df)
+    df.sort_values(["competition_key", "game_code", "season"], inplace=True)
+    is_ln = df["competition_key"] == "liga_nationala"
+    dup = is_ln & df.duplicated(subset=["competition_key", "game_code"], keep="last")
+    df = df[~dup]
+    if len(df) != before:
+        log.info(f"  games: {before - len(df)} duplicate (același game_code) eliminate")
 
     df.sort_values(["competition_key", "season", "date"], inplace=True)
     df.reset_index(drop=True, inplace=True)

@@ -1,1208 +1,239 @@
-/* ─── Config ─────────────────────────────────────────────────────────────── */
-// Relative path works on GitHub Pages and locally via http-server.
-// For GitHub raw: 'https://raw.githubusercontent.com/USER/REPO/main/data/processed/...'
-const _CB = Date.now();
-const DATA_URL          = `../data/processed/player_stats_normalized.csv?v=${_CB}`;
-const PER_GAME_DATA_URL = `../data/processed/player_stats_per_game_normalized.csv?v=${_CB}`;
-const DETAILS_URL       = `../data/processed/player_details.csv?v=${_CB}`;
-const BIO_URL           = `../config/player_bio.json?v=${_CB}`;
+/* Profil jucător — cap, cifre pe meci, aruncări, loc în echipă, evoluție, meciuri, competiții, istoric */
+(function () {
+  'use strict';
+  const U = UBT;
+  const page = U.mount(null);
+  const back = U.backTarget('players');
+  const NAT = { Lithuania: 'Lituania', Romania: 'România', 'United States': 'SUA', USA: 'SUA', Serbia: 'Serbia', Croatia: 'Croația', Montenegro: 'Muntenegru', Estonia: 'Estonia', 'Dominican Republic': 'Rep. Dominicană', Ghana: 'Ghana', Slovenia: 'Slovenia', 'Bosnia and Herzegovina': 'Bosnia', Greece: 'Grecia', France: 'Franța', Spain: 'Spania', Italy: 'Italia', Germany: 'Germania', Canada: 'Canada', Israel: 'Israel', Latvia: 'Letonia', Ukraine: 'Ucraina' };
+  const F = ['games_played', 'minutes', 'points', 'rebounds', 'assists', 'steals', 'blocks', 'turnovers', 'fg2_made', 'fg2_att', 'fg3_made', 'fg3_att', 'ft_made', 'ft_att', 'pir'];
+  const agg = rows => { const o = {}; F.forEach(k => { o[k] = rows.reduce((t, r) => t + (+r[k] || 0), 0); }); return o; };
+  const ST = { rows: [], games: {}, pg: [], bio: {}, det: {}, pid: new URLSearchParams(location.search).get('id'), season: null, comp: 'all' };
+  let BARS = [];
 
-const COMP_LABEL = {
-  eurocup:        'EuroCup',
-  aba_league:     'ABA League',
-  liga_nationala: 'Liga Națională',
-  cupa_romaniei:  'Cupa României',
-};
-
-const COMP_ORDER = ['eurocup', 'aba_league', 'liga_nationala', 'cupa_romaniei'];
-
-const EVOLUTION_STATS = [
-  { key: 'points',        label: 'Puncte' },
-  { key: 'pir',           label: 'PIR' },
-  { key: 'assists',       label: 'Pase decisive' },
-  { key: 'rebounds',      label: 'Recuperări' },
-  { key: 'steals',        label: 'Intercepții' },
-  { key: 'blocks',        label: 'Blocaje' },
-  { key: 'minutes_played',label: 'Minute jucate' },
-  { key: 'turnovers',     label: 'Pierderi' },
-];
-
-/* Maps sort key → per-game and total stat metadata for the player card */
-const SORT_META = {
-  points_pg:   { pgKey: 'points_pg',  pgLabel: 'Puncte/meci',   pgFmt: v => fmt(v),
-                 totalKey: 'points',   totalLabel: 'Total puncte',   totalFmt: v => fmt(v, 0) },
-  pir:         { pgKey: null,          pgLabel: 'PIR/meci',       pgFmt: v => fmt(v),
-                 totalKey: 'pir',      totalLabel: 'PIR total',       totalFmt: v => fmt(v, 0) },
-  assists_pg:  { pgKey: 'assists_pg', pgLabel: 'Pase/meci',      pgFmt: v => fmt(v),
-                 totalKey: 'assists',  totalLabel: 'Total pase',       totalFmt: v => fmt(v, 0) },
-  rebounds_pg: { pgKey: 'rebounds_pg',pgLabel: 'Reb/meci',       pgFmt: v => fmt(v),
-                 totalKey: 'rebounds', totalLabel: 'Total recuperări', totalFmt: v => fmt(v, 0) },
-  blocks_pg:   { pgKey: 'blocks_pg',  pgLabel: 'Blocaje/meci',   pgFmt: v => fmt(v),
-                 totalKey: 'blocks',   totalLabel: 'Total blocaje',    totalFmt: v => fmt(v, 0) },
-  minutes_pg:  { pgKey: 'minutes_pg', pgLabel: 'Min/meci',       pgFmt: v => fmtMinutes(v),
-                 totalKey: 'minutes',  totalLabel: 'Min total',        totalFmt: v => fmt(v, 0) },
-  fg2_pct:     { pgKey: 'fg2_pct',   pgLabel: 'FG2%',           pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
-                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
-  fg3_pct:     { pgKey: 'fg3_pct',   pgLabel: 'FG3%',           pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
-                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
-  ft_pct:      { pgKey: 'ft_pct',    pgLabel: 'FT%',            pgFmt: v => v != null ? fmtPct(v)+'%' : '—',
-                 totalKey: null,       totalLabel: '',                 totalFmt: () => '' },
-  player_name: { pgKey: 'points_pg',  pgLabel: 'Puncte/meci',   pgFmt: v => fmt(v),
-                 totalKey: 'points',   totalLabel: 'Total puncte',   totalFmt: v => fmt(v, 0) },
-};
-
-const COMP_COLOR = {
-  eurocup:        '#f6a800',
-  aba_league:     '#00b4d8',
-  liga_nationala: '#e63946',
-  cupa_romaniei:  '#7c3aed',
-};
-
-/* ─── Data loading ───────────────────────────────────────────────────────── */
-async function loadData() {
-  return new Promise((resolve, reject) => {
-    Papa.parse(DATA_URL, {
-      download:      true,
-      header:        true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: ({ data }) => resolve(data.filter(r => r.player_id)),
-      error:    (err)      => reject(err),
-    });
-  });
-}
-
-/* ─── Helpers ────────────────────────────────────────────────────────────── */
-function formatName(name) {
-  if (!name) return '';
-  // "RUSSELL, DARON" → "Daron Russell"
-  if (name.includes(',') && name === name.toUpperCase()) {
-    const [last, first] = name.split(',').map(s => s.trim().toLowerCase()
-      .replace(/\b(\w)/g, c => c.toUpperCase()));
-    return `${first} ${last}`;
-  }
-  return name;
-}
-
-function getInitials(name) {
-  return name.split(' ').slice(0, 2)
-    .map(w => w[0]?.toUpperCase() || '')
-    .join('');
-}
-
-function fmt(val, dec = 1) {
-  if (val === null || val === undefined || isNaN(val)) return '—';
-  return Number(val).toFixed(dec);
-}
-
-function fmtMinutes(val) {
-  if (val === null || val === undefined || isNaN(val)) return '—';
-  const totalSec = Math.round(Number(val) * 60);
-  const m = Math.floor(totalSec / 60);
-  const s = totalSec % 60;
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
-
-function fmtPct(val) {
-  if (val === null || val === undefined || isNaN(val)) return null;
-  return (Number(val) * 100).toFixed(1);
-}
-
-function seasonLabel(s) {
-  if (s == null) return 'Toate sezoanele';
-  const n = +s;
-  return `${n}–${n + 1}`;
-}
-
-function shootClass(pct, fg3 = false, ft = false) {
-  if (pct === null) return { bar: 'bar-none', val: 'val-none' };
-  if (ft)  return pct >= 78 ? { bar: 'bar-good', val: 'val-good' }
-                : pct >= 65 ? { bar: 'bar-avg',  val: 'val-avg'  }
-                            : { bar: 'bar-poor', val: 'val-poor' };
-  if (fg3) return pct >= 38 ? { bar: 'bar-good', val: 'val-good' }
-                : pct >= 30 ? { bar: 'bar-avg',  val: 'val-avg'  }
-                            : { bar: 'bar-poor', val: 'val-poor' };
-  /* fg2 */    return pct >= 55 ? { bar: 'bar-good', val: 'val-good' }
-                : pct >= 45 ? { bar: 'bar-avg',  val: 'val-avg'  }
-                            : { bar: 'bar-poor', val: 'val-poor' };
-}
-
-/* Group rows by player_id → Map<id, {id, name, rows}> */
-function groupPlayers(rows) {
-  const map = new Map();
-  for (const row of rows) {
-    const name = formatName(row.player_name);
-    if (!map.has(row.player_id)) map.set(row.player_id, { id: row.player_id, name, rows: [] });
-    map.get(row.player_id).rows.push({ ...row, player_name: name });
-  }
-  return [...map.values()];
-}
-
-/* Pick the "primary" row (highest-priority competition with most games) */
-function primaryRow(player) {
-  for (const key of COMP_ORDER) {
-    const r = player.rows.find(r => r.competition_key === key);
-    if (r) return r;
-  }
-  return player.rows[0];
-}
-
-/* ─── Leaderboard — Index page ───────────────────────────────────────────── */
-let _activeSortKey = 'points_pg';
-
-const SORT_LABELS = {
-  points_pg:   'Puncte pe meci',
-  pir:         'Eficiență (PIR)',
-  assists_pg:  'Pase decisive pe meci',
-  rebounds_pg: 'Recuperări pe meci',
-  blocks_pg:   'Blocaje pe meci',
-  minutes_pg:  'Minute jucate pe meci',
-  fg2_pct:     'Procent din 2',
-  fg3_pct:     'Procent din 3',
-  ft_pct:      'Procent la libere',
-  player_name: 'Nume A–Z',
-};
-
-function initIndex(rows) {
-  // Season setup
-  const allSeasons = [...new Set(rows.map(r => r.season).filter(Boolean))].map(Number).sort((a, b) => b - a);
-  let activeSeason  = allSeasons[0] ?? null;
-
-  // Populate #season-select
-  const seasonSel = document.getElementById('season-select');
-  if (seasonSel && allSeasons.length > 0) {
-    seasonSel.innerHTML = allSeasons.map(s =>
-      `<option value="${s}">${seasonLabel(s)}</option>`
-    ).join('');
-    seasonSel.value = String(activeSeason);
-  }
-
-  const seasonEl = document.getElementById('info-season');
-  function updateBadge() {
-    if (seasonEl) seasonEl.textContent = `Sezon: ${seasonLabel(activeSeason)}`;
-  }
-  updateBadge();
-
-  function seasonRows() {
-    return activeSeason == null ? rows : rows.filter(r => +r.season === activeSeason);
-  }
-
-  let filteredComp = 'all';
-  let sortKey      = 'points_pg';
-  _activeSortKey   = sortKey;
-
-  const top3El    = document.getElementById('top3-grid');
-  const rosterEl  = document.getElementById('roster-grid');
-  const countEl   = document.getElementById('results-count');
-  const sortLblEl = document.getElementById('sort-label');
-  const titleEl   = document.getElementById('top3-title');
-
-  function getStatRow(p) {
-    return filteredComp !== 'all'
-      ? (p.rows.find(r => r.competition_key === filteredComp) || primaryRow(p))
-      : (p.rows.length > 1 ? _aggregateRows(p.rows) : primaryRow(p));
-  }
-
-  function sorted() {
-    const sRows   = seasonRows();
-    const players = groupPlayers(sRows);
-    return players
-      .filter(p => filteredComp === 'all' || p.rows.some(r => r.competition_key === filteredComp))
-      .sort((a, b) => {
-        if (sortKey === 'player_name') return a.name.localeCompare(b.name);
-        const getVal = p => {
-          const r = getStatRow(p);
-          return sortKey === 'pir' ? (r.pir ?? -Infinity) : (r[sortKey] ?? -Infinity);
-        };
-        return getVal(b) - getVal(a);
-      });
-  }
-
-  // Assigns proper ranks — tied values get the same rank number.
-  // Players with null/missing stat for the active sort key are pushed to rest.
-  function rankedList(list) {
-    if (sortKey === 'player_name') {
-      return list.map((p, i) => ({ player: p, rank: i + 1, val: p.name }));
-    }
-    const getVal = p => {
-      const r = getStatRow(p);
-      const v = sortKey === 'pir' ? r.pir : r[sortKey];
-      return (v != null && !isNaN(v)) ? +v : null;
-    };
-    const withVals = list.map(p => ({ player: p, val: getVal(p) }));
-    let rank = 1;
-    return withVals.map(({ player, val }, i) => {
-      if (i > 0 && val !== withVals[i - 1].val) rank = i + 1;
-      return { player, rank, val };
-    });
-  }
-
-  function render() {
-    _activeSortKey = sortKey;
-    const list  = sorted();
-    const label = SORT_LABELS[sortKey] || sortKey;
-
-    if (countEl)   countEl.textContent   = `${list.length} jucători în lot`;
-    if (sortLblEl) sortLblEl.textContent = sortKey === 'player_name'
-      ? 'Sortare curentă: Nume A–Z'
-      : `Sortare curentă: ${label} (descrescător)`;
-
-    const ranked = rankedList(list);
-    // Top section: rank ≤ 3 with actual data (null-stat players go to rest)
-    const topN = ranked.filter(({ rank, val }) =>
-      rank <= 3 && (sortKey === 'player_name' || val !== null)
-    );
-    const rest = ranked.filter(({ rank, val }) =>
-      rank > 3 || (sortKey !== 'player_name' && val === null)
-    );
-
-    if (titleEl) titleEl.textContent = `Top ${topN.length} – după ${label}`;
-
-    if (top3El) {
-      top3El.innerHTML = topN.map(({ player, rank }) =>
-        buildTop3Card(player, rank, getStatRow(player))
-      ).join('');
-      top3El.querySelector('.top3-card')?.classList.add('is-active');
-    }
-    updateCarouselDots(topN.length);
-    if (rosterEl) rosterEl.innerHTML = rest.map(({ player, rank }) =>
-      buildRosterCard(player, rank, getStatRow(player))
-    ).join('');
-  }
-
-  // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filteredComp = btn.dataset.comp;
-      render();
-    });
-  });
-
-  // Sort
-  document.getElementById('sort-select').addEventListener('change', e => {
-    sortKey = e.target.value;
+  Promise.all([U.csv(U.URLS.players), U.csv(U.URLS.games), U.csv(U.URLS.perGame), U.csv(U.URLS.details), U.json(U.URLS.bio)]).then(([st, gt, pt, dt, bj]) => {
+    ST.rows = st.map(r => ({ ...r, season: String(r.season), player_id: String(r.player_id) }));
+    U.normGames(gt).forEach(g => { ST.games[g.key] = g; });
+    ST.pg = pt.map(r => ({ ...r, season: String(r.season), player_id: String(r.player_id) }));
+    dt.forEach(o => { ST.det[o.player_id] = o; });
+    ST.bio = (bj && bj.players) || {};
     render();
   });
 
-  // Season
-  if (seasonSel) {
-    seasonSel.addEventListener('change', e => {
-      activeSeason = +e.target.value;
-      updateBadge();
-      render();
-    });
-  }
-
-  render();
-
-  // Carousel scroll → update dots + active card (added once)
-  const grid = document.getElementById('top3-grid');
-  if (grid) {
-    grid.addEventListener('scroll', () => {
-      const cards = grid.querySelectorAll('.top3-card');
-      if (!cards.length) return;
-      const cardWidth = cards[0].offsetWidth + 12; // gap 12px
-      const idx = Math.min(Math.round(grid.scrollLeft / cardWidth), cards.length - 1);
-      document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-      cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
-    }, { passive: true });
-  }
-}
-
-function buildTop3Card(player, rank, row) {
-  const isFirst  = rank === 1;
-  const meta     = SORT_META[_activeSortKey] || SORT_META['points_pg'];
-  const pgVal    = meta.pgKey ? row[meta.pgKey] : (row.pir != null ? row.pir / (row.games_played || 1) : null);
-  const totVal   = row[meta.totalKey];
-  const photoRow = primaryRow(player);
-  const name     = player.name;
-
-  return `
-    <a class="top3-card${isFirst ? ' rank-1' : ''}" href="player.html?id=${player.id}">
-      <div class="top3-card-photo">
-        <img src="${photoRow.image_url || ''}" alt=""
-             referrerpolicy="no-referrer"
-             onload="this.style.opacity=1"
-             onerror="this.closest('.top3-card-photo').classList.add('no-photo')"
-             style="opacity:0;transition:opacity .3s">
-        <div class="top3-card-photo-placeholder">${getInitials(name)}</div>
-        <div class="top3-card-photo-gradient"></div>
-        <span class="top3-rank-badge${isFirst ? ' rank-1' : ''}" aria-label="Locul ${rank}">${rank}</span>
-        ${isFirst ? '<span class="top3-performer-badge">Cel mai bun</span>' : ''}
-      </div>
-      <div class="top3-card-content">
-        <h3 class="top3-name" title="${name}">${name}</h3>
-        <div class="top3-stats-row">
-          <div class="top3-stat-block">
-            <span class="top3-stat-val">${meta.pgFmt(pgVal)}</span>
-            <span class="top3-stat-lbl">${meta.pgLabel}</span>
-          </div>
-          ${totVal != null ? `
-          <div class="top3-stats-sep"></div>
-          <div class="top3-stat-block top3-stat-block--total">
-            <span class="top3-total-val">${meta.totalFmt(totVal)}</span>
-            <span class="top3-stat-lbl">${meta.totalLabel}</span>
-          </div>` : ''}
-        </div>
-        ${totVal != null ? `<div class="top3-mobile-total">${meta.totalFmt(totVal)} total</div>` : ''}
-        <div class="top3-see-profile">
-          <span>Vezi profil complet</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </a>`;
-}
-
-function buildRosterCard(player, rank, row) {
-  const meta     = SORT_META[_activeSortKey] || SORT_META['points_pg'];
-  const pgVal    = meta.pgKey ? row[meta.pgKey] : (row.pir != null ? row.pir / (row.games_played || 1) : null);
-  const totVal   = row[meta.totalKey];
-  const photoRow = primaryRow(player);
-  const name     = player.name;
-
-  return `
-    <a class="roster-card" href="player.html?id=${player.id}">
-      <span class="roster-rank" aria-label="Locul ${rank}">${rank}</span>
-      <div class="roster-photo-wrap" id="rphoto-${player.id}">
-        <img src="${photoRow.image_url || ''}" alt=""
-             referrerpolicy="no-referrer"
-             onload="this.style.opacity=1"
-             onerror="document.getElementById('rphoto-${player.id}').classList.add('no-photo')"
-             style="opacity:0;transition:opacity .3s">
-        <div class="roster-photo-placeholder">${getInitials(name)}</div>
-      </div>
-      <div class="roster-info">
-        <div class="roster-name" title="${name}">${name}</div>
-        <div class="roster-stat">
-          <span class="roster-stat-val">${meta.pgFmt(pgVal)}</span>
-          <span class="roster-stat-lbl">${meta.pgLabel}</span>
-          ${totVal != null ? `<span class="roster-total">${meta.totalFmt(totVal)} total</span>` : ''}
-        </div>
-      </div>
-      <div class="roster-arrow">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </div>
-    </a>`;
-}
-
-function updateCarouselDots(count) {
-  const el = document.getElementById('carousel-dots');
-  if (!el) return;
-  el.innerHTML = Array.from({ length: count }, (_, i) =>
-    `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="scrollTop3To(${i})" aria-label="Card ${i + 1}"></button>`
-  ).join('');
-}
-
-function scrollTop3To(index) {
-  const grid = document.getElementById('top3-grid');
-  if (!grid) return;
-  const cards = grid.querySelectorAll('.top3-card');
-  if (!cards[index]) return;
-  const cardWidth = cards[0].offsetWidth + 16;
-  grid.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
-  document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === index));
-}
-
-/* ─── Player page ────────────────────────────────────────────────────────── */
-async function initPlayer(rows) {
-  const params   = new URLSearchParams(location.search);
-  const playerId = Number(params.get('id'));
-  const players  = groupPlayers(rows);
-  const player   = players.find(p => p.id === playerId);
-
-  if (!player) {
-    document.getElementById('player-content').innerHTML = `
-      <div class="error-state">
-        <div class="error-state-title">Jucătorul nu a fost găsit</div>
-        <div class="error-state-sub">ID: ${playerId}</div>
-      </div>`;
-    return;
-  }
-
-  const row = primaryRow(player);
-
-  // Set active season to newest the player appears in
-  const playerSeasons = [...new Set(player.rows.map(r => r.season).filter(Boolean))]
-    .map(Number).sort((a, b) => b - a);
-  _activePlayerSeason = playerSeasons[0] ?? null;
-
-  // Load per-game data, player details and bio in parallel
-  let perGameRows = [], detailRows = [], bioData = { players: {} };
-  try {
-    [perGameRows, detailRows, bioData] = await Promise.all([loadPerGame(), loadDetails(), loadBio()]);
-  } catch (_) { /* optional */ }
-
-  const playerGames = perGameRows
-    .filter(r => Number(r.player_id) === playerId)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  const detail = detailRows.find(d => Number(d.player_id) === playerId) || null;
-  const bio    = bioData.players?.[String(playerId)] || null;
-
-  document.title = `${player.name} · U-BT Stats`;
-  document.getElementById('player-content').innerHTML = buildProfile(player, row, rows, playerGames, detail, bio);
-
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
-      el.style.width = el.dataset.pct + '%';
-    });
-    const { sRows, sGames } = _playerCtx;
-    const multiComp  = sRows.length > 1;
-    const activeRow  = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
-    const initGames  = multiComp ? sGames : sGames.filter(g => g.competition_key === (sRows[0]?.competition_key || row.competition_key));
-    buildRadarChart(document.getElementById('radar-chart'), groupPlayers(rows), { rows: [activeRow] });
-    if (initGames.length >= 2) buildEvolutionChart(initGames, 'points');
-  });
-}
-
-function loadPerGame() {
-  return new Promise((resolve, reject) => {
-    Papa.parse(PER_GAME_DATA_URL, {
-      download: true, header: true, dynamicTyping: true, skipEmptyLines: true,
-      complete: ({ data }) => resolve(data.filter(r => r.player_id)),
-      error: reject,
-    });
-  });
-}
-
-function loadDetails() {
-  return new Promise((resolve) => {
-    Papa.parse(DETAILS_URL, {
-      download: true, header: true, dynamicTyping: true, skipEmptyLines: true,
-      complete: ({ data }) => resolve(data),
-      error: () => resolve([]),
-    });
-  });
-}
-
-function loadBio() {
-  return fetch(BIO_URL)
-    .then(r => r.ok ? r.json() : { players: {} })
-    .catch(() => ({ players: {} }));
-}
-
-function buildProfile(player, row, allRows, playerGames = [], detail = null, bio = null) {
-  // Season filtering
-  const s      = _activePlayerSeason;
-  const sRows  = s === null ? player.rows : player.rows.filter(r => +r.season === s);
-  const sGames = s === null ? playerGames : playerGames.filter(g => +g.season === s);
-
-  const multiComp = sRows.length > 1;
-
-  _playerCtx     = { player, allRows, playerGames, detail, bio, sRows, sGames };
-  _activeCompKey = multiComp ? 'all' : (sRows[0]?.competition_key || row.competition_key);
-
-  const activeRow = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
-
-  const name = player.name;
-  const compKeys = [...new Set(sRows.map(r => r.competition_key))]
-    .sort((a, b) => COMP_ORDER.indexOf(a) - COMP_ORDER.indexOf(b));
-
-  // Butoane filtre: "Toate" + fiecare competiție
-  const allBtn = multiComp
-    ? `<button class="comp-badge comp-filter-btn comp-all${_activeCompKey === 'all' ? ' active' : ''}"
-               data-key="all" onclick="filterByComp('all')">Toate</button>`
-    : '';
-  const compBtns = compKeys.map(key => {
-    const isActive = key === _activeCompKey;
-    return `<button class="comp-badge comp-filter-btn comp-${key}${isActive ? ' active' : ''}"
-                    data-key="${key}" onclick="filterByComp('${key}')">${COMP_LABEL[key] ?? key}</button>`;
-  }).join('');
-  const badges = allBtn + compBtns;
-
-  // Total meciuri + breakdown per competiție (din sezonul activ)
-  const totalGP = sRows.reduce((sum, r) => sum + (Number(r.games_played) || 0), 0);
-  const gpBreakdown = sRows
-    .filter(r => Number(r.games_played) > 0)
-    .sort((a, b) => COMP_ORDER.indexOf(a.competition_key) - COMP_ORDER.indexOf(b.competition_key))
-    .map(r => `${Number(r.games_played)} în ${COMP_LABEL[r.competition_key] ?? r.competition_key}`)
-    .join(' · ');
-
-  // Vârstă + bio
-  const currentYear = new Date().getFullYear();
-  let age = null;
-  if (bio?.birth_date) {
-    const born = new Date(bio.birth_date);
-    const thisYearBday = new Date(currentYear, born.getMonth(), born.getDate());
-    age = currentYear - born.getFullYear() - (new Date() < thisYearBday ? 1 : 0);
-  } else if (detail?.birth_year) {
-    age = currentYear - detail.birth_year;
-  }
-
-  const bioLine1 = bio
-    ? [bio.jersey != null ? `#${bio.jersey}` : null, bio.position || null].filter(Boolean)
-    : null;
-  const bioLine2 = bio
-    ? [bio.height_cm ? `${bio.height_cm} cm` : null, age ? `${age} ani` : null, bio.birthplace || null].filter(Boolean)
-    : [detail?.nationality_name || null, age ? `${age} ani` : (detail?.birth_year ? `n. ${detail.birth_year}` : null)].filter(Boolean);
-  const natLine = !bio && bioLine2.length ? bioLine2.join(' · ') : null;
-
-  const gamesForComp = multiComp ? sGames : sGames.filter(g => g.competition_key === _activeCompKey);
-
-  // Season selector (only if player has multiple seasons at U-BT)
-  const playerSeasons = [...new Set(player.rows.map(r => r.season).filter(Boolean))]
-    .map(Number).sort((a, b) => b - a);
-  const hasMultiSeason = playerSeasons.length > 1;
-
-  let seasonSelectorHTML = '';
-  if (hasMultiSeason) {
-    const opts = playerSeasons.map(ps =>
-      `<option value="${ps}"${ps === s ? ' selected' : ''}>${seasonLabel(ps)}</option>`
-    ).join('');
-    const allOpt = `<option value="null"${s === null ? ' selected' : ''}>Toate sezoanele la U-BT</option>`;
-    seasonSelectorHTML = `
-      <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-        <label for="player-season-select" style="font-size:12px;color:var(--text-secondary)">Sezon:</label>
-        <select id="player-season-select" class="sort-select" style="font-size:12px;padding:4px 8px"
-                onchange="filterBySeason(this.value === 'null' ? null : +this.value)">
-          ${opts}
-          ${allOpt}
-        </select>
-      </div>`;
-  }
-
-  return `
-    <!-- Hero (static) -->
-    <div class="player-hero">
-      <div class="hero-photo-wrap" id="hero-photo">
-        <img src="${activeRow.image_url || row.image_url || ''}" alt="${name}"
-             onload="this.style.opacity=1"
-             onerror="document.getElementById('hero-photo').classList.add('no-photo')"
-             style="opacity:0;transition:opacity .4s">
-        <div class="hero-photo-placeholder">${getInitials(name)}</div>
-      </div>
-      <div class="hero-content">
-        <h1 class="hero-name">${name}</h1>
-        ${bioLine1?.length ? `<p class="hero-meta hero-bio-pos"><span class="hero-jersey">${bioLine1[0]}</span>${bioLine1[1] ? `<span class="hero-position">${bioLine1[1]}</span>` : ''}</p>` : ''}
-        ${bio && bioLine2?.length ? `<p class="hero-meta hero-bio-details">${bioLine2.join(' · ')}</p>` : (natLine ? `<p class="hero-meta hero-meta-nat">${natLine}</p>` : '')}
-        <p class="hero-meta"><span>${totalGP}</span> meciuri${gpBreakdown ? ` <span class="hero-meta-gp-detail">(${gpBreakdown})</span>` : ''}</p>
-        ${seasonSelectorHTML}
-        ${multiComp ? `
-        <div class="hero-comp-filter">
-          <span class="hero-comp-filter-label">Performanțe pe competiție:</span>
-          <div class="hero-comps">${badges}</div>
-        </div>` : `<div class="hero-comps" style="margin-top:12px">${badges}</div>`}
-      </div>
-    </div>
-
-    <!-- Stats body (re-rendered on filter change) -->
-    <div id="stats-body">${_renderStatsBody(activeRow, player, gamesForComp, sRows)}</div>`;
-}
-
-function buildEvolutionSection() {
-  const opts = EVOLUTION_STATS.map(s =>
-    `<option value="${s.key}">${s.label}</option>`
-  ).join('');
-  return `
-    <div class="chart-section" id="evolution-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <p class="section-title" style="margin:0">Evoluție per meci</p>
-        <select id="evolution-stat-select" class="sort-select" aria-label="Statistica afișată" style="font-size:12px;padding:6px 10px">
-          ${opts}
-        </select>
-      </div>
-      <div class="evo-legend">
-        <div class="evo-legend-item"><div class="evo-dot" style="background:rgba(34,197,94,0.8)"></div> Victorie</div>
-        <div class="evo-legend-item"><div class="evo-dot" style="background:rgba(230,57,70,0.8)"></div> Înfrângere</div>
-        <div class="evo-legend-item" style="margin-left:auto;color:rgba(246,168,0,0.7)">--- Medie sezon</div>
-      </div>
-      <div class="chart-wrap" style="height:260px">
-        <canvas id="evolution-chart"></canvas>
-      </div>
-    </div>`;
-}
-
-let _compTableMode = 'medii';
-
-function toggleCompTableMode() {
-  _compTableMode = _compTableMode === 'medii' ? 'total' : 'medii';
-  if (_playerCtx) {
-    const section = document.querySelector('.comp-table-section');
-    if (section) section.outerHTML = buildCompTable(_playerCtx.sRows);
-  }
-}
-
-function buildCompTable(rows) {
-  const sorted = [...rows].sort((a, b) => COMP_ORDER.indexOf(a.competition_key) - COMP_ORDER.indexOf(b.competition_key));
-  const mode = _compTableMode;
-
-  const COLS_MEDII = [
-    { label: 'Meciuri jucate', fmt: r => r.games_played ?? '—' },
-    { label: 'Puncte',         fmt: r => fmt(r.points_pg) },
-    { label: 'Recuperări',     fmt: r => fmt(r.rebounds_pg) },
-    { label: 'Pase decisive',  fmt: r => fmt(r.assists_pg) },
-    { label: 'Intercepții',    fmt: r => fmt(r.steals_pg) },
-    { label: 'Blocaje',        fmt: r => fmt(r.blocks_pg) },
-    { label: 'Eficiență',      fmt: r => fmt(r.pir != null ? r.pir / (r.games_played || 1) : null) },
-    { label: 'Minute/meci',    fmt: r => fmtMinutes(r.minutes_pg) },
-    { label: 'FG2%',           fmt: r => { const p = fmtPct(r.fg2_pct); return p !== null ? p + '%' : '—'; } },
-    { label: 'FG3%',           fmt: r => { const p = fmtPct(r.fg3_pct); return p !== null ? p + '%' : '—'; } },
-    { label: 'FT%',            fmt: r => { const p = fmtPct(r.ft_pct);  return p !== null ? p + '%' : '—'; } },
-  ];
-
-  const COLS_TOTAL = [
-    { label: 'Meciuri jucate', fmt: r => r.games_played ?? '—' },
-    { label: 'Puncte',         fmt: r => fmt(r.points, 0) },
-    { label: 'Recuperări',     fmt: r => fmt(r.rebounds, 0) },
-    { label: 'Pase decisive',  fmt: r => fmt(r.assists, 0) },
-    { label: 'Intercepții',    fmt: r => fmt(r.steals, 0) },
-    { label: 'Blocaje',        fmt: r => fmt(r.blocks, 0) },
-    { label: 'Eficiență',      fmt: r => fmt(r.pir, 0) },
-    { label: 'Minute jucate',  fmt: r => fmtMinutes(r.minutes != null ? r.minutes : (r.minutes_pg != null ? r.minutes_pg * (r.games_played || 1) : null)) },
-    { label: 'FG2%',           fmt: r => { const p = fmtPct(r.fg2_pct); return p !== null ? p + '%' : '—'; } },
-    { label: 'FG3%',           fmt: r => { const p = fmtPct(r.fg3_pct); return p !== null ? p + '%' : '—'; } },
-    { label: 'FT%',            fmt: r => { const p = fmtPct(r.ft_pct);  return p !== null ? p + '%' : '—'; } },
-  ];
-
-  const cols = mode === 'medii' ? COLS_MEDII : COLS_TOTAL;
-  const headers = cols.map(c => `<th>${c.label}</th>`).join('');
-
-  // Find best numeric value per column for highlighting
-  const colMaxes = cols.map(col =>
-    Math.max(...sorted.map(r => parseFloat(col.fmt(r)) || 0))
-  );
-
-  const trows = sorted.map(r => {
-    const cells = cols.map((c, ci) => {
-      const val = c.fmt(r);
-      const num = parseFloat(val) || 0;
-      const isBest = sorted.length > 1 && num > 0 && num === colMaxes[ci];
-      return `<td${isBest ? ' class="best-cell"' : ''}>${val}</td>`;
-    }).join('');
-    return `<tr>
-      <td><span class="comp-badge comp-${r.competition_key}">${COMP_LABEL[r.competition_key] ?? r.competition_key}</span></td>
-      ${cells}
-    </tr>`;
-  }).join('');
-
-  // Mobile cards (one per competition)
-  const mobileCards = sorted.map(r => {
-    const gp = r.games_played ?? '—';
-    const mStats = mode === 'medii' ? [
-      { val: fmt(r.points_pg,   1), lbl: 'Puncte/meci' },
-      { val: fmt(r.rebounds_pg, 1), lbl: 'Rec./meci'   },
-      { val: fmt(r.assists_pg,  1), lbl: 'Pase/meci'   },
-      { val: fmt(r.steals_pg,   1), lbl: 'Intercepții' },
-      { val: fmt(r.blocks_pg,   1), lbl: 'Blocaje'     },
-      { val: fmtMinutes(r.minutes_pg), lbl: 'Minute/meci' },
-    ] : [
-      { val: fmt(r.points,   0), lbl: 'Puncte'      },
-      { val: fmt(r.rebounds, 0), lbl: 'Recuperări'  },
-      { val: fmt(r.assists,  0), lbl: 'Pase'        },
-      { val: fmt(r.steals,   0), lbl: 'Intercepții' },
-      { val: fmt(r.blocks,   0), lbl: 'Blocaje'     },
-      { val: fmtMinutes(r.minutes != null ? r.minutes : (r.minutes_pg != null ? r.minutes_pg * (r.games_played || 1) : null)), lbl: 'Minute' },
-    ];
-    return `
-      <div class="comp-mobile-card">
-        <div class="comp-mobile-header">
-          <span class="comp-badge comp-${r.competition_key}">${COMP_LABEL[r.competition_key] ?? r.competition_key}</span>
-          <span class="comp-mobile-gp">${gp} meciuri</span>
-        </div>
-        <div class="comp-mobile-stats">
-          ${mStats.map(s => `
-            <div class="comp-mobile-stat">
-              <span class="comp-mobile-stat-val">${s.val}</span>
-              <span class="comp-mobile-stat-lbl">${s.lbl}</span>
-            </div>`).join('')}
-        </div>
-      </div>`;
-  }).join('');
-
-  return `
-    <div class="comp-table-section">
-      <div class="comp-table-header">
-        <p class="section-title" style="margin:0">Pe competiție</p>
-        <div class="comp-table-toggle">
-          <button class="${mode === 'medii' ? 'active' : ''}" onclick="toggleCompTableMode()">Medii</button>
-          <button class="${mode === 'total' ? 'active' : ''}" onclick="toggleCompTableMode()">Total</button>
-        </div>
-      </div>
-      <div class="comp-table-scroll">
-        <table class="comp-table">
-          <thead><tr><th>Competiție</th>${headers}</tr></thead>
-          <tbody>${trows}</tbody>
-        </table>
-      </div>
-      <div class="comp-mobile-cards">${mobileCards}</div>
-    </div>`;
-}
-
-/* ─── Player page state ──────────────────────────────────────────────────── */
-let _playerCtx          = null;   // { player, allRows, playerGames, detail, sRows, sGames }
-let _activeCompKey      = null;
-let _activePlayerSeason = null;   // null = toate sezoanele, number = sezon specific
-
-/* Agregă toate rândurile unui jucător într-un singur rând combinat */
-function _aggregateRows(rows) {
-  const gp = rows.reduce((s, r) => s + (Number(r.games_played) || 0), 0);
-  if (!gp) return rows[0];
-  const sum = k => rows.reduce((s, r) => s + (Number(r[k]) || 0), 0);
-  const fg2m = sum('fg2_made'), fg2a = sum('fg2_att');
-  const fg3m = sum('fg3_made'), fg3a = sum('fg3_att');
-  const ftm  = sum('ft_made'),  fta  = sum('ft_att');
-  const pts  = sum('points'),   reb  = sum('rebounds');
-  const ast  = sum('assists'),  stl  = sum('steals');
-  const blk  = sum('blocks'),   to   = sum('turnovers');
-  const min  = sum('minutes');
-  return {
-    ...rows[0],
-    competition_key: 'all',
-    competition:     'Toate',
-    games_played:    gp,
-    points: pts, rebounds: reb, assists: ast, steals: stl,
-    blocks: blk, turnovers: to, minutes: min,
-    fg2_made: fg2m, fg2_att: fg2a,
-    fg3_made: fg3m, fg3_att: fg3a,
-    ft_made:  ftm,  ft_att:  fta,
-    points_pg:    +(pts / gp).toFixed(2),
-    rebounds_pg:  +(reb / gp).toFixed(2),
-    assists_pg:   +(ast / gp).toFixed(2),
-    steals_pg:    +(stl / gp).toFixed(2),
-    blocks_pg:    +(blk / gp).toFixed(2),
-    turnovers_pg: +(to  / gp).toFixed(2),
-    minutes_pg:   min / gp,
-    fg2_pct: fg2a ? +(fg2m / fg2a).toFixed(3) : null,
-    fg3_pct: fg3a ? +(fg3m / fg3a).toFixed(3) : null,
-    ft_pct:  fta  ? +(ftm  / fta ).toFixed(3) : null,
-    pir: rows.reduce((s, r) => s + (Number(r.pir) || 0), 0),
-  };
-}
-
-function filterByComp(key) {
-  if (!_playerCtx || _activeCompKey === key) return;
-  _activeCompKey = key;
-
-  // Update badge active state
-  document.querySelectorAll('.comp-filter-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.key === key);
-  });
-
-  const { sRows, sGames } = _playerCtx;
-
-  const row = key === 'all'
-    ? _aggregateRows(sRows)
-    : (sRows.find(r => r.competition_key === key) || sRows[0] || primaryRow(_playerCtx.player));
-
-  // Re-render stats body
-  const gamesForComp = key === 'all'
-    ? sGames
-    : sGames.filter(g => g.competition_key === key);
-  document.getElementById('stats-body').innerHTML =
-    _renderStatsBody(row, _playerCtx.player, gamesForComp, sRows);
-
-  // Re-animate bars + rebuild charts
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
-      el.style.width = '0';
-      requestAnimationFrame(() => { el.style.width = el.dataset.pct + '%'; });
-    });
-    const compRows = key === 'all'
-      ? _playerCtx.allRows
-      : _playerCtx.allRows.filter(r => r.competition_key === key);
-    buildRadarChart(document.getElementById('radar-chart'), groupPlayers(compRows), { rows: [row] });
-    if (gamesForComp.length >= 2) buildEvolutionChart(gamesForComp, 'points');
-  });
-}
-
-function filterBySeason(season) {
-  if (!_playerCtx) return;
-  _activePlayerSeason = season;
-  const { player, allRows, playerGames, detail, bio } = _playerCtx;
-  const row = primaryRow(player);
-  document.getElementById('player-content').innerHTML = buildProfile(player, row, allRows, playerGames, detail, bio);
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.shooting-bar-fill[data-pct]').forEach(el => {
-      el.style.width = el.dataset.pct + '%';
-    });
-    const { sRows, sGames } = _playerCtx;
-    const multiComp = sRows.length > 1;
-    const activeRow = multiComp ? _aggregateRows(sRows) : (sRows[0] || row);
-    const initGames = multiComp ? sGames : sGames.filter(g => g.competition_key === (sRows[0]?.competition_key || row.competition_key));
-    buildRadarChart(document.getElementById('radar-chart'), groupPlayers(allRows), { rows: [activeRow] });
-    if (initGames.length >= 2) buildEvolutionChart(initGames, 'points');
-  });
-}
-
-
-function shootLabel(cls) {
-  if (cls.bar === 'bar-good') return 'Excelent';
-  if (cls.bar === 'bar-avg')  return 'Bun';
-  if (cls.bar === 'bar-poor') return 'Slab';
-  return '';
-}
-
-function buildBestGame(gamesForComp) {
-  if (!gamesForComp || !gamesForComp.length) return '';
-  const best = gamesForComp.reduce((b, g) => {
-    const pts = Number(g.points) || 0, bPts = Number(b.points) || 0;
-    if (pts > bPts) return g;
-    if (pts === bPts) return (Number(g.pir) || 0) > (Number(b.pir) || 0) ? g : b;
-    return b;
-  }, gamesForComp[0]);
-
-  const pts  = Number(best.points)   || 0;
-  const reb  = Number(best.rebounds) || 0;
-  const ast  = Number(best.assists)  || 0;
-  const pir  = Number(best.pir)      || 0;
-  const opp  = best.opponent         || '—';
-  const comp = best.competition_key  || '';
-  const compLabel = COMP_LABEL[comp] || comp || '—';
-  const date = best.date
-    ? new Date(best.date).toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' })
-    : '';
-  const res = best.result || '';
-  const resBadge = res
-    ? `<span class="bestgame-result ${res === 'W' ? 'win' : 'loss'}">${res === 'W' ? 'Victorie' : 'Înfrângere'}</span>`
-    : '';
-
-  const cardTag = best.game_code ? `a href="game.html?id=${best.game_code}&season=${best.season}"` : 'div';
-
-  return `
-    <div class="bestgame-section">
-      <p class="section-title" style="margin-bottom:14px">Cel mai bun meci</p>
-      <${cardTag} class="bestgame-card">
-        <div class="bestgame-primary">
-          <div class="bestgame-pts">${pts}</div>
-          <div class="bestgame-pts-lbl">puncte</div>
-        </div>
-        <div class="bestgame-info">
-          <div class="bestgame-opp">vs <strong>${opp}</strong> ${resBadge}</div>
-          <div class="bestgame-meta-row">
-            <span class="comp-badge comp-${comp}">${compLabel}</span>
-            ${date ? `<span class="bestgame-date">${date}</span>` : ''}
-          </div>
-        </div>
-        <div class="bestgame-secondary">
-          <div class="bestgame-sec-item">
-            <span class="bestgame-sec-val">${reb}</span>
-            <span class="bestgame-sec-lbl">Rec.</span>
-          </div>
-          <div class="bestgame-sec-item">
-            <span class="bestgame-sec-val">${ast}</span>
-            <span class="bestgame-sec-lbl">Pase</span>
-          </div>
-          <div class="bestgame-sec-item">
-            <span class="bestgame-sec-val">${pir}</span>
-            <span class="bestgame-sec-lbl">PIR</span>
-          </div>
-        </div>
-      </${best.game_code ? 'a' : 'div'}>
-    </div>`;
-}
-
-function _renderStatsBody(row, player, gamesForComp, sRows = null) {
-  const gp = Number(row.games_played) || 0;
-
-  // Stat boxes — Puncte/meci is primary (larger, accented)
-  const statDefs = [
-    { v: fmt(row.points_pg,   1), l: 'Puncte / meci',         primary: true  },
-    { v: fmt(row.rebounds_pg, 1), l: 'Recuperări / meci',     primary: false },
-    { v: fmt(row.assists_pg,  1), l: 'Pase decisive / meci',  primary: false },
-    { v: fmt(row.steals_pg,   1), l: 'Intercepţii / meci',    primary: false },
-    { v: fmt(row.blocks_pg,   1), l: 'Blocaje / meci',        primary: false },
-    { v: fmt(row.turnovers_pg,1), l: 'Mingi pierdute / meci', primary: false },
-    { v: fmtMinutes(row.minutes_pg), l: 'Minute / meci',      primary: false },
-    { v: gp,                         l: 'Meciuri jucate',     primary: false },
-    { v: row.pir !== null && row.pir !== undefined && !isNaN(row.pir)
-        ? fmt(row.pir / (gp || 1), 1) : '—',                  l: 'PIR / meci', primary: false },
-  ];
-  const statBoxes = statDefs.map(s => `
-    <div class="stat-box${s.primary ? ' stat-box-primary' : ''}">
-      <div class="stat-box-value">${s.v}</div>
-      <div class="stat-box-label">${s.l}</div>
-    </div>`).join('');
-
-  // Shooting rows — with context label
-  const shootingRows = [
-    { label: 'FG2%', rawPct: fmtPct(row.fg2_pct), maxPct: 70,  cls: shootClass(fmtPct(row.fg2_pct) !== null ? +fmtPct(row.fg2_pct) : null) },
-    { label: 'FG3%', rawPct: fmtPct(row.fg3_pct), maxPct: 60,  cls: shootClass(fmtPct(row.fg3_pct) !== null ? +fmtPct(row.fg3_pct) : null, true) },
-    { label: 'FT%',  rawPct: fmtPct(row.ft_pct),  maxPct: 100, cls: shootClass(fmtPct(row.ft_pct)  !== null ? +fmtPct(row.ft_pct)  : null, false, true) },
-  ].map(({ label, rawPct, maxPct, cls }) => {
-    const pct    = rawPct !== null ? +rawPct : null;
-    const barPct = pct !== null ? Math.min((pct / maxPct) * 100, 100) : 0;
-    const ctxLbl = shootLabel(cls);
-    return `
-      <div class="shooting-row">
-        <span class="shooting-label">${label}</span>
-        <div class="shooting-bar-track">
-          <div class="shooting-bar-fill ${cls.bar}" data-pct="${barPct}"></div>
-        </div>
-        <div class="shooting-value-wrap">
-          <span class="shooting-value ${cls.val}">${pct !== null ? pct.toFixed(1) + '%' : '—'}</span>
-          ${ctxLbl ? `<span class="shooting-context ${cls.val}">${ctxLbl}</span>` : ''}
-        </div>
-      </div>`;
-  }).join('');
-
-  const activeRows = sRows ?? player.rows;
-  const compTable = activeRows.length > 1 ? buildCompTable(activeRows) : '';
-  const bestGame  = buildBestGame(gamesForComp);
-
-  return `
-    <p class="section-title">Statistici per meci</p>
-    <div class="stat-grid">${statBoxes}</div>
-
-    ${bestGame}
-
-    <div class="shooting-section">
-      <p class="section-title" style="margin-bottom:6px">Eficiență la aruncare</p>
-      <p class="chart-subtitle">Bare proporționale față de benchmark per tip de aruncare</p>
-      ${shootingRows}
-    </div>
-
-    <div class="chart-section radar-section">
-      <p class="section-title" style="margin-bottom:4px">Profil statistic față de echipă</p>
-      <p class="chart-subtitle">Procentaje față de maximul din lot, pe fiecare categorie</p>
-      <div class="chart-wrap" style="margin-top:12px"><canvas id="radar-chart"></canvas></div>
-      <div class="radar-mobile-bars" id="radar-mobile-bars"></div>
-    </div>
-
-    ${gamesForComp.length >= 2 ? buildEvolutionSection() : ''}
-    ${compTable}`;
-}
-
-/* ─── Evolution chart ────────────────────────────────────────────────────── */
-let _evolutionChart = null;
-
-function buildEvolutionChart(games, statKey) {
-  const canvas = document.getElementById('evolution-chart');
-  if (!canvas || !window.Chart) return;
-
-  const statLabel = EVOLUTION_STATS.find(s => s.key === statKey)?.label ?? statKey;
-  const isMin     = statKey === 'minutes_played';
-
-  const labels = games.map((g, i) => g.round ? `R${g.round}` : `M${i + 1}`);
-
-  // Raw (absolute) values — used for average and tooltip display
-  const rawValues = games.map(g => {
-    const v = parseFloat(g[statKey]);
-    return isNaN(v) ? null : +v.toFixed(2);
-  });
-
-  // Display values: negate for losses so bars drop below X axis
-  const displayValues = rawValues.map((v, i) =>
-    v !== null && games[i].result === 'L' ? -v : v
-  );
-
-  const nonNull  = rawValues.filter(v => v !== null);
-  const avgVal   = nonNull.length ? nonNull.reduce((s, v) => s + v, 0) / nonNull.length : 0;
-
-  const barColors       = games.map(g => g.result === 'W' ? 'rgba(34,197,94,0.75)'  : g.result === 'L' ? 'rgba(230,57,70,0.75)'  : 'rgba(148,163,184,0.6)');
-  const barColorsBorder = games.map(g => g.result === 'W' ? 'rgba(34,197,94,1)'     : g.result === 'L' ? 'rgba(230,57,70,1)'     : 'rgba(148,163,184,1)');
-
-  if (_evolutionChart) {
-    _evolutionChart.destroy();
-    _evolutionChart = null;
-  }
-
-  _evolutionChart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        {
-          label:           statLabel,
-          data:             displayValues,
-          backgroundColor:  barColors,
-          borderColor:      barColorsBorder,
-          borderWidth:      1.5,
-          borderRadius:     3,
-          borderSkipped:    false,
-        },
-        {
-          type:        'line',
-          label:       'Medie',
-          data:        games.map(() => +avgVal.toFixed(2)),
-          borderColor: 'rgba(246,168,0,0.55)',
-          borderWidth: 1.5,
-          borderDash:  [6, 4],
-          pointRadius: 0,
-          fill:        false,
-          tension:     0,
-        },
-      ],
-    },
-    options: {
-      responsive:          true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      scales: {
-        x: {
-          grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#848C99', font: { size: 11 }, maxRotation: 0, maxTicksLimit: 9 },
-        },
-        y: {
-          grid:  { color: 'rgba(255,255,255,0.04)' },
-          ticks: {
-            color: '#848C99', font: { size: 11 },
-            callback: v => Math.abs(v),
-          },
-        },
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#171A21',
-          borderColor:     'rgba(194,106,46,0.25)',
-          borderWidth:     1,
-          titleColor:      '#EDEFF2',
-          bodyColor:       '#9AA3AF',
-          padding:         12,
-          callbacks: {
-            title: (items) => {
-              const g = games[items[0].dataIndex];
-              const res = g.result === 'W' ? 'Victorie' : g.result === 'L' ? 'Înfrângere' : '';
-              return [g.opponent || '?', [g.date, res].filter(Boolean).join(' · ')].filter(Boolean).join('\n');
-            },
-            label: (item) => {
-              if (item.datasetIndex === 1) return `  Medie: ${isMin ? fmtMinutes(item.raw) : item.raw}`;
-              const v = rawValues[item.dataIndex];
-              return v !== null ? `  ${statLabel}: ${isMin ? fmtMinutes(v) : v}` : '  —';
-            },
-          },
-        },
-      },
-    },
-  });
-
-  // Stat selector
-  const sel = document.getElementById('evolution-stat-select');
-  if (sel) {
-    sel.value = statKey;
-    sel.onchange = (e) => buildEvolutionChart(games, e.target.value);
-  }
-}
-
-/* ─── Radar chart ────────────────────────────────────────────────────────── */
-function buildRadarChart(canvas, allPlayers, target) {
-  if (!canvas || !window.Chart) return;
-
-  const get = (p, key) => primaryRow(p)[key] ?? 0;
-  const maxOf = key => Math.max(...allPlayers.map(p => get(p, key))) || 1;
-
-  const maxes = {
-    points_pg:   maxOf('points_pg'),
-    rebounds_pg: maxOf('rebounds_pg'),
-    assists_pg:  maxOf('assists_pg'),
-    steals_pg:   maxOf('steals_pg'),
-    blocks_pg:   maxOf('blocks_pg'),
-    minutes_pg:  maxOf('minutes_pg') || 40,
-  };
-
-  const pct = key => Math.min((get(target, key) / maxes[key]) * 100, 100);
-
-  const data = [
-    pct('points_pg'),
-    pct('rebounds_pg'),
-    pct('assists_pg'),
-    pct('steals_pg'),
-    pct('blocks_pg'),
-    pct('minutes_pg'),
-  ];
-
-  // Populate mobile bar list (shown instead of radar on small screens)
-  const mobileEl = document.getElementById('radar-mobile-bars');
-  if (mobileEl) {
-    const radarLabels = ['Puncte înscrise', 'Recuperări', 'Pase decisive', 'Mingi furate', 'Blocaje', 'Minute/meci'];
-    mobileEl.innerHTML = radarLabels.map((lbl, i) => `
-      <div class="radar-bar-row">
-        <span class="radar-bar-lbl">${lbl}</span>
-        <div class="radar-bar-track">
-          <div class="radar-bar-fill" style="width:${data[i].toFixed(0)}%"></div>
-        </div>
-        <span class="radar-bar-pct">${data[i].toFixed(0)}%</span>
-      </div>`).join('');
-  }
-
-  new Chart(canvas, {
-    type: 'radar',
-    data: {
-      labels: ['Puncte înscrise', 'Recuperări', 'Pase decisive', 'Mingi furate', 'Blocaje', 'Minute/meci'],
-      datasets: [{
-        data,
-        backgroundColor: 'rgba(194,106,46,0.12)',
-        borderColor:     '#C26A2E',
-        borderWidth:     2,
-        pointBackgroundColor: '#C26A2E',
-        pointBorderColor:     '#0F1115',
-        pointRadius:     5,
-        pointHoverRadius: 7,
-      }],
-    },
-    options: {
-      responsive:          true,
-      maintainAspectRatio: false,
-      scales: {
-        r: {
-          min: 0, max: 100,
-          ticks:      { display: false, stepSize: 25 },
-          grid:       { color: 'rgba(255,255,255,0.07)' },
-          angleLines: { color: 'rgba(255,255,255,0.07)' },
-          pointLabels: {
-            color:    '#9AA3AF',
-            font:     { size: 12, family: 'Inter, system-ui', weight: '600' },
-          },
-        },
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.raw.toFixed(0)}% din maxim`,
-          },
-          backgroundColor: '#171A21',
-          borderColor:     'rgba(194,106,46,0.25)',
-          borderWidth:     1,
-          titleColor:      '#EDEFF2',
-          bodyColor:       '#9AA3AF',
-          padding:         10,
-        },
-      },
-    },
-  });
-}
-
-/* ─── Bootstrap ──────────────────────────────────────────────────────────── */
-(async function init() {
-  const isPlayer = document.body.dataset.page === 'player';
-
-  // Loading spinner
-  if (isPlayer) {
-    const mount = document.getElementById('player-content');
-    if (mount) mount.innerHTML = `
-      <div class="loading-spinner">
-        <div class="spinner"></div>
-        <span>Se încarcă datele…</span>
-      </div>`;
-  } else {
-    const top3 = document.getElementById('top3-grid');
-    if (top3) top3.innerHTML = `
-      <div class="loading-spinner" style="grid-column:1/-1">
-        <div class="spinner"></div>
-        <span>Se încarcă datele…</span>
-      </div>`;
-  }
-
-  try {
-    const rows = await loadData();
-    if (isPlayer) initPlayer(rows);
-    else          initIndex(rows);
-  } catch (err) {
-    console.error(err);
-    const errHtml = `
-      <div class="error-state">
-        <div class="error-state-title">Eroare la încărcarea datelor</div>
-        <div class="error-state-sub">${err.message ?? String(err)}</div>
-      </div>`;
-    if (isPlayer) {
-      const m = document.getElementById('player-content');
-      if (m) m.innerHTML = errHtml;
-    } else {
-      const m = document.getElementById('top3-grid');
-      if (m) m.innerHTML = errHtml;
+  U.on('comp', t => { ST.comp = t.dataset.v; render(true); });
+  U.onChange('season', v => { ST.season = v; ST.comp = 'all'; render(true); });
+  U.on('crow', t => t.closest('.acc-row').classList.toggle('open'));
+
+  function render(keepScroll) {
+    const y = window.scrollY;
+    if (!ST.rows.length) { U.paint(page, U.backBar(back) + '<main class="main"><div class="empty">Nu am găsit date.</div></main>'); return; }
+    let P = ST.rows.filter(r => r.player_id === ST.pid);
+    if (!P.length) {   // pagină deschisă fără id valid → cel mai bun marcator din ultimul sezon
+      const ls = ST.rows.reduce((m, r) => (r.season > m ? r.season : m), '0'), tot = {};
+      ST.rows.filter(r => r.season === ls).forEach(r => { const t = tot[r.player_id] || (tot[r.player_id] = { p: 0, g: 0 }); t.p += +r.points; t.g += +r.games_played; });
+      const best = Object.entries(tot).filter(([, t]) => t.g >= 3).sort((a, b) => b[1].p / b[1].g - a[1].p / a[1].g)[0];
+      ST.pid = best ? best[0] : ST.rows[0].player_id;
+      P = ST.rows.filter(r => r.player_id === ST.pid);
     }
+    const pid = ST.pid;
+    const seasons = [...new Set(P.map(r => r.season))].sort((a, b) => b - a);
+    const season = seasons.includes(ST.season) ? ST.season : seasons[0];
+    const sRows = P.filter(r => r.season === season && +r.games_played > 0).sort((a, b) => U.ORDER.indexOf(a.competition_key) - U.ORDER.indexOf(b.competition_key));
+    const compKeys = sRows.map(r => r.competition_key);
+    const comp = compKeys.includes(ST.comp) ? ST.comp : 'all';
+    const inC = k => comp === 'all' || k === comp;
+    const A = agg(sRows.filter(r => inC(r.competition_key))), gp = A.games_played || 0;
+    const from = `player:${pid}`;
+
+    // ── Cap (1a) ────────────────────────────────────────────────────────────
+    const name = U.cleanName(P[0].player_name);
+    document.title = `${name} · U-BT în cifre`;
+    const bio = ST.bio[pid] || {}, det = ST.det[pid] || {};
+    const img = P.map(r => r.image_url).find(Boolean);
+    const now = new Date(); let age = null;
+    if (bio.birth_date) { const b = new Date(bio.birth_date); age = now.getFullYear() - b.getFullYear() - ((now.getMonth() < b.getMonth() || (now.getMonth() === b.getMonth() && now.getDate() < b.getDate())) ? 1 : 0); }
+    else if (det.birth_year) age = now.getFullYear() - +det.birth_year;
+    const posLong = U.POS(bio.position || P.map(r => r.position).find(Boolean));
+    const nat = bio.nationality || (det.nationality_name ? NAT[det.nationality_name] || det.nationality_name : '');
+    const jersey = bio.jersey != null ? bio.jersey : (ST.pg.find(r => r.player_id === pid && r.jersey) || {}).jersey;
+    const facts = [['Număr', jersey != null && jersey !== '' ? '#' + jersey : '–'], ['Înălțime', bio.height_cm ? bio.height_cm + ' cm' : '–'], ['Vârstă', age ? age + ' ani' : '–'], [bio.nationality ? 'Naționalitate' : 'Țara', nat || '–']]
+      .concat(seasons.length > 1 ? [['La U-BT', seasons.length + ' sezoane']] : []);
+    const allGp = sRows.reduce((t, r) => t + +r.games_played, 0);
+    const gpTxt = `${U.meci(allGp)} pentru U-BT în sezonul ${U.SL(season)}` + (sRows.length > 1 ? ' · ' + sRows.map(r => `${r.games_played} în ${U.COMP[r.competition_key]}`).join(' · ') : '');
+
+    let h = U.backBar(back);
+    h += `<div class="ph-hero">${U.photo(img, name, 'ph-hero-img')}
+      <div class="ph-hero-info"><div class="ph-hero-nm"><div class="ph-hero-pos">${U.esc(posLong)}</div><h1 class="ph-hero-h1">${U.esc(name)}</h1></div>
+        <div class="ph-facts" style="--nf:${facts.length}">${facts.map(([l, v]) => `<div class="ph-fact"><span class="label">${l}</span><b>${U.esc(v)}</b></div>`).join('')}</div>
+        <p class="ph-gp">${U.esc(gpTxt)}</p></div></div>`;
+
+    // ── Filtre (în conținut) ────────────────────────────────────────────────
+    const comps = (compKeys.length > 1 ? [{ key: 'all', label: 'Toate', on: comp === 'all' }] : [])
+      .concat(compKeys.map(k => ({ key: k, label: U.COMP[k] || k, on: k === comp || compKeys.length === 1 })));
+    const ctxComp = comp === 'all' ? (compKeys.length > 1 ? 'toate competițiile' : U.COMP[compKeys[0]] || '') : U.COMP[comp];
+    const summary = (comp === 'all' ? (compKeys.length > 1 ? 'Toate competițiile' : U.COMP[compKeys[0]] || '') : U.COMP[comp]) + ' · ' + U.SL(season);
+    h += '<main class="main">';
+    h += U.filters({ comps, season, seasons, summary, inline: true, open: U.filtersOpen });
+
+    // meciurile jucate (detaliate)
+    const G = ST.pg.filter(r => r.player_id === pid && r.season === season && inC(r.competition_key) && +r.seconds_played > 0).map(r => {
+      const g = ST.games[`${r.competition_key}|${r.season}|${r.game_code}`] || {};
+      return { date: g.date || String(r.date || '').slice(0, 10), comp: r.competition_key, opp: g.opp || r.opponent, win: (g.win != null ? g.win : r.result === 'W'), us: g.us, them: g.them, code: r.game_code, season: r.season,
+        v: { pts: +r.points, reb: +r.rebounds, ast: +r.assists, pir: Math.round(+r.pir), min: +r.seconds_played } };
+    }).sort((a, b) => a.date.localeCompare(b.date));
+    const n = G.length;
+
+    if (!gp) {
+      h += '<div class="empty t-c">Jucătorul nu are meciuri pentru combinația de filtre aleasă.</div>';
+    } else {
+      h += avgSection(A, gp, ctxComp, season);
+      h += shotsAndRanks(A, gp, season, inC);
+      if (n) h += evolution(G, from) + gamesList(G, gp, from);
+    }
+    if (sRows.length > 1) h += compSection(sRows, season);
+    if (seasons.length > 1) h += history(P, seasons, pid);
+    h += U.endCards({ href: 'players.html', title: 'Toți jucătorii', sub: 'Lotul complet, cu statistici', dir: 'prev' }, { href: 'team.html', title: 'Echipa', sub: 'Cifrele U-BT pe sezon', dir: 'next' });
+    h += '</main>';
+    U.paint(page, h);
+    if (keepScroll) window.scrollTo(0, y);
+  }
+
+  // ── 1. Cifrele pe meci ────────────────────────────────────────────────────
+  function avgSection(A, gp, ctxComp, season) {
+    const d = x => x / gp;
+    const cards = [['Puncte', A.points, 'puncte'], ['Pase decisive', A.assists, 'pase decisive'], ['Recuperări', A.rebounds, 'recuperări'], ['Eficiență', A.pir, null], ['Minute', A.minutes, 'minute']];
+    return `<section class="sec">${U.secHead('Cifrele pe meci', `Media pe meci · ${U.esc(ctxComp)}, sezonul ${U.SL(season)} · ${U.meci(gp)}`)}
+      <div class="avg5">${cards.map(([l, t, u]) => `<div class="tile"><div class="tile-l"><span class="label">${l}</span>${l === 'Eficiență' ? U.infoK('pir', 'l') : ''}</div>
+        <div class="avg-v">${l === 'Minute' ? U.mmss(d(t) * 60) : U.num(d(t)).replace('-', U.MINUS)}</div><div class="tile-s">${U.neg(Math.round(t))} ${u ? u + ' ' : ''}în total</div></div>`).join('')}</div></section>`;
+  }
+
+  // ── 2. Aruncări | Față de restul echipei ──────────────────────────────────
+  function shotsAndRanks(A, gp, season, inC) {
+    const shots = [['Aruncări de 2 puncte', A.fg2_made, A.fg2_att], ['Aruncări de 3 puncte', A.fg3_made, A.fg3_att], ['Aruncări libere', A.ft_made, A.ft_att, 'ft']].map(([l, m, a, inf]) => `
+      <div class="sh-row"><div class="tile-l"><span class="sh-l">${l}</span>${inf ? U.infoK(inf, 'l') : ''}</div><span class="sh-p">${U.pctR(m, a)}</span>
+        <div class="sh-bar"><div class="bar-track"><div class="bar-fill" style="width:${a ? m / a * 100 : 0}%"></div></div><span>${m} din ${a}</span></div></div>`).join('');
+    const tm = {};
+    ST.rows.filter(r => r.season === season && inC(r.competition_key) && +r.games_played > 0).forEach(r => { (tm[r.player_id] = tm[r.player_id] || []).push(r); });
+    const minG = gp >= 3 ? 3 : 1;
+    const TA = Object.entries(tm).map(([id, rs]) => { const a = agg(rs); return { id, gp: a.games_played, a }; }).filter(x => x.gp >= minG);
+    const RK = [['Puncte', 'points'], ['Pase decisive', 'assists'], ['Recuperări', 'rebounds'], ['Eficiență', 'pir'], ['Minute', 'minutes']];
+    const ranks = RK.map(([l, k]) => {
+      const vals = TA.map(x => x.a[k] / x.gp).sort((a, b) => b - a);
+      const me = A[k] / gp, rank = 1 + vals.filter(v => v > me + 1e-9).length, mx = Math.max(...vals, 1e-9);
+      return `<div class="rk-row"><span class="rk-l">${l} / meci</span><span class="rk-v">${k === 'minutes' ? U.mmss(me * 60) : U.num(me).replace('-', U.MINUS)}</span>
+        <span class="rk-r"><b>Locul ${rank}</b><span>din ${vals.length} jucători</span></span>
+        <div class="bar-track rk-bar"><div class="bar-fill" style="width:${Math.max(0, me) / mx * 100}%"></div></div></div>`;
+    }).join('');
+    return `<div class="sr-grid">
+      <section class="sec sr-col">${U.secHead('Aruncări', 'Procentaj reușite')}<div class="box sh-box">${shots}</div></section>
+      <section class="sec sr-col">${U.secHead('Față de restul echipei', 'Locul în lotul U-BT, după media pe meci')}<div class="box rk-box">${ranks}</div></section></div>`;
+  }
+
+  // ── 3. Evoluția pe meciuri (doar puncte) ──────────────────────────────────
+  function evolution(G, from) {
+    const vs = G.map(x => x.v.pts), top = Math.max(10, ...vs), bot = Math.min(0, ...vs), H = 120, zero = top / (top - bot) * H, n = G.length;
+    BARS = G.map(x => ({ ...x, href: U.gameHref(x.code, x.season, from) }));
+    const bars = G.map((x, i) => {
+      const v = x.v.pts, hh = Math.max(v === 0 ? 2 : 4, Math.abs(v) / (top - bot) * H);
+      const dn = U.dNum(x.date), slots = Math.max(n, 20), nearEnd = slots - 1 - i < 7;   // tooltip-ul (300px) încape la dreapta?
+      return `<a href="${U.gameHref(x.code, x.season, from)}" class="pbar" data-i="${i}"${i === n - 1 ? ' data-last' : ''} aria-label="${U.esc(`${x.opp}, ${U.dShort(x.date)}: ${v}`)}">
+        <div class="pbar-area">${tipHtml(x, nearEnd)}<div class="pbar-b" style="top:${v >= 0 ? zero - hh : zero}px;height:${hh}px"></div>
+          <div class="pbar-lab" style="top:${v >= 0 ? zero - hh - 18 : zero + hh + 2}px">${v < 0 ? U.MINUS + Math.abs(v) : v === 0 ? '' : v}</div></div>
+        <div class="xlab">${dn.d}<small>${dn.y}</small></div></a>`;
+    }).join('');
+    const fut = Array.from({ length: Math.max(0, 20 - n) }, () => '<div class="pbar-fut" aria-hidden="true"><div></div></div>').join('');
+    return `<section class="sec">${U.secHead('Evoluția pe meciuri', '<span class="only-desk">Punctele din fiecare meci · locurile punctate sunt meciurile care urmează</span><span class="only-mob">Punctele din fiecare meci · atinge o bară pentru detalii</span>')}
+      <div class="box pchart"><div class="chart-scroll pchart-scroll noscroll-m" data-scroll-end><div class="chart-track" data-ptrack><div class="chart-zero" style="top:${zero}px"></div>${bars}${fut}</div></div>
+        <p class="hint only-desk pchart-foot">Treci cu mouse-ul peste o bară ca să vezi meciul · click deschide pagina meciului</p>
+        <div class="only-mob" data-psel></div></div></section>`;
+  }
+  function allStats(x) {
+    return [['pts', 'puncte'], ['ast', 'pase'], ['reb', 'recup.'], ['pir', 'efic.'], ['min', 'minute']].map(([k, l]) => `<div><b>${k === 'min' ? U.mmss(x.v.min) : U.neg(x.v[k])}</b><span>${l}</span></div>`).join('');
+  }
+  function tipHtml(x, nearEnd) {
+    return `<div class="tip ptip ${nearEnd ? 'ptip-r' : 'ptip-l'}"><div class="tip-h">${U.resBadge(x.win)}<span class="tip-opp">${U.esc(x.opp)}</span><b class="ptip-sc">${x.us}–${x.them}</b></div>
+      <div class="ptip-all">${allStats(x)}</div><div class="tip-meta">${U.dLong(x.date)} · ${U.COMP[x.comp]}</div></div>`;
+  }
+  function setOn(track, i) {
+    track.querySelectorAll('.pbar.on').forEach(b => b.classList.remove('on'));
+    if (i != null) track.querySelector(`.pbar[data-i="${i}"]`).classList.add('on');
+  }
+  page.addEventListener('mouseover', e => { if (U.isMobile()) return; const b = e.target.closest('.pbar'); if (b) setOn(b.parentElement, b.dataset.i); });
+  page.addEventListener('mouseout', e => { if (U.isMobile()) return; const b = e.target.closest('.pbar'); if (b && !b.contains(e.relatedTarget)) setOn(b.parentElement, null); });
+  page.addEventListener('click', e => {
+    const b = e.target.closest('.pbar'); if (!b || !U.isMobile()) return;
+    e.preventDefault();
+    const was = b.classList.contains('on'), i = +b.dataset.i, box = page.querySelector('[data-psel]');
+    setOn(b.parentElement, was ? null : i);
+    if (was) { box.innerHTML = ''; return; }
+    const x = BARS[i];
+    box.innerHTML = `<a href="${x.href}" class="selcard psel"><span class="tip-h">${U.resBadge(x.win)}<span class="tip-opp">${U.esc(x.opp)}</span><b class="ptip-sc">${x.us}–${x.them}</b></span>
+      <span class="ptip-all">${allStats(x)}</span><span class="tip-meta">${U.dLong(x.date)} · ${U.COMP[x.comp]}</span><span class="psel-go">Pagina meciului →</span></a>`;
+  });
+
+  // ── 4. Meciurile sezonului ────────────────────────────────────────────────
+  function gamesList(G, gp, from) {
+    const n = G.length;
+    const best = {}; ['pts', 'ast', 'reb', 'pir', 'min'].forEach(k => { best[k] = Math.max(...G.map(x => x.v[k])); });
+    const bestG = n > 1 ? [...G].sort((a, b) => b.v.pts - a.v.pts || b.v.pir - a.v.pir)[0] : null;
+    const R = [...G].reverse();
+    const rows = R.map(x => `<a href="${U.gameHref(x.code, x.season, from)}" class="tbl-row gl-row">
+        <span class="gl-d">${U.dLong(x.date)}</span><span class="gl-c">${U.COMP[x.comp]}</span>
+        <span class="gl-o"><span>${U.esc(x.opp)}</span>${x === bestG ? '<span class="tag-best">Cel mai bun meci</span>' : ''}</span>
+        <span class="gl-r">${U.resBadge(x.win)}<b>${x.us}–${x.them}</b></span>
+        ${['pts', 'ast', 'reb', 'pir', 'min'].map(k => { const b = k !== 'min' && x.v[k] === best[k] && best[k] > 0; return `<span class="t-n${b ? ' b' : x.v[k] < 0 ? ' m' : ''}">${k === 'min' ? U.mmss(x.v.min) : U.neg(x.v[k])}</span>`; }).join('')}</a>`).join('');
+    const mrows = R.map(x => `<a href="${U.gameHref(x.code, x.season, from)}" class="gm-row"><span class="gm-mid">
+        <span class="gm-top">${U.resBadge(x.win, 'sm')}<span class="gm-opp">${U.esc(x.opp)}</span><span class="gm-sc">${x.us}–${x.them}</span></span>
+        <span class="gm-meta">${U.dLong(x.date)} · ${U.COMP[x.comp]} · ${x.v.ast} ${x.v.ast === 1 ? 'pasă' : 'pase'} · ${x.v.reb} recup. · ${U.mmss(x.v.min)} min</span>
+        ${x === bestG ? '<span class="tag-best gm-best">Cel mai bun meci</span>' : ''}</span>
+        <span class="bigstat"><span class="bigstat-v">${U.neg(x.v.pts)}</span><span class="bigstat-l">puncte</span></span></a>`).join('');
+    const cnt = (n < gp ? `${n} din ${gp} meciuri au statistici detaliate` : U.meci(n)) + ', cel mai recent primul';
+    return `<section class="sec">${U.secHead('Meciurile sezonului', `<span class="only-desk">${cnt} · click pe un rând deschide pagina meciului</span><span class="only-mob">${cnt}</span>`)}
+      <div class="tbl only-desk"><div class="tbl-row tbl-head gl-row"><span>Data</span><span>Competiție</span><span>Adversar</span><span>Rezultat</span><span class="t-r">Puncte</span><span class="t-r">Pase</span><span class="t-r">Recup.</span><span class="t-r">Efic.</span><span class="t-r">Minute</span></div>${rows}</div>
+      <p class="note only-desk">Cu îngroșat: cel mai bun meci al lui în sezon la acea cifră.</p>
+      <div class="gm-list only-mob">${mrows}</div></section>`;
+  }
+
+  // ── 5. Pe competiții ──────────────────────────────────────────────────────
+  function compSection(sRows, season) {
+    const row = (l, rs, tot) => { const a = agg(rs), g = a.games_played || 1; return { l, tot, cells: [a.games_played, U.num(a.points / g), U.num(a.assists / g), U.num(a.rebounds / g), U.num(a.pir / g), U.mmss(a.minutes / g * 60), U.pctR(a.fg2_made, a.fg2_att), U.pctR(a.fg3_made, a.fg3_att), U.pctR(a.ft_made, a.ft_att)] }; };
+    const R = sRows.map(r => row(U.COMP[r.competition_key], [r])).concat([row('Tot sezonul', sRows, true)]);
+    const cL = ['Puncte', 'Pase', 'Recup.', 'Efic.', 'Minute', '2 puncte', '3 puncte', 'Libere'];
+    const desk = R.map(r => `<div class="tbl-row cp-row${r.tot ? ' total' : ''}"><span class="cp-l${r.tot ? ' b' : ''}">${r.l}</span>${r.cells.map(v => `<span class="t-n${r.tot ? ' b' : ''}">${v}</span>`).join('')}</div>`).join('');
+    const mob = R.map(r => `<div class="acc-row"><button type="button" class="acc-btn cm-btn" data-act="crow">
+        <span class="cm-mid"><span class="cm-l${r.tot ? ' b' : ''}">${r.l}</span><span class="cm-gp">${U.meci(+r.cells[0])}</span></span>
+        <span class="bigstat"><span class="bigstat-v">${r.cells[1]}</span><span class="bigstat-l">puncte / meci</span></span><span class="acc-chev"></span></button>
+        <div class="acc-body cm-body"><div class="cells4">${r.cells.slice(2).map((v, i) => `<div class="cell"><span class="cell-v best">${v}</span><span class="cell-l">${cL[i + 1]}</span></div>`).join('')}</div></div></div>`).join('');
+    return `<section class="sec">${U.secHead('Pe competiții', `<span class="only-desk">Media pe meci în fiecare competiție, sezonul ${U.SL(season)}</span><span class="only-mob">Sezonul ${U.SL(season)} · atinge o competiție pentru toate cifrele</span>`)}
+      <div class="tbl only-desk"><div class="tbl-row tbl-head cp-row"><span>Competiție</span><span class="t-r">Meciuri</span><span class="t-r">Puncte</span><span class="t-r">Pase</span><span class="t-r">Recup.</span><span class="t-r">Efic.</span><span class="t-r">Minute</span><span class="t-r">2 puncte</span><span class="t-r">3 puncte</span><span class="t-r">Libere</span></div>${desk}</div>
+      <div class="mp-list only-mob">${mob}</div></section>`;
+  }
+
+  // ── 6. Istoricul la U-BT ──────────────────────────────────────────────────
+  function history(P, seasons, pid) {
+    const allR = P.filter(r => +r.games_played > 0), AT = agg(allR), atg = AT.games_played || 1;
+    const hs = [...seasons].sort();
+    const sv = hs.map(s => { const a = agg(allR.filter(r => r.season === s)), g = a.games_played || 1; return { s, a, pg: { pts: a.points / g, ast: a.assists / g, reb: a.rebounds / g, pir: a.pir / g, min: a.minutes / g } }; });
+    const K = ['pts', 'ast', 'reb', 'pir', 'min'], bs = {}; K.forEach(k => { bs[k] = Math.max(...sv.map(x => x.pg[k])); });
+    const fmtI = v => Math.round(v).toLocaleString('ro-RO');
+    const tot = [['Meciuri jucate', AT.games_played, 'în ' + hs.length + ' sezoane'], ['Puncte', AT.points, U.num(AT.points / atg) + ' pe meci'], ['Pase decisive', AT.assists, U.num(AT.assists / atg) + ' pe meci'], ['Recuperări', AT.rebounds, U.num(AT.rebounds / atg) + ' pe meci']]
+      .map(([l, v, sub]) => `<div class="tile"><div class="label">${l}</div><div class="avg-v">${fmtI(v)}</div><div class="tile-s">${sub}</div></div>`).join('');
+    const PGall = ST.pg.filter(r => r.player_id === pid && +r.seconds_played > 0).sort((a, b) => +b.points - +a.points), top1 = PGall[0];
+    let rec = '';
+    if (top1) {
+      const tg = ST.games[`${top1.competition_key}|${top1.season}|${top1.game_code}`] || {};
+      rec = `<a href="${U.gameHref(top1.game_code, top1.season, 'player:' + pid)}" class="rec"><span class="rec-txt"><span class="label">Cel mai bun meci<span class="only-mob"> la U-BT</span></span>
+        <span class="rec-v"><b>${top1.points}</b><span>puncte</span></span><span class="rec-m">vs ${U.esc(tg.opp || top1.opponent)}, ${tg.date ? U.dLong(tg.date) : ''}<span class="only-desk"> →</span></span></span><span class="rec-arr only-mob">→</span></a>`;
+    }
+    const rows = sv.slice().reverse().map(x => ({ l: U.SL(x.s), gp: x.a.games_played, cells: K.map(k => ({ v: k === 'min' ? U.mmss(x.pg[k] * 60) : U.num(x.pg[k]), b: sv.length > 1 && x.pg[k] === bs[k] })) }))
+      .concat([{ l: 'Toate sezoanele', tot: true, gp: AT.games_played, cells: [AT.points, AT.assists, AT.rebounds, AT.pir, AT.minutes].map((v, i) => ({ v: i === 4 ? U.mmss(v / atg * 60) : U.num(v / atg), b: true })) }]);
+    const desk = rows.map(r => `<div class="tbl-row hs-row${r.tot ? ' total' : ''}"><span class="cp-l${r.tot ? ' b' : ''}">${r.l}</span><span class="t-n${r.tot ? ' b' : ''}">${r.gp}</span>${r.cells.map(c => `<span class="t-n${c.b ? ' b' : ''}">${c.v}</span>`).join('')}</div>`).join('');
+    const hL = ['Puncte', 'Pase', 'Recup.', 'Efic.', 'Minute'];
+    const mob = rows.map(r => `<div class="hm-card${r.tot ? ' total' : ''}"><div class="hm-h"><span class="cp-l${r.tot ? ' b' : ''}">${r.l}</span><span class="note">${U.meci(r.gp)}</span></div>
+      <div class="hm-cells">${r.cells.map((c, i) => `<div><b class="${c.b ? 'b' : ''}">${c.v}</b><span>${hL[i]}</span></div>`).join('')}</div></div>`).join('');
+    return `<section class="sec">${U.secHead('Istoricul la U-BT', `Tot ce a făcut pentru U-BT, din sezonul ${U.SL(hs[0])} până acum, în toate competițiile`)}
+      <div class="hist-tiles">${tot}${rec}</div>
+      <div class="tbl only-desk"><div class="tbl-row tbl-head hs-row"><span>Sezon</span><span class="t-r">Meciuri</span><span class="t-r">Puncte</span><span class="t-r">Pase</span><span class="t-r">Recup.</span><span class="t-r">Efic.</span><span class="t-r">Minute</span></div>${desk}</div>
+      <div class="hm-list only-mob">${mob}</div>
+      <p class="note">Media pe meci, toate competițiile · cu îngroșat: cel mai bun sezon<span class="only-desk"> la acea cifră</span></p></section>`;
   }
 })();

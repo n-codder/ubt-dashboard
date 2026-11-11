@@ -364,6 +364,13 @@ def save(df_new: pd.DataFrame, full: bool) -> None:
         )
         df_out = pd.concat([df_existing[mask], df_new], ignore_index=True)
 
+    # Un jucător apare o singură dată pe meci (LN a avut rânduri dublate după
+    # schimbarea convenției de sezon). Păstrăm rândul cel mai nou.
+    before = len(df_out)
+    df_out = df_out.drop_duplicates(subset=["competition_key", "season", "game_code", "player_id"], keep="last")
+    if len(df_out) != before:
+        log.info("  %d rânduri duplicate (același jucător, același meci) eliminate", before - len(df_out))
+
     df_out.sort_values(["competition_key", "season", "date", "player_id"], inplace=True)
     df_out.reset_index(drop=True, inplace=True)
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)

@@ -28,3 +28,6 @@ logs/
 config/service_account.json
 
 .claude/
+
+# Materiale de design (locale, nepublicate)
+design/

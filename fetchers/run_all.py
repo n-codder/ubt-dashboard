@@ -120,6 +120,13 @@ def _run_processors(season: int, full: bool) -> None:
     except Exception as exc:
         log.error(f"Normalizer eroare: {exc}")
 
+    log.info("Rulez processors/quarters.py ...")
+    try:
+        qtr = importlib.import_module("processors.quarters")
+        qtr.run()
+    except Exception as exc:
+        log.error(f"Quarters eroare: {exc}")
+
     log.info("Rulez processors/per_game_stats.py ...")
     try:
         pgs = importlib.import_module("processors.per_game_stats")

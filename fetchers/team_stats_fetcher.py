@@ -13,6 +13,7 @@ Rulare:
 """
 
 import argparse
+import json
 import logging
 import sys
 import time
@@ -25,7 +26,7 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
 from config.settings import (
-    DATA_PROCESSED,
+    DATA_PROCESSED, DATA_RAW,
     RAPIDAPI_KEY, RAPIDAPI_HOST_BASKETBALL, RAPIDAPI_BASE_BASKETBALL,
 )
 
@@ -157,11 +158,25 @@ def _aggregate_lineups(players: list) -> dict:
     )
 
 
-def _fetch_aba_game(match_id: int, ubt_is_home: bool) -> dict | None:
+def _sofa_lineups(match_id: int, folder: str) -> tuple[dict | None, bool]:
+    """Lineups basketapi1 (ABA / LN), întâi din cache-ul data/raw/{folder}/lineups/.
+    Întoarce (date, din_cache). Răspunsurile noi se salvează în cache."""
+    cache = DATA_RAW / folder / "lineups" / f"{match_id}.json"
+    if cache.exists():
+        return json.loads(cache.read_text()), True
     try:
         data = _aba_get(f"/api/basketball/match/{match_id}/lineups")
     except Exception as exc:
-        log.warning(f"  ABA lineups({match_id}): {exc}")
+        log.warning(f"  lineups({match_id}): {exc}")
+        return None, False
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(data))
+    return data, False
+
+
+def _fetch_aba_game(match_id: int, ubt_is_home: bool, folder: str = "aba") -> dict | None:
+    data, _ = _sofa_lineups(match_id, folder)
+    if not data:
         return None
 
     ubt_side = "home" if ubt_is_home else "away"
@@ -179,7 +194,7 @@ def _fetch_aba_game(match_id: int, ubt_is_home: bool) -> dict | None:
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
-def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFrame:
+def fetch_team_stats(season: int | None = None, full: bool = False, competition: str | None = None) -> pd.DataFrame:
     games_path = DATA_PROCESSED / "games.csv"
     if not games_path.exists():
         log.error(f"games.csv lipsă: {games_path}")
@@ -190,6 +205,8 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
 
     if season is not None:
         df_games = df_games[df_games["season"].astype(int) == season]
+    if competition is not None:   # ex. doar „EuroCup” — fără apeluri RapidAPI
+        df_games = df_games[df_games["competition"] == competition]
 
     if df_games.empty:
         log.info("Niciun meci terminat de procesat.")
@@ -206,7 +223,9 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
     for _, game in df_games.iterrows():
         comp       = game["competition"]
         gc         = str(game["game_code"])
-        key        = (gc, str(game["season"]), comp)
+        # LN: games.csv folosește anul de final; game_stats.csv (ca games_normalized) anul de început
+        row_season = int(game["season"]) - (1 if comp == "Liga Națională" else 0)
+        key        = (gc, str(row_season), comp)
         ubt_home   = bool(game["ubt_is_home"]) if isinstance(game["ubt_is_home"], bool) else str(game["ubt_is_home"]).lower() == "true"
 
         if key in existing_keys:
@@ -218,9 +237,12 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
         if comp == "EuroCup":
             stats = _fetch_eurocup_game(int(game["season"]), int(gc), ubt_home)
             time.sleep(0.5)
-        elif comp == "ABA League":
-            stats = _fetch_aba_game(int(gc), ubt_home)
-            time.sleep(2)
+        elif comp in ("ABA League", "Liga Națională"):
+            folder = "aba" if comp == "ABA League" else "ln"
+            cached = (DATA_RAW / folder / "lineups" / f"{gc}.json").exists()
+            stats = _fetch_aba_game(int(gc), ubt_home, folder)
+            if not cached:
+                time.sleep(2)
         else:
             log.debug(f"  Skip {comp} — date echipă indisponibile")
             continue
@@ -231,7 +253,7 @@ def fetch_team_stats(season: int | None = None, full: bool = False) -> pd.DataFr
 
         row = {
             "competition": comp,
-            "season":      int(game["season"]),
+            "season":      row_season,
             "game_code":   gc,
             "date":        game.get("date", ""),
             "opponent":    game.get("opponent", ""),
@@ -271,7 +293,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fetch team box-score stats per game")
     parser.add_argument("--season", type=int, default=None,
                         help="Sezonul de procesat (default: toate)")
+    parser.add_argument("--competition", default=None,
+                        help='Doar o competiție, ex. "EuroCup" (implicit: toate)')
     parser.add_argument("--full", action="store_true",
                         help="Re-fetch complet, suprascrie game_stats.csv")
     args = parser.parse_args()
-    fetch_team_stats(season=args.season, full=args.full)
+    fetch_team_stats(season=args.season, full=args.full, competition=args.competition)
