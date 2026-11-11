@@ -7,14 +7,12 @@
   const FROM = Q0.get('from');
   const back = U.backTarget('start');
 
-  const LOGOS = {
-    'Skyliners Frankfurt': 'assets/logos/skyliners-frankfurt.svg',
-    'Turk Telekom Ankara': 'assets/logos/turk-telekom-ankara.png',
-  };
+  let LOGOS = {};   // din config/site.json → team_logos (se editează din admin)
   const ORD = { 2: 'doua', 3: 'treia', 4: 'patra', 5: 'cincea', 6: 'șasea', 7: 'șaptea', 8: 'opta', 9: 'noua', 10: 'zecea' };
   const ST = { games: [], stats: {}, players: [], bio: {}, quarters: {}, sort: 'pts', msort: 'pts' };
 
-  Promise.all([U.csv(U.URLS.games), U.csv(U.URLS.gameStats), U.csv(U.URLS.perGame), U.csv(U.URLS.players)]).then(async ([g, ts, pg, ps]) => {
+  Promise.all([U.csv(U.URLS.games), U.csv(U.URLS.gameStats), U.csv(U.URLS.perGame), U.csv(U.URLS.players), U.site()]).then(async ([g, ts, pg, ps, cfg]) => {
+    LOGOS = cfg.team_logos || {};
     ST.games = U.normGames(g);
     ST.stats = U.normTeamStats(ts);
     ST.bio = U.bioFromStats(ps);

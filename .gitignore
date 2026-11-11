@@ -2,8 +2,7 @@
 .env
 *.env
 
-# Raw data - not committed
-data/raw/
+# Raw data — acum în repo: fetch-ul automat (GitHub Actions) are nevoie de el
 
 # Python
 __pycache__/

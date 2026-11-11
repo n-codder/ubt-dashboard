@@ -1,0 +1,4 @@
+# Admin local (python admin/app.py)
+fastapi==0.115.6
+uvicorn==0.34.0
+python-multipart==0.0.20

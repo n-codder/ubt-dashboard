@@ -1,0 +1,1488 @@
+[
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 7130,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 2
+    },
+    "customId": "RocsdFy",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 2,
+    "homeTeam": {
+      "name": "BC Vienna",
+      "slug": "bc-vienna",
+      "shortName": "Vienna",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 982,
+      "nameCode": "VIE",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "AT",
+        "alpha3": "AUT",
+        "name": "Austria",
+        "slug": "austria"
+      },
+      "id": 5742,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#db3831",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0641\u064a\u064a\u0646\u0627 \u0628\u064a \u0633\u064a",
+          "bn": "\u09ac\u09bf\u09b8\u09bf \u09ad\u09bf\u09af\u09bc\u09c7\u09a8\u09be",
+          "hi": "\u092c\u0940\u0938\u0940 \u0935\u093f\u092f\u0928\u093e",
+          "ru": "\u0411\u041a \u0412\u0435\u043d\u0430"
+        },
+        "shortNameTranslation": {
+          "ru": "\u0412\u0435\u043d\u0430"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2736,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 84,
+      "display": 84,
+      "period1": 19,
+      "period2": 22,
+      "period3": 15,
+      "period4": 28,
+      "normaltime": 84
+    },
+    "awayScore": {
+      "current": 95,
+      "display": 95,
+      "period1": 25,
+      "period2": 20,
+      "period3": 21,
+      "period4": 29,
+      "normaltime": 95
+    },
+    "time": {
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-10-03T17:04:00+00:00",
+      "currentPeriodStartTimestamp": 1791039712
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime"
+      ],
+      "changeTimestamp": 1791047123
+    },
+    "hasGlobalHighlights": true,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943051,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "u-banca-transilvania-cluj-napoca-bc-vienna",
+    "startTimestamp": 1791039600,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  },
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 7106,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 3
+    },
+    "customId": "dFyspyke",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 2,
+    "homeTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2729,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "BC Dubai",
+      "slug": "bc-dubai",
+      "shortName": "Dubai",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 9058,
+      "nameCode": "DUB",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {},
+      "id": 526165,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#374df5",
+        "secondary": "#374df5",
+        "text": "#ffffff"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062f\u0628\u064a \u0644\u0643\u0631\u0629 \u0627\u0644\u0633\u0644\u0629",
+          "ru": "\u0411\u041a \u0414\u0443\u0431\u0430\u0439"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062f\u0628\u064a"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 85,
+      "display": 85,
+      "period1": 19,
+      "period2": 26,
+      "period3": 14,
+      "period4": 26,
+      "normaltime": 85
+    },
+    "awayScore": {
+      "current": 92,
+      "display": 92,
+      "period1": 21,
+      "period2": 15,
+      "period3": 32,
+      "period4": 24,
+      "normaltime": 92
+    },
+    "time": {
+      "played": 2400,
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-10-11T11:52:27+00:00",
+      "currentPeriodStartTimestamp": 1791712950
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime"
+      ],
+      "changeTimestamp": 1791719671
+    },
+    "hasGlobalHighlights": true,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943064,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "bc-dubai-u-banca-transilvania-cluj-napoca",
+    "startTimestamp": 1791712800,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  },
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 6847,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true,
+        "hasLiveRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 4
+    },
+    "customId": "dFysUUub",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 1,
+    "homeTeam": {
+      "name": "KK Spartak Office Shoes",
+      "slug": "kk-spartak-office-shoes-subotica",
+      "shortName": "KK Spartak",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2055,
+      "nameCode": "SPS",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RS",
+        "alpha3": "SRB",
+        "name": "Serbia",
+        "slug": "serbia"
+      },
+      "id": 174744,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#1e90ff",
+        "secondary": "#ffffff",
+        "text": "#ffffff"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0643\u064a \u0643\u064a \u0633\u0628\u0627\u0631\u062a\u0627\u0643 \u0623\u0648\u0641\u064a\u0633 \u0634\u0648\u0632 \u0633\u0648\u0628\u0648\u062a\u064a\u0643\u0627",
+          "ru": "\u041a\u041a \u0421\u043f\u0430\u0440\u0442\u0430\u043a \u041e\u0444\u0438\u0441 \u0428\u0443\u0437"
+        },
+        "shortNameTranslation": {
+          "ar": "\u0633\u0628\u0627\u0631\u062a\u0627\u0643 \u0633\u0648\u0628\u0648\u062a\u064a\u0643\u0627",
+          "bn": "\u09b8\u09cd\u09aa\u09be\u09b0\u09cd\u099f\u09be\u0995 \u09b8\u09c1\u09ac\u09cb\u099f\u09bf\u0995\u09be",
+          "hi": "\u0938\u094d\u092a\u093e\u0930\u094d\u091f\u0915 \u0938\u0941\u092c\u094b\u091f\u093f\u0915\u093e",
+          "ru": "\u041a\u041a \u0421\u043f\u0430\u0440\u0442\u0430\u043a"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2706,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 89,
+      "display": 89,
+      "period1": 27,
+      "period2": 24,
+      "period3": 16,
+      "period4": 22,
+      "normaltime": 89
+    },
+    "awayScore": {
+      "current": 75,
+      "display": 75,
+      "period1": 17,
+      "period2": 17,
+      "period3": 20,
+      "period4": 21,
+      "normaltime": 75
+    },
+    "time": {
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-10-18T19:19:33+00:00",
+      "currentPeriodStartTimestamp": 1792344770
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime"
+      ],
+      "changeTimestamp": 1792351217
+    },
+    "hasGlobalHighlights": true,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943080,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "kk-spartak-office-shoes-u-banca-transilvania-cluj-napoca",
+    "startTimestamp": 1792344600,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  },
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 6838,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true,
+        "hasLiveRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 5
+    },
+    "customId": "dFysOCac",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 1,
+    "homeTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2747,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "KK SC Derby",
+      "slug": "kk-sc-derby",
+      "shortName": "SC Derby",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 977,
+      "nameCode": "CEN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "ME",
+        "alpha3": "MNE",
+        "name": "Montenegro",
+        "slug": "montenegro"
+      },
+      "id": 251389,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#374df5",
+        "secondary": "#374df5",
+        "text": "#ffffff"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0643\u064a \u0643\u064a \u0625\u0633 \u0633\u064a \u062f\u064a\u0631\u0628\u064a",
+          "ru": "\u041a\u041a \u0421\u041a \u0414\u0435\u0440\u0431\u0438"
+        },
+        "shortNameTranslation": {
+          "ar": "\u0625\u0633 \u0633\u064a \u062f\u064a\u0631\u0628\u064a",
+          "bn": "\u098f\u09b8\u09b8\u09bf \u09a1\u09be\u09b0\u09cd\u09ac\u09bf",
+          "hi": "\u090f\u0938\u0938\u0940 \u0921\u0930\u094d\u092c\u0940",
+          "ru": "\u0421\u041a \u0414\u0435\u0440\u0431\u0438"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 100,
+      "display": 100,
+      "period1": 24,
+      "period2": 29,
+      "period3": 27,
+      "period4": 20,
+      "normaltime": 100
+    },
+    "awayScore": {
+      "current": 78,
+      "display": 78,
+      "period1": 16,
+      "period2": 30,
+      "period3": 15,
+      "period4": 17,
+      "normaltime": 78
+    },
+    "time": {
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-10-23T16:53:15+00:00",
+      "currentPeriodStartTimestamp": 1792767637
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime"
+      ],
+      "changeTimestamp": 1792774435
+    },
+    "hasGlobalHighlights": true,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943243,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "kk-sc-derby-u-banca-transilvania-cluj-napoca",
+    "startTimestamp": 1792767600,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  },
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 6845,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true,
+        "hasLiveRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 6
+    },
+    "customId": "MHcsdFy",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 1,
+    "homeTeam": {
+      "name": "KK Partizan Mozzart Bet",
+      "slug": "kk-partizan-mozzart-bet",
+      "shortName": "Partizan Mozzart",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 98493,
+      "nameCode": "PAR",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RS",
+        "alpha3": "SRB",
+        "name": "Serbia",
+        "slug": "serbia"
+      },
+      "id": 6637,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#000000",
+        "secondary": "#ffffff",
+        "text": "#ffffff"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0643\u064a \u0643\u064a \u0628\u0627\u0631\u062a\u064a\u0632\u0627\u0646 \u0645\u0648\u0632\u0627\u0631\u062a \u0628\u064a\u062a",
+          "ru": "\u041f\u0430\u0440\u0442\u0438\u0437\u0430\u043d \u0411\u0435\u043b\u0433\u0440\u0430\u0434"
+        },
+        "shortNameTranslation": {
+          "ar": "\u0628\u0627\u0631\u062a\u064a\u0632\u0627\u0646 \u0645\u0648\u0632\u0627\u0631\u062a",
+          "bn": "\u09aa\u09be\u09b0\u09cd\u099f\u09bf\u099c\u09be\u09a8 \u09ae\u09cb\u09ce\u099c\u09be\u09b0\u09cd\u099f",
+          "hi": "\u092a\u093e\u0930\u094d\u091f\u093f\u091c\u093c\u0928 \u092e\u094b\u091c\u093c\u093e\u0930\u094d\u091f"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2754,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 97,
+      "display": 97,
+      "period1": 34,
+      "period2": 23,
+      "period3": 19,
+      "period4": 21,
+      "normaltime": 97
+    },
+    "awayScore": {
+      "current": 77,
+      "display": 77,
+      "period1": 18,
+      "period2": 31,
+      "period3": 17,
+      "period4": 11,
+      "normaltime": 77
+    },
+    "time": {
+      "played": 2400,
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-11-02T13:51:36+00:00",
+      "currentPeriodStartTimestamp": 1793620835
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime",
+        "time.played",
+        "time.playedLastUpdated",
+        "time.clockRunning",
+        "time.clockRunningLastUpdated"
+      ],
+      "changeTimestamp": 1793627496
+    },
+    "hasGlobalHighlights": false,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943103,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "u-banca-transilvania-cluj-napoca-kk-partizan-mozzart-bet",
+    "startTimestamp": 1793620800,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  },
+  {
+    "tournament": {
+      "name": "AdmiralBet ABA League, Group B",
+      "slug": "aba-liga-group-b",
+      "category": {
+        "name": "International",
+        "slug": "international",
+        "sport": {
+          "name": "Basketball",
+          "slug": "basketball",
+          "id": 2
+        },
+        "priority": 11,
+        "country": {},
+        "id": 103,
+        "flag": "international",
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0644\u064a",
+            "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+            "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+            "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+          },
+          "shortNameTranslation": {}
+        }
+      },
+      "uniqueTournament": {
+        "name": "AdmiralBet ABA League",
+        "slug": "admiralbet-aba-league",
+        "primaryColorHex": "#182651",
+        "secondaryColorHex": "#f47321",
+        "category": {
+          "name": "International",
+          "slug": "international",
+          "sport": {
+            "name": "Basketball",
+            "slug": "basketball",
+            "id": 2
+          },
+          "priority": 11,
+          "country": {},
+          "id": 103,
+          "flag": "international",
+          "fieldTranslations": {
+            "nameTranslation": {
+              "ar": "\u062f\u0648\u0644\u064a",
+              "hi": "\u0905\u0902\u0924\u0930\u094d\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f",
+              "bn": "\u0986\u09a8\u09cd\u09a4\u09b0\u09cd\u099c\u09be\u09a4\u09bf\u0995",
+              "ru": "\u041c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u044b\u0435"
+            },
+            "shortNameTranslation": {}
+          }
+        },
+        "userCount": 6819,
+        "hasPerformanceGraphFeature": false,
+        "liveActivityEnabled": false,
+        "country": {},
+        "id": 235,
+        "hasEventPlayerStatistics": false,
+        "hasBoxScore": true,
+        "displayInverseHomeAwayTeams": false,
+        "fieldTranslations": {
+          "nameTranslation": {
+            "ar": "\u062f\u0648\u0631\u064a \u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0628\u0644\u0642\u0627\u0646",
+            "bn": "\u098f\u09ac\u09bf\u098f \u09b2\u09c0\u0997",
+            "hi": "\u090f\u092c\u0940\u090f \u0932\u0940\u0917",
+            "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet"
+          },
+          "shortNameTranslation": {}
+        },
+        "hasRating": true,
+        "hasLiveRating": true
+      },
+      "priority": 106,
+      "isGroup": true,
+      "groupName": "Group B",
+      "groupSign": "B",
+      "id": 160509,
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0627\u0644\u062f\u0648\u0631\u064a \u0627\u0644\u0623\u062f\u0631\u064a\u0627\u062a\u064a\u0643\u064a\u060c \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629 B",
+          "ru": "\u041b\u0438\u0433\u0430 \u0410\u0411\u0410 AdmiralBet, \u0413\u0440\u0443\u043f\u043f\u0430 B"
+        },
+        "shortNameTranslation": {}
+      }
+    },
+    "season": {
+      "name": "Liga ABA 26/27",
+      "year": "26/27",
+      "editor": false,
+      "id": 102074
+    },
+    "roundInfo": {
+      "round": 7
+    },
+    "customId": "kIcsdFy",
+    "status": {
+      "code": 100,
+      "description": "Ended",
+      "type": "finished"
+    },
+    "winnerCode": 2,
+    "homeTeam": {
+      "name": "U-Banca Transilvania Cluj-Napoca",
+      "slug": "u-banca-transilvania-cluj-napoca",
+      "shortName": "U-BT Cluj-Napoca",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 2770,
+      "nameCode": "UCN",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "RO",
+        "alpha3": "ROU",
+        "name": "Romania",
+        "slug": "romania"
+      },
+      "id": 59003,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#ffffff",
+        "secondary": "#000000",
+        "text": "#000000"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u0627\u0646\u0643\u0627 \u062a\u0631\u0627\u0646\u0633\u064a\u0644\u0641\u0627\u0646\u064a\u0627 \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "ru": "\u0423-\u0411\u0430\u043d\u043a\u0430 \u0422\u0440\u0430\u043d\u0441\u0438\u043b\u044c\u0432\u0430\u043d\u0438\u044f"
+        },
+        "shortNameTranslation": {
+          "ar": "\u062a\u062d\u062a \u0628\u064a \u062a\u064a \u0643\u0644\u0648\u062c-\u0646\u0627\u0628\u0648\u0643\u0627",
+          "bn": "\u0987\u0989-\u09ac\u09bf\u099f\u09bf \u0995\u09cd\u09b2\u09c1\u099c-\u09a8\u09be\u09aa\u09cb\u0995\u09be",
+          "hi": "\u092f\u0942-\u092c\u0940\u091f\u0940 \u0915\u094d\u0932\u0941\u091c-\u0928\u092a\u094b\u0915\u093e"
+        }
+      }
+    },
+    "awayTeam": {
+      "name": "KK Bosna",
+      "slug": "kk-bosna-meridianbet",
+      "shortName": "Bosna",
+      "gender": "M",
+      "sport": {
+        "name": "Basketball",
+        "slug": "basketball",
+        "id": 2
+      },
+      "userCount": 4775,
+      "nameCode": "BOS",
+      "disabled": false,
+      "national": false,
+      "type": 0,
+      "country": {
+        "alpha2": "BA",
+        "alpha3": "BIH",
+        "name": "Bosnia & Herzegovina",
+        "slug": "bosnia-and-herzegovina"
+      },
+      "id": 6660,
+      "subTeams": [],
+      "teamColors": {
+        "primary": "#732727",
+        "secondary": "#f3ac01",
+        "text": "#f3ac01"
+      },
+      "fieldTranslations": {
+        "nameTranslation": {
+          "ar": "\u0643\u064a \u0643\u064a \u0628\u0648\u0633\u0646\u0627",
+          "ru": "\u0411\u043e\u0441\u043d\u0430 \u0421\u0430\u0440\u0430\u0435\u0432\u043e"
+        },
+        "shortNameTranslation": {
+          "ar": "\u0628\u0648\u0633\u0646\u0627",
+          "bn": "\u09ac\u09b8\u09a8\u09be",
+          "hi": "\u092c\u094b\u0938\u094d\u0928\u093e"
+        }
+      }
+    },
+    "homeScore": {
+      "current": 91,
+      "display": 91,
+      "period1": 23,
+      "period2": 29,
+      "period3": 21,
+      "period4": 18,
+      "normaltime": 91
+    },
+    "awayScore": {
+      "current": 93,
+      "display": 93,
+      "period1": 25,
+      "period2": 17,
+      "period3": 23,
+      "period4": 28,
+      "normaltime": 93
+    },
+    "time": {
+      "periodLength": 600,
+      "overtimeLength": 300,
+      "totalPeriodCount": 4,
+      "clockRunning": false,
+      "clockRunningLastUpdated": "2026-11-08T12:07:36+00:00"
+    },
+    "changes": {
+      "changes": [
+        "status.code",
+        "status.description",
+        "status.type",
+        "homeScore.normaltime",
+        "awayScore.normaltime"
+      ],
+      "changeTimestamp": 1794139775
+    },
+    "hasGlobalHighlights": true,
+    "hasEventPlayerStatistics": true,
+    "crowdsourcingDataDisplayEnabled": false,
+    "id": 16943114,
+    "periods": {
+      "current": "Score",
+      "period1": "1st quarter",
+      "period2": "2nd quarter",
+      "period3": "3rd quarter",
+      "period4": "4th quarter",
+      "overtime": "Overtime"
+    },
+    "slug": "u-banca-transilvania-cluj-napoca-kk-bosna",
+    "startTimestamp": 1794132000,
+    "finalResultOnly": false,
+    "feedLocked": false,
+    "isEditor": false,
+    "eventFilters": {
+      "category": [
+        "club"
+      ],
+      "level": [
+        "top-competitions",
+        "pro"
+      ],
+      "gender": [
+        "M"
+      ]
+    }
+  }
+]

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin · U-BT în cifre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF; --bg-2: #F1F1EF; --bg-out: #E6E6E3; --line: #E2E2E0; --line-input: #D6D6D3;
+    --ink: #0C0C0D; --ink-2: #4A4A4C; --ink-3: #8A8A8C;
+    --acc: #4A6FA5; --acc-hover: #36557F; --win: #1F8A4C; --loss: #C8323C; --warn: #B7791F;
+    --f-num: 'Saira Condensed', 'Arial Narrow', sans-serif; --f-txt: 'Public Sans', system-ui, sans-serif;
+    --r: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg-out); color: var(--ink); font: 400 15px/1.5 var(--f-txt); -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, p { margin: 0; }
+  button, input, select { font: inherit; color: inherit; }
+  a { color: var(--acc); }
+  header { background: var(--ink); color: #fff; padding: 18px 32px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  header h1 { font: 700 26px/1 var(--f-num); letter-spacing: .02em; text-transform: uppercase; }
+  header span { color: #BDBDBD; font-size: 14px; }
+  header a { color: #fff; margin-left: auto; font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 20px; }
+  section { background: var(--bg); border-radius: var(--r); padding: 22px 24px; }
+  h2 { font: 700 22px/1.1 var(--f-num); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 4px; }
+  .sub { color: var(--ink-2); font-size: 14px; margin-bottom: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .card { background: var(--bg-2); border-radius: 10px; padding: 14px 16px; }
+  .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); }
+  .big { font: 700 22px/1.2 var(--f-num); margin: 2px 0; }
+  .muted { color: var(--ink-3); font-size: 13px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--line-input); background: var(--bg); border-radius: 99px; padding: 7px 16px; cursor: pointer; font-weight: 600; font-size: 14px; }
+  .btn:hover { background: var(--bg-2); }
+  .btn.pri { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn.pri:hover { background: #2A2A2C; }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .btn.sm { padding: 4px 12px; font-size: 13px; }
+  .btn.danger { color: var(--loss); }
+  .pill { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; background: var(--bg-2); color: var(--ink-2); }
+  .pill.ok { background: #E3F2E9; color: var(--win); }
+  .pill.err { background: #FBE4E6; color: var(--loss); }
+  .pill.warn { background: #FBF0DD; color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  tr.click { cursor: pointer; } tr.click:hover td { background: #F7F7F5; }
+  pre { background: #111; color: #DADADA; border-radius: 10px; padding: 14px; font: 12px/1.5 ui-monospace, Menlo, monospace; max-height: 340px; overflow: auto; white-space: pre-wrap; margin: 14px 0 0; }
+  .logo { width: 44px; height: 44px; object-fit: contain; }
+  .ini { width: 44px; height: 44px; border-radius: 50%; background: var(--bg-2); color: var(--ink-3); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; }
+  .toggle input { width: 18px; height: 18px; accent-color: var(--ink); }
+  select, input[type=text] { border: 1px solid var(--line-input); border-radius: 8px; padding: 6px 10px; background: var(--bg); }
+  input[type=text] { min-width: 320px; }
+  .msg { font-size: 14px; margin-top: 10px; min-height: 1.4em; }
+  .msg.ok { color: var(--win); } .msg.err { color: var(--loss); }
+  .files { max-height: 220px; overflow: auto; font: 12px/1.6 ui-monospace, Menlo, monospace; background: var(--bg-2); border-radius: 8px; padding: 10px 12px; margin: 12px 0; }
+  .note { font-size: 13px; color: var(--ink-2); background: var(--bg-2); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+  .hide { display: none; }
+  @media (max-width: 760px) {
+    header { padding: 16px; } section { padding: 18px 16px; }
+    .grid3 { grid-template-columns: 1fr; } input[type=text] { min-width: 0; width: 100%; }
+    .hide-m { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>U-BT în cifre · Admin</h1><span>local, doar pe acest Mac</span>
+  <a href="https://ubt-dashboard-dun.vercel.app/" target="_blank" rel="noopener">Site-ul public ↗</a>
+</header>
+<main>
+
+  <section id="s-status">
+    <h2>Stare</h2>
+    <p class="sub">Ultimul fetch și ultimul meci din fiecare competiție.</p>
+    <div class="grid3" id="comps"></div>
+    <p class="muted" id="gitline" style="margin-top:12px"></p>
+  </section>
+
+  <section id="s-fetch">
+    <h2>Fetch</h2>
+    <p class="sub">Aduce meciurile noi și rulează procesarea. O competiție adusă în ultimele 24 de ore e sărită, dacă nu bifezi „Forțează”.</p>
+    <div class="row">
+      <button class="btn pri" data-fetch="">Toate competițiile</button>
+      <button class="btn" data-fetch="eurocup">EuroCup</button>
+      <button class="btn" data-fetch="aba_league">ABA League</button>
+      <button class="btn" data-fetch="liga_nationala">Liga Națională</button>
+      <label class="toggle" style="margin-left:8px"><input type="checkbox" id="force"> Forțează</label>
+    </div>
+    <div id="live" class="hide"><p class="msg" id="live-st"></p><pre id="live-log"></pre></div>
+    <h3 class="label" style="margin:22px 0 4px">Istoric</h3>
+    <table><thead><tr><th>Când</th><th>Ce</th><th>Rezultat</th><th class="hide-m">Durată</th></tr></thead><tbody id="runs"></tbody></table>
+  </section>
+
+  <section id="s-auto">
+    <h2>Fetch automat</h2>
+    <p class="sub">Rulează pe GitHub Actions, chiar dacă Mac-ul e închis. Verifică zilnic și face fetch când a trecut intervalul ales, apoi publică singur.</p>
+    <div class="row">
+      <label class="toggle"><input type="checkbox" id="auto-on"> Pornit</label>
+      <span>o dată la</span>
+      <select id="auto-days"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>7</option></select>
+      <span>zile</span>
+      <button class="btn" id="auto-save">Salvează</button>
+    </div>
+    <p class="msg" id="auto-msg"></p>
+    <div class="note">Setarea ajunge pe GitHub după ce apeși <b>Publică</b>. Ca să meargă, în repo trebuie să existe secretul <code>RAPIDAPI_KEY</code> (Settings → Secrets and variables → Actions).</div>
+    <div id="auto-runs" class="muted" style="margin-top:10px"></div>
+  </section>
+
+  <section id="s-logos">
+    <h2>Logo-uri echipe</h2>
+    <p class="sub">Apar pe pagina meciului. SVG e ideal; merge și PNG, WebP sau JPG (max 2 MB).</p>
+    <div class="row" style="margin-bottom:10px">
+      <select id="team-comp" aria-label="Competiție"><option value="">Toate competițiile</option></select>
+      <label class="toggle"><input type="checkbox" id="only-missing" checked> Doar echipele fără logo</label>
+      <span class="muted" id="team-count"></span>
+    </div>
+    <table><thead><tr><th style="width:60px">Logo</th><th>Echipă</th><th class="hide-m">Competiții</th><th class="hide-m">Ultimul meci</th><th></th></tr></thead><tbody id="teams"></tbody></table>
+    <input type="file" id="logo-file" accept=".svg,.png,.webp,.jpg,.jpeg,image/svg+xml,image/png,image/webp,image/jpeg" class="hide">
+    <p class="msg" id="logo-msg"></p>
+  </section>
+
+  <section id="s-seasons">
+    <h2>Sezoane afișate</h2>
+    <p class="sub">Sezoanele debifate dispar de pe site (meciuri, jucători, istoric). Datele rămân în repo.</p>
+    <table><thead><tr><th style="width:60px">Afișat</th><th>Sezon</th><th>Meciuri</th><th class="hide-m">Competiții</th></tr></thead><tbody id="seasons"></tbody></table>
+    <div class="row" style="margin-top:12px"><button class="btn" id="seasons-save">Salvează</button></div>
+    <p class="msg" id="seasons-msg"></p>
+  </section>
+
+  <section id="s-publish">
+    <h2>Publică</h2>
+    <p class="sub">Face commit cu tot ce s-a schimbat, ia de pe GitHub eventualele commit-uri ale fetch-ului automat și face push. Vercel publică site-ul în ~30 de secunde.</p>
+    <div id="pub-files" class="files"></div>
+    <div class="row"><input type="text" id="pub-msg"><button class="btn pri" id="pub-go">Publică</button></div>
+    <p class="msg" id="pub-st"></p>
+    <pre id="pub-log" class="hide"></pre>
+  </section>
+
+</main>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const api = async (path, opts = {}) => {
+    const r = await fetch('/api' + path, opts);
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.detail || r.statusText);
+    return j;
+  };
+  const form = obj => { const f = new FormData(); Object.entries(obj).forEach(([k, v]) => f.append(k, v)); return { method: 'POST', body: f }; };
+  const COMP = { eurocup: 'EuroCup', aba_league: 'ABA League', liga_nationala: 'Liga Națională' };
+  const ago = iso => {
+    if (!iso) return 'niciodată';
+    const m = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (m < 1) return 'acum'; if (m < 60) return `acum ${m} min`;
+    const h = Math.round(m / 60); if (h < 36) return `acum ${h} h`;
+    return `acum ${Math.round(h / 24)} zile`;
+  };
+  const when = iso => new Date(iso).toLocaleString('ro-RO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const setMsg = (el, txt, ok) => { el.textContent = txt; el.className = 'msg ' + (ok === undefined ? '' : ok ? 'ok' : 'err'); };
+
+  // ── Stare ──
+  async function loadStatus() {
+    const s = await api('/status');
+    $('#comps').innerHTML = s.competitions.map(c => {
+      const g = c.last_game;
+      const st = c.status === 'active' ? '' : `<span class="pill">${c.status === 'finished' ? 'încheiat' : 'neînceput'}</span>`;
+      return `<div class="card"><div class="label">${esc(c.label)} ${st}</div>
+        <div class="big">${g ? `${g.result === 'W' ? 'V' : 'Î'} ${g.ubt_score}–${g.opp_score}` : '—'}</div>
+        <div class="muted">${g ? `${esc(g.opponent)} · ${g.date}` : 'niciun meci'}</div>
+        <div class="muted">Fetch: ${ago(c.last_fetch)}</div></div>`;
+    }).join('');
+    const gt = s.git;
+    const bits = [`Ultimul commit: ${esc(gt.last_commit)}`];
+    if (gt.changed.length) bits.push(`<span class="pill warn">${gt.changed.length} fișiere nepublicate</span>`);
+    if (gt.ahead) bits.push(`<span class="pill warn">${gt.ahead} commit-uri neîmpinse</span>`);
+    if (gt.behind) bits.push(`<span class="pill">${gt.behind} commit-uri noi pe GitHub</span>`);
+    if (!gt.changed.length && !gt.ahead) bits.push('<span class="pill ok">site-ul e la zi</span>');
+    $('#gitline').innerHTML = bits.join(' &nbsp; ');
+    document.querySelectorAll('[data-fetch]').forEach(b => { b.disabled = s.fetch_running; });
+  }
+
+  // ── Fetch ──
+  let polling = null;
+  async function loadRuns() {
+    const runs = await api('/fetch/runs');
+    $('#runs').innerHTML = runs.length ? runs.map(r => {
+      const dur = r.finished ? Math.round((new Date(r.finished) - new Date(r.started)) / 1000) + ' s' : '';
+      const res = !r.finished ? '<span class="pill">rulează…</span>' : r.exit_code === 0
+        ? `<span class="pill ok">ok</span> ${esc(r.summary)}` : `<span class="pill err">eroare</span> ${esc(r.summary)}`;
+      return `<tr class="click" data-run="${r.id}"><td>${when(r.started)}</td><td>${r.only ? COMP[r.only] : 'Toate'}${r.force ? ' · forțat' : ''}</td><td>${res}</td><td class="hide-m">${dur}</td></tr>`;
+    }).join('') : '<tr><td colspan="4" class="muted">Niciun fetch pornit din admin încă.</td></tr>';
+    const running = runs.find(r => !r.finished);
+    if (running && !polling) watch(running.id);
+  }
+  async function showRun(id) {
+    const r = await api('/fetch/runs/' + id);
+    $('#live').classList.remove('hide');
+    $('#live-log').textContent = r.log || '(log gol)';
+    $('#live-log').scrollTop = 1e9;
+    setMsg($('#live-st'), !r.finished ? `Rulează… (pornit ${when(r.started)})` : r.exit_code === 0 ? `Terminat (${when(r.finished)}).` : `S-a oprit cu eroare (cod ${r.exit_code}).`,
+      !r.finished ? undefined : r.exit_code === 0);
+    return r;
+  }
+  function watch(id) {
+    clearInterval(polling);
+    polling = setInterval(async () => {
+      const r = await showRun(id);
+      if (r.finished) { clearInterval(polling); polling = null; loadRuns(); loadStatus(); loadTeams(); loadSeasons(); loadPublish(); }
+    }, 1500);
+    showRun(id);
+  }
+  document.querySelectorAll('[data-fetch]').forEach(b => b.addEventListener('click', async () => {
+    try {
+      const r = await api('/fetch', form({ only: b.dataset.fetch, force: $('#force').checked }));
+      document.querySelectorAll('[data-fetch]').forEach(x => { x.disabled = true; });
+      await loadRuns(); watch(r.id);
+    } catch (e) { $('#live').classList.remove('hide'); setMsg($('#live-st'), e.message, false); }
+  }));
+  $('#runs').addEventListener('click', e => { const tr = e.target.closest('[data-run]'); if (tr) showRun(tr.dataset.run); });
+
+  // ── Fetch automat ──
+  async function loadAuto() {
+    const a = await api('/auto');
+    $('#auto-on').checked = a.enabled; $('#auto-days').value = String(a.every_days);
+    $('#auto-runs').innerHTML = a.recent_runs.length ? 'Ultimele rulări automate: ' + a.recent_runs.map(esc).join('<br>') : 'Nicio rulare automată încă.';
+  }
+  $('#auto-save').addEventListener('click', async () => {
+    try { await api('/auto', form({ enabled: $('#auto-on').checked, every_days: $('#auto-days').value }));
+      setMsg($('#auto-msg'), 'Salvat. Apasă Publică ca să ajungă pe GitHub.', true); loadPublish(); }
+    catch (e) { setMsg($('#auto-msg'), e.message, false); }
+  });
+
+  // ── Logo-uri ──
+  let TEAMS = [], target = null;
+  const logoSrc = p => '/logos/' + p.split('/').pop();
+  const ini = n => n.split(/\s+/).filter(w => /^\p{Lu}/u.test(w)).map(w => w[0]).slice(0, 2).join('') || n.slice(0, 2).toUpperCase();
+  async function loadTeams() {
+    TEAMS = await api('/teams');
+    const sel = $('#team-comp'), cur = sel.value;
+    const comps = [...new Set(TEAMS.flatMap(t => t.competitions))].sort();
+    sel.innerHTML = '<option value="">Toate competițiile</option>' + comps.map(c => `<option${c === cur ? ' selected' : ''}>${esc(c)}</option>`).join('');
+    renderTeams();
+  }
+  function renderTeams() {
+    const only = $('#only-missing').checked, comp = $('#team-comp').value;
+    const list = TEAMS.filter(t => (!only || !t.logo) && (!comp || t.competitions.includes(comp)));
+    $('#team-count').textContent = `${list.length} ${list.length === 1 ? 'echipă' : 'echipe'}`;
+    $('#teams').innerHTML = list.length ? list.map(t => `<tr>
+      <td>${t.logo ? `<img class="logo" src="${logoSrc(t.logo)}" alt="">` : `<div class="ini">${esc(ini(t.name))}</div>`}</td>
+      <td><b>${esc(t.name)}</b><div class="muted">${t.games} ${t.games === 1 ? 'meci' : 'meciuri'}</div></td>
+      <td class="hide-m">${t.competitions.map(esc).join(', ')}</td><td class="hide-m">${t.last}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="btn sm" data-up="${esc(t.name)}">${t.logo ? 'Înlocuiește' : 'Încarcă logo'}</button>
+        ${t.logo ? `<button class="btn sm danger" data-del="${esc(t.name)}">Șterge</button>` : ''}</td></tr>`).join('')
+      : `<tr><td colspan="5" class="muted">${only ? 'Toate echipele de aici au logo.' : 'Nicio echipă.'}</td></tr>`;
+  }
+  $('#only-missing').addEventListener('change', renderTeams);
+  $('#team-comp').addEventListener('change', renderTeams);
+  $('#teams').addEventListener('click', async e => {
+    const up = e.target.closest('[data-up]'), del = e.target.closest('[data-del]');
+    if (up) { target = up.dataset.up; $('#logo-file').value = ''; $('#logo-file').click(); }
+    if (del && confirm(`Ștergi logo-ul pentru ${del.dataset.del}?`)) {
+      try { await api('/teams/logo?name=' + encodeURIComponent(del.dataset.del), { method: 'DELETE' });
+        setMsg($('#logo-msg'), `Logo șters pentru ${del.dataset.del}.`, true); loadTeams(); loadPublish(); }
+      catch (err) { setMsg($('#logo-msg'), err.message, false); }
+    }
+  });
+  $('#logo-file').addEventListener('change', async () => {
+    const f = $('#logo-file').files[0]; if (!f || !target) return;
+    try { await api('/teams/logo', form({ name: target, file: f }));
+      setMsg($('#logo-msg'), `Logo salvat pentru ${target}. Apasă Publică ca să apară pe site.`, true); loadTeams(); loadPublish(); }
+    catch (err) { setMsg($('#logo-msg'), err.message, false); }
+  });
+
+  // ── Sezoane ──
+  async function loadSeasons(data) {
+    const ss = data || await api('/seasons');
+    $('#seasons').innerHTML = ss.map(s => `<tr><td><input type="checkbox" data-season="${s.season}" ${s.hidden ? '' : 'checked'} style="width:18px;height:18px;accent-color:#0C0C0D"></td>
+      <td><b>${s.label}</b></td><td>${s.games}</td><td class="hide-m">${s.competitions.map(esc).join(', ')}</td></tr>`).join('');
+  }
+  $('#seasons-save').addEventListener('click', async () => {
+    const hidden = [...document.querySelectorAll('[data-season]')].filter(c => !c.checked).map(c => c.dataset.season);
+    try { await loadSeasons(await api('/seasons', form({ hidden: hidden.join(',') })));
+      setMsg($('#seasons-msg'), hidden.length ? `Salvat: ${hidden.length} ${hidden.length === 1 ? 'sezon ascuns' : 'sezoane ascunse'}. Apasă Publică.` : 'Salvat: toate sezoanele sunt afișate. Apasă Publică.', true); loadPublish(); }
+    catch (e) { setMsg($('#seasons-msg'), e.message, false); }
+  });
+
+  // ── Publică ──
+  async function loadPublish() {
+    const p = await api('/publish');
+    $('#pub-files').innerHTML = p.files.length ? p.files.map(f => `${esc(f.status.padEnd(2))} ${esc(f.path)}`).join('<br>') : 'Nimic de publicat local.';
+    if (!$('#pub-msg').value) $('#pub-msg').value = p.default_message;
+  }
+  $('#pub-go').addEventListener('click', async () => {
+    const b = $('#pub-go'); b.disabled = true; setMsg($('#pub-st'), 'Public…');
+    try {
+      const r = await api('/publish', form({ message: $('#pub-msg').value }));
+      $('#pub-log').classList.remove('hide');
+      $('#pub-log').textContent = r.steps.map(s => `${s.ok ? '✓' : '✗'} ${s.step}\n${s.output ? s.output + '\n' : ''}`).join('\n');
+      setMsg($('#pub-st'), r.ok ? 'Publicat. Site-ul se actualizează în ~30 de secunde.' : 'Nu s-a putut publica — vezi pașii de mai jos.', r.ok);
+      if (r.ok) $('#pub-msg').value = '';
+    } catch (e) { setMsg($('#pub-st'), e.message, false); }
+    b.disabled = false; loadPublish(); loadStatus(); loadAuto();
+  });
+
+  loadStatus(); loadRuns(); loadAuto(); loadTeams(); loadSeasons(); loadPublish();
+})();
+</script>
+</body>
+</html>

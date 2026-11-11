@@ -61,11 +61,17 @@
   };
 
   // ── Date ──────────────────────────────────────────────────────────────────
-  const csv = url => fetch(url).then(r => (r.ok ? r.text() : '')).then(t => {
-    if (!t) return [];
-    return Papa.parse(t.trim(), { header: true, skipEmptyLines: true }).data;
-  }).catch(() => []);
   const json = url => fetch(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  // config/site.json (scris din admin): sezoane ascunse + logo-uri echipe
+  let siteP = null;
+  const site = () => siteP || (siteP = json('../config/site.json?v=' + CB).then(c => ({ hidden_seasons: [], team_logos: {}, ...(c || {}) })));
+  // CSV-urile se citesc fără rândurile din sezoanele ascunse
+  const csv = url => Promise.all([site(), fetch(url).then(r => (r.ok ? r.text() : '')).catch(() => '')]).then(([cfg, t]) => {
+    if (!t) return [];
+    const hid = new Set((cfg.hidden_seasons || []).map(String));
+    const rows = Papa.parse(t.trim(), { header: true, skipEmptyLines: true }).data;
+    return hid.size ? rows.filter(o => !hid.has(String(o.season))) : rows;
+  }).catch(() => []);
 
   const isTrue = v => v === true || v === 'True' || v === 'true' || v === '1';
 
@@ -312,7 +318,7 @@
   window.UBT = {
     URLS, ORDER, COMP, SHORT, MS, MINUS,
     num, neg, mmss, sgn, sgnN, pctR, SL, SLs, dLong, dShort, dWeek, dNum, meci, pl, esc, initials, cleanName, POS,
-    csv, json, isTrue, normGames, normTeamStats, bioFromStats,
+    csv, json, site, isTrue, normGames, normTeamStats, bioFromStats,
     backTarget, gameHref, playerHref,
     header, footer, backBar, filters, pills, seasonSelect, info, infoK, INFO, photo, resBadge, endCards, secHead,
     on, onChange, mount, paint, scrollChartsToEnd, isMobile, filtersOpen: false,

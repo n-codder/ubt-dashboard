@@ -31,6 +31,18 @@ python fetchers/run_all.py        # fetch + procesare; --force ignoră cache-ul 
 
 După o schimbare în `player-profiles/assets/`, crește versiunea `?v=` din paginile HTML ca browserele să nu păstreze fișierele vechi.
 
+## Admin (local)
+
+```bash
+pip install -r requirements-admin.txt
+python admin/app.py               # http://127.0.0.1:8770
+```
+
+Din admin: pornești fetch-ul (cu log și istoric), setezi fetch-ul automat, încarci logo-uri pentru adversari, alegi ce sezoane apar pe site și publici (commit + push → Vercel).
+Logo-urile și sezoanele ascunse stau în `config/site.json`.
+
+**Fetch automat:** `.github/workflows/auto-fetch.yml` rulează zilnic pe GitHub Actions și face fetch dacă e pornit în `config/auto_fetch.json` și a trecut intervalul ales. Are nevoie de secretul `RAPIDAPI_KEY` în repo (Settings → Secrets and variables → Actions).
+
 ## Structură
 
 | Folder | Rol |

@@ -1,0 +1,117 @@
+competition,season,match_id,date,player_id,player_name,player_slug,position,jersey_number,is_starter,seconds_played,minutes_played,points,fg2_made,fg2_att,fg3_made,fg3_att,ft_made,ft_att,rebounds,off_rebounds,def_rebounds,assists,steals,blocks,turnovers,fouls,plus_minus
+Liga Națională,2026,16035738,2026-04-24,1201381,Karel Guzman,karel-guzman,F,0,False,448,7.47,6,0,0,2,3,0,0,1,0,1,0,1,0,1,1,-3
+Liga Națională,2026,16035738,2026-04-24,1180150,Iverson Molinar,iverson-molinar,G,1,False,1356,22.6,14,4,8,0,2,6,6,1,0,1,2,1,0,2,1,3
+Liga Națională,2026,16035738,2026-04-24,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16035738,2026-04-24,1185082,Nighael Ceaser,nighael-ceaser,C,4,False,1504,25.07,8,4,6,0,0,0,0,12,3,9,1,0,0,0,3,1
+Liga Națională,2026,16035738,2026-04-24,1938084,Darius Miron,miron-darius,G,6,False,345,5.75,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,1
+Liga Națională,2026,16035738,2026-04-24,1564127,Ben Altit,ben-altit,C,8,False,864,14.4,2,1,1,0,1,0,0,0,0,0,3,0,0,1,2,-3
+Liga Națională,2026,16035738,2026-04-24,998233,Dušan Miletić,miletic-dusan,C,10,True,1083,18.05,17,6,7,1,1,2,2,6,2,4,2,0,0,0,4,16
+Liga Națională,2026,16035738,2026-04-24,1953813,Fatts Russell,daron-russell,G,11,True,1807,30.12,19,2,4,3,10,6,9,3,0,3,6,0,0,2,2,5
+Liga Națională,2026,16035738,2026-04-24,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,114,1.9,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,5
+Liga Națională,2026,16035738,2026-04-24,1201378,Patrick Richard,patrick-richard,G,35,True,1695,28.25,11,0,0,3,5,2,2,5,2,3,2,1,0,2,2,11
+Liga Națională,2026,16035738,2026-04-24,861615,Jeff Taylor,taylor-jeff,F,44,True,1200,20.0,6,0,0,2,3,0,0,3,1,2,2,2,1,0,2,0
+Liga Națională,2026,16035738,2026-04-24,957956,Mitch Creek,creek-mitch,FG,55,True,1582,26.37,18,8,14,0,3,2,3,7,2,5,3,1,0,0,2,-1
+Liga Națională,2026,16035742,2026-04-26,1180150,Iverson Molinar,iverson-molinar,G,1,True,1194,19.9,4,1,4,0,3,2,2,1,1,0,3,1,0,1,1,-2
+Liga Națională,2026,16035742,2026-04-26,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16035742,2026-04-26,1185082,Nighael Ceaser,nighael-ceaser,C,4,False,1213,20.22,4,2,4,0,1,0,0,6,2,4,3,1,0,1,4,8
+Liga Națională,2026,16035742,2026-04-26,1938084,Darius Miron,miron-darius,G,6,True,529,8.82,0,0,0,0,4,0,0,2,1,1,0,1,0,1,1,-4
+Liga Națională,2026,16035742,2026-04-26,1564127,Ben Altit,ben-altit,C,8,True,664,11.07,2,0,0,0,0,2,2,4,2,2,0,0,1,1,3,-10
+Liga Națională,2026,16035742,2026-04-26,998233,Dušan Miletić,miletic-dusan,C,10,False,1153,19.22,13,6,7,0,0,1,3,10,6,4,2,1,5,1,1,6
+Liga Națională,2026,16035742,2026-04-26,1953813,Fatts Russell,daron-russell,G,11,False,1684,28.07,26,4,8,3,9,9,12,1,0,1,6,3,0,4,2,13
+Liga Națională,2026,16035742,2026-04-26,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,97,1.62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1
+Liga Națională,2026,16035742,2026-04-26,1183034,Trey Woodbury,trey-woodbury,G,22,True,898,14.97,2,0,0,0,3,2,4,2,1,1,1,0,0,1,2,-8
+Liga Națională,2026,16035742,2026-04-26,1201378,Patrick Richard,patrick-richard,G,35,False,1825,30.42,18,1,3,5,7,1,2,9,3,6,1,0,0,2,4,8
+Liga Națională,2026,16035742,2026-04-26,861615,Jeff Taylor,taylor-jeff,F,44,False,972,16.2,2,0,0,0,2,2,2,4,2,2,2,0,0,0,2,3
+Liga Națională,2026,16035742,2026-04-26,957956,Mitch Creek,creek-mitch,FG,55,True,1768,29.47,16,4,10,2,4,2,2,4,0,4,2,0,1,0,1,2
+Liga Națională,2026,16035735,2026-04-30,1180150,Iverson Molinar,iverson-molinar,G,1,True,1457,24.28,12,4,6,1,2,1,2,2,1,1,5,0,0,2,3,10
+Liga Națională,2026,16035735,2026-04-30,1185082,Nighael Ceaser,nighael-ceaser,C,4,False,1373,22.88,8,4,6,0,1,0,0,5,2,3,4,1,1,2,1,9
+Liga Națională,2026,16035735,2026-04-30,1564127,Ben Altit,ben-altit,C,8,True,1200,20.0,4,2,3,0,0,0,0,3,1,2,1,0,2,2,4,13
+Liga Națională,2026,16035735,2026-04-30,998233,Dušan Miletić,miletic-dusan,C,10,False,1029,17.15,11,4,7,0,0,3,4,5,1,4,1,0,1,0,1,3
+Liga Națională,2026,16035735,2026-04-30,1953813,Fatts Russell,daron-russell,G,11,False,1080,18.0,7,2,2,0,4,3,3,3,0,3,4,0,0,1,0,14
+Liga Națională,2026,16035735,2026-04-30,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,1019,16.98,4,2,4,0,4,0,0,2,0,2,1,1,1,3,5,5
+Liga Națională,2026,16035735,2026-04-30,1183034,Trey Woodbury,trey-woodbury,G,22,False,1235,20.58,9,1,3,2,5,1,2,2,0,2,0,0,0,0,0,10
+Liga Națională,2026,16035735,2026-04-30,1201378,Patrick Richard,patrick-richard,G,35,True,1500,25.0,6,0,0,2,6,0,0,4,2,2,6,1,0,0,4,12
+Liga Națională,2026,16035735,2026-04-30,861615,Jeff Taylor,taylor-jeff,F,44,True,1027,17.12,10,1,2,2,3,2,2,3,1,2,2,2,0,0,1,13
+Liga Națională,2026,16035735,2026-04-30,957956,Mitch Creek,creek-mitch,FG,55,True,1077,17.95,16,6,10,1,1,1,3,9,1,8,4,0,0,0,2,21
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,1555,25.92,10,4,7,0,3,2,2,0,0,0,3,2,0,4,2,6
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,245,4.08,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,-1
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,False,1282,21.37,9,2,2,1,1,2,2,11,3,8,0,4,1,2,1,13
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1938084,Darius Miron,miron-darius,G,6,False,295,4.92,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,538,8.97,2,1,3,0,0,0,0,2,0,2,2,0,1,0,2,7
+Liga Națională,2026,16158819,2026-05-14 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,True,1753,29.22,14,5,5,0,1,4,6,12,5,7,3,0,0,1,4,8
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1552,25.87,17,4,7,2,11,3,6,5,0,5,6,3,0,0,2,5
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,True,852,14.2,4,1,3,0,3,2,2,2,1,1,2,1,0,1,2,2
+Liga Națională,2026,16158819,2026-05-14 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,True,2167,36.12,9,0,2,2,6,3,3,4,1,3,2,1,0,1,1,6
+Liga Națională,2026,16158819,2026-05-14 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1756,29.27,20,7,9,0,2,6,7,5,4,1,2,1,0,3,2,1
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,False,1527,25.45,15,5,5,1,2,2,2,5,2,3,1,0,0,1,2,-4
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1938084,Darius Miron,miron-darius,G,6,True,994,16.57,5,1,3,1,2,0,0,2,1,1,0,0,0,1,3,6
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,855,14.25,0,0,0,0,0,0,0,2,0,2,1,0,0,1,0,7
+Liga Națională,2026,16158820,2026-05-16 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,True,1491,24.85,15,6,11,0,0,3,4,18,6,12,2,1,3,1,3,9
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1755,29.25,10,0,4,3,7,1,2,4,1,3,14,2,0,3,3,2
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,972,16.2,5,2,3,0,4,1,2,2,0,2,0,1,0,2,1,2
+Liga Națională,2026,16158820,2026-05-16 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,False,1342,22.37,5,1,1,1,5,0,0,3,0,3,1,1,0,3,1,5
+Liga Națională,2026,16158820,2026-05-16 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,1330,22.17,2,1,3,0,2,0,0,4,2,2,2,0,1,0,1,19
+Liga Națională,2026,16158820,2026-05-16 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1732,28.87,28,11,16,1,2,3,4,6,4,2,3,0,0,3,2,9
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,1399,23.32,14,5,9,0,2,4,4,6,0,6,5,0,0,0,1,5
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,136,2.27,3,0,0,1,1,0,0,0,0,0,0,0,0,0,1,2
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,False,1267,21.12,11,4,5,1,4,0,0,5,1,4,0,0,0,0,0,1
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1938084,Darius Miron,miron-darius,G,6,True,334,5.57,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,6
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,952,15.87,4,2,4,0,0,0,0,1,1,0,2,0,0,2,0,-8
+Liga Națională,2026,16122983,2026-05-20 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,True,1291,21.52,12,5,7,0,1,2,3,9,4,5,1,0,2,0,2,18
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1222,20.37,13,2,5,3,5,0,0,1,0,1,7,2,1,3,1,20
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,720,12.0,2,1,1,0,2,0,0,2,1,1,1,0,0,0,1,7
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,1020,17.0,5,1,3,1,1,0,0,1,0,1,1,0,0,3,1,-4
+Liga Națională,2026,16122983,2026-05-20 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,False,1434,23.9,11,1,1,3,5,0,0,3,1,2,2,2,0,2,3,13
+Liga Națională,2026,16122983,2026-05-20 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,933,15.55,4,0,0,1,1,1,2,2,0,2,4,1,0,2,3,11
+Liga Națională,2026,16122983,2026-05-20 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1290,21.5,24,7,9,1,2,7,8,5,0,5,2,2,0,0,2,29
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,1155,19.25,12,1,5,2,3,4,4,0,0,0,2,2,0,3,3,-10
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,False,870,14.5,2,1,3,0,1,0,0,3,1,2,1,1,0,0,3,-7
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1938084,Darius Miron,miron-darius,G,6,False,178,2.97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,808,13.47,2,1,4,0,0,0,2,4,4,0,1,0,0,0,1,-2
+Liga Națională,2026,16211433,2026-05-26 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,True,1389,23.15,12,4,6,1,1,1,2,7,2,5,0,2,0,1,3,6
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1759,29.32,28,5,10,4,14,6,6,4,0,4,3,1,0,1,3,3
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,223,3.72,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,1188,19.8,10,3,4,1,5,1,2,6,3,3,1,0,0,0,4,5
+Liga Națională,2026,16211433,2026-05-26 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,True,1831,30.52,5,1,1,1,4,0,0,6,2,4,6,1,0,1,2,-8
+Liga Națională,2026,16211433,2026-05-26 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,835,13.92,0,0,0,0,1,0,0,0,0,0,0,0,0,0,3,0
+Liga Națională,2026,16211433,2026-05-26 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1762,29.37,13,5,10,0,2,3,3,4,1,3,0,2,0,1,1,-3
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,945,15.75,14,3,4,1,1,5,5,0,0,0,1,0,0,1,2,-5
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,True,1024,17.07,12,6,8,0,1,0,0,6,4,2,0,0,0,0,4,1
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1938084,Darius Miron,miron-darius,G,6,True,376,6.27,0,0,2,0,1,0,0,1,1,0,0,0,0,0,1,-1
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,841,14.02,4,1,1,0,1,2,2,1,1,0,1,0,0,0,2,-1
+Liga Națională,2026,16211436,2026-05-28 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,False,1375,22.92,15,3,4,1,2,6,6,8,3,5,1,0,0,1,2,4
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1806,30.1,17,1,9,2,7,9,11,7,0,7,9,2,0,2,3,8
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,783,13.05,0,0,1,0,2,0,0,2,1,1,1,0,0,0,3,-3
+Liga Națională,2026,16211436,2026-05-28 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,False,1777,29.62,9,0,0,2,5,3,4,5,1,4,0,0,0,2,3,5
+Liga Națională,2026,16211436,2026-05-28 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,1260,21.0,4,0,1,1,3,1,2,3,2,1,0,2,0,0,2,8
+Liga Națională,2026,16211436,2026-05-28 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1812,30.2,13,1,4,3,4,2,2,1,1,0,1,0,0,2,3,9
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,1125,18.75,9,3,7,0,1,3,3,0,0,0,7,0,0,0,0,3
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,145,2.42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,True,978,16.3,6,3,3,0,0,0,1,5,1,4,0,0,0,2,1,-13
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1938084,Darius Miron,miron-darius,G,6,True,775,12.92,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,15
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,1013,16.88,6,1,1,1,1,1,2,0,0,0,0,0,0,0,2,-6
+Liga Națională,2026,16211435,2026-06-01 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,False,1351,22.52,8,4,4,0,0,0,0,11,3,8,2,1,2,1,3,38
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1558,25.97,24,3,6,4,11,6,7,4,0,4,8,1,0,2,2,26
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,217,3.62,2,1,2,0,0,0,0,0,0,0,0,1,0,1,2,6
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,1158,19.3,15,4,5,2,2,1,2,2,0,2,3,1,0,1,1,24
+Liga Națională,2026,16211435,2026-06-01 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,False,1378,22.97,6,0,1,2,5,0,0,2,1,1,0,1,0,1,1,11
+Liga Națională,2026,16211435,2026-06-01 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,673,11.22,0,0,0,0,1,0,0,5,1,4,1,0,1,1,4,-6
+Liga Națională,2026,16211435,2026-06-01 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1623,27.05,27,5,6,4,6,5,6,5,2,3,2,1,1,0,3,25
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1180150,Iverson Molinar,iverson-molinar,G,1,False,1366,22.77,17,6,9,0,3,5,5,2,0,2,1,2,0,3,1,-2
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1949098,Radu Andrei Cepoi,radu-andrei-cepoi,G,2,False,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1185082,Nighael Ceaser,nighael-ceaser,F,4,True,1338,22.3,6,2,5,0,2,2,2,8,2,6,0,0,1,1,2,2
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1938084,Darius Miron,miron-darius,G,6,True,289,4.82,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,-3
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1564127,Ben Altit,ben-altit,C,8,False,645,10.75,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,1
+Liga Națională,2026,16249696,2026-06-03 00:00:00,998233,Dušan Miletić,miletic-dusan,C,10,False,1062,17.7,6,2,3,0,1,2,2,6,3,3,1,1,1,5,4,-2
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1953813,Fatts Russell,daron-russell,G,11,True,1825,30.42,23,4,13,3,9,6,8,5,1,4,7,1,0,0,4,3
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1545209,Alexis Petric,petric-tudor-alexis,F,12,False,73,1.22,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,-3
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1183034,Trey Woodbury,trey-woodbury,G,22,False,835,13.92,4,2,2,0,1,0,0,1,0,1,2,0,0,0,1,5
+Liga Națională,2026,16249696,2026-06-03 00:00:00,1201378,Patrick Richard,patrick-richard,G,35,False,1966,32.77,8,1,2,2,6,0,0,5,2,3,2,4,0,0,4,6
+Liga Națională,2026,16249696,2026-06-03 00:00:00,861615,Jeff Taylor,taylor-jeff,F,44,True,658,10.97,0,0,0,0,2,0,0,5,3,2,2,0,0,0,2,-2
+Liga Națională,2026,16249696,2026-06-03 00:00:00,957956,Mitch Creek,creek-mitch,G,55,True,1939,32.32,10,3,3,1,2,1,2,6,0,6,0,0,0,1,3,5
