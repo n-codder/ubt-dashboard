@@ -11,6 +11,7 @@
 5. [Upload Google Sheets](#5-upload-google-sheets)
 6. [Pagina cu jucători (GitHub Pages)](#6-pagina-cu-jucători-github-pages)
 7. [Referință rapidă — comenzi](#7-referință-rapidă--comenzi)
+8. [Admin (local)](#8-admin-local)
 
 ---
 
@@ -225,3 +226,44 @@ python processors/per_game_stats.py --full
 python uploaders/sheets_uploader.py
 git add data/processed/ && git commit -m "data: full rebuild $(date +%Y-%m-%d)" && git push
 ```
+
+---
+
+## 8. Admin (local)
+
+Admin-ul pornește dintr-un terminal și se deschide în browser la **http://127.0.0.1:8770**.
+
+### Pornire
+
+```bash
+cd /Users/evakallay/Documents/stats/venv/ubt-dashboard
+source ../bin/activate
+python admin/app.py
+# Deschide: http://127.0.0.1:8770
+```
+
+Varianta scurtă, totul într-o singură comandă:
+
+```bash
+cd /Users/evakallay/Documents/stats/venv/ubt-dashboard && ../bin/python admin/app.py
+```
+
+### Oprire
+
+Ca să oprești admin-ul, apeși **Ctrl + C** în terminalul în care rulează. Dacă închizi fereastra de terminal, se oprește și el.
+
+Admin-ul și site-ul sunt două servere separate și nu au nevoie unul de altul:
+
+| Ce | Comandă | Adresă |
+| --- | --- | --- |
+| Admin | `python admin/app.py` | http://127.0.0.1:8770 |
+| Site (previzualizare locală) | `python3 -m http.server 8000` | http://localhost:8000 |
+
+### Probleme frecvente
+
+| Ce vezi | Cauza | Ce faci |
+| --- | --- | --- |
+| `command not found: python` | Venv-ul nu e activat | Rulezi `source ../bin/activate` din folderul proiectului sau folosești varianta scurtă cu `../bin/python` |
+| `ModuleNotFoundError: No module named 'fastapi'` | Lipsesc pachetele admin-ului | Cu venv-ul activat, rulezi `pip install -r requirements-admin.txt` |
+| `Address already in use` | Admin-ul rulează deja într-un alt terminal | Deschizi direct http://127.0.0.1:8770 sau îl oprești pe cel vechi cu Ctrl + C |
+| Pagina nu se încarcă în browser | Terminalul cu admin-ul a fost închis | Reiei pașii de la Pornire |
