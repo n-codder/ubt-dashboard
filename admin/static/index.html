@@ -61,9 +61,17 @@
   .files { max-height: 220px; overflow: auto; font: 12px/1.6 ui-monospace, Menlo, monospace; background: var(--bg-2); border-radius: 8px; padding: 10px 12px; margin: 12px 0; }
   .note { font-size: 13px; color: var(--ink-2); background: var(--bg-2); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
   .hide { display: none; }
+  .face { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--bg-2); }
+  .bio-form { background: var(--bg-2); border-radius: 10px; padding: 16px; margin-top: 14px; }
+  .bio-form h3 { font: 700 18px/1.2 var(--f-num); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 12px; }
+  .fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .fields label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); }
+  .fields .wide { grid-column: span 2; }
+  .fields input, .fields select { border: 1px solid var(--line-input); border-radius: 8px; padding: 6px 10px; background: var(--bg); font-size: 15px; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); min-width: 0; width: 100%; }
   @media (max-width: 760px) {
     header { padding: 16px; } section { padding: 18px 16px; }
     .grid3 { grid-template-columns: 1fr; } input[type=text] { min-width: 0; width: 100%; }
+    .fields { grid-template-columns: 1fr 1fr; } .fields .wide { grid-column: span 2; }
     .hide-m { display: none; }
   }
 </style>
@@ -123,6 +131,35 @@
     <table><thead><tr><th style="width:60px">Logo</th><th>Echipă</th><th class="hide-m">Competiții</th><th class="hide-m">Ultimul meci</th><th></th></tr></thead><tbody id="teams"></tbody></table>
     <input type="file" id="logo-file" accept=".svg,.png,.webp,.jpg,.jpeg,image/svg+xml,image/png,image/webp,image/jpeg" class="hide">
     <p class="msg" id="logo-msg"></p>
+  </section>
+
+  <section id="s-players">
+    <h2>Fișe jucători</h2>
+    <p class="sub">Numele afișat pe site, numărul, poziția, vârsta, naționalitatea și înălțimea. Datele se iau de pe <a id="bio-src" href="https://www.u-bt.ro/seniori/u-banca-transilvania-cluj-napoca" target="_blank" rel="noopener">u-bt.ro ↗</a>. Un jucător nou apare aici după primul fetch în care a jucat.</p>
+    <div class="row" style="margin-bottom:10px">
+      <label class="toggle"><input type="checkbox" id="only-nobio"> Doar jucătorii fără fișă</label>
+      <span class="muted" id="pl-count"></span>
+    </div>
+    <table><thead><tr><th style="width:60px"></th><th>Jucător</th><th class="hide-m">Competiții</th><th>Fișă</th><th></th></tr></thead><tbody id="players"></tbody></table>
+    <form class="bio-form hide" id="bio-form" autocomplete="off">
+      <h3 id="bio-title"></h3>
+      <div class="fields">
+        <label class="wide">Nume afișat pe site<input name="name" required placeholder="ex. Uroš Plavšić"></label>
+        <label>Număr<input name="jersey" type="number" min="0" max="99" inputmode="numeric"></label>
+        <label>Poziție<select name="position"></select></label>
+        <label>Data nașterii<input name="birth_date" type="date"></label>
+        <label>Înălțime (cm)<input name="height_cm" type="number" min="150" max="235" inputmode="numeric"></label>
+        <label>Naționalitate<input name="nationality" list="nat-list" placeholder="ex. American"></label>
+        <label>Locul nașterii<input name="birthplace" placeholder="ex. Indianapolis, SUA"></label>
+      </div>
+      <datalist id="nat-list"></datalist>
+      <div class="row" style="margin-top:14px">
+        <button class="btn pri" type="submit">Salvează fișa</button>
+        <button class="btn" type="button" id="bio-cancel">Renunță</button>
+        <button class="btn danger hide" type="button" id="bio-del" style="margin-left:auto">Șterge fișa</button>
+      </div>
+    </form>
+    <p class="msg" id="bio-msg"></p>
   </section>
 
   <section id="s-seasons">
@@ -212,7 +249,7 @@
     clearInterval(polling);
     polling = setInterval(async () => {
       const r = await showRun(id);
-      if (r.finished) { clearInterval(polling); polling = null; loadRuns(); loadStatus(); loadTeams(); loadSeasons(); loadPublish(); }
+      if (r.finished) { clearInterval(polling); polling = null; loadRuns(); loadStatus(); loadTeams(); loadPlayers(); loadSeasons(); loadPublish(); }
     }, 1500);
     showRun(id);
   }
@@ -278,6 +315,65 @@
     catch (err) { setMsg($('#logo-msg'), err.message, false); }
   });
 
+  // ── Fișe jucători ──
+  let PL = { players: [] }, editing = null;
+  async function loadPlayers() {
+    PL = await api('/players');
+    $('#bio-form [name=position]').innerHTML = '<option value="">—</option>' + PL.positions.map(p => `<option>${esc(p)}</option>`).join('');
+    $('#nat-list').innerHTML = PL.nationalities.map(n => `<option value="${esc(n)}">`).join('');
+    if (PL.source) $('#bio-src').href = PL.source;
+    renderPlayers();
+  }
+  function renderPlayers() {
+    const only = $('#only-nobio').checked;
+    const list = PL.players.filter(p => !only || !p.bio);
+    const missing = PL.players.filter(p => !p.bio).length;
+    $('#pl-count').textContent = `Sezonul ${PL.season} · ${PL.players.length} jucători` + (missing ? ` · ${missing} fără fișă` : ' · toți au fișă');
+    $('#players').innerHTML = list.length ? list.map(p => {
+      const b = p.bio;
+      const facts = b ? [b.jersey != null ? '#' + b.jersey : '', b.position, b.height_cm ? b.height_cm + ' cm' : '', b.nationality].filter(Boolean).join(' · ') : '';
+      return `<tr>
+        <td>${p.image ? `<img class="face" src="${esc(p.image)}" alt="" loading="lazy">` : `<div class="ini">${esc(ini(p.name))}</div>`}</td>
+        <td><b>${esc(b ? b.name : p.name)}</b><div class="muted">${p.games} ${p.games === 1 ? 'meci' : 'meciuri'}${facts ? ' · ' + esc(facts) : ''}</div></td>
+        <td class="hide-m">${p.competitions.map(esc).join(', ')}</td>
+        <td>${b ? '<span class="pill ok">completă</span>' : '<span class="pill warn">lipsește</span>'}</td>
+        <td style="text-align:right"><button class="btn sm" data-bio="${esc(p.id)}">${b ? 'Editează' : 'Completează'}</button></td></tr>`;
+    }).join('') : '<tr><td colspan="5" class="muted">Toți jucătorii sezonului au fișă.</td></tr>';
+  }
+  function openBio(id) {
+    const p = PL.players.find(x => x.id === id); if (!p) return;
+    editing = id;
+    const f = $('#bio-form'), b = p.bio || {};
+    $('#bio-title').textContent = (p.bio ? 'Editează fișa: ' : 'Fișă nouă: ') + (b.name || p.name);
+    for (const k of ['name', 'jersey', 'position', 'birth_date', 'birthplace', 'nationality', 'height_cm'])
+      f.elements[k].value = b[k] ?? (k === 'name' ? p.name : '');
+    $('#bio-del').classList.toggle('hide', !p.bio);
+    f.classList.remove('hide'); setMsg($('#bio-msg'), '');
+    f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.elements.name.focus();
+  }
+  const closeBio = () => { editing = null; $('#bio-form').classList.add('hide'); };
+  $('#only-nobio').addEventListener('change', renderPlayers);
+  $('#players').addEventListener('click', e => { const b = e.target.closest('[data-bio]'); if (b) openBio(b.dataset.bio); });
+  $('#bio-cancel').addEventListener('click', closeBio);
+  $('#bio-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, data = Object.fromEntries(new FormData(f));
+    const btn = f.querySelector('[type=submit]'); btn.disabled = true;
+    try {
+      const r = await api('/players/bio', form({ player_id: editing, ...data }));
+      closeBio(); await loadPlayers();
+      setMsg($('#bio-msg'), `Fișa lui ${r.bio.name} e salvată. Apasă Publică ca să apară pe site.`, true); loadPublish();
+    } catch (err) { setMsg($('#bio-msg'), err.message, false); }
+    btn.disabled = false;
+  });
+  $('#bio-del').addEventListener('click', async () => {
+    const p = PL.players.find(x => x.id === editing);
+    if (!p || !confirm(`Ștergi fișa lui ${p.bio.name}?`)) return;
+    try { await api('/players/bio?player_id=' + encodeURIComponent(editing), { method: 'DELETE' });
+      closeBio(); await loadPlayers(); setMsg($('#bio-msg'), 'Fișă ștearsă. Apasă Publică.', true); loadPublish(); }
+    catch (err) { setMsg($('#bio-msg'), err.message, false); }
+  });
+
   // ── Sezoane ──
   async function loadSeasons(data) {
     const ss = data || await api('/seasons');
@@ -309,7 +405,7 @@
     b.disabled = false; loadPublish(); loadStatus(); loadAuto();
   });
 
-  loadStatus(); loadRuns(); loadAuto(); loadTeams(); loadSeasons(); loadPublish();
+  loadStatus(); loadRuns(); loadAuto(); loadTeams(); loadPlayers(); loadSeasons(); loadPublish();
 })();
 </script>
 </body>

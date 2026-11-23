@@ -37,6 +37,7 @@ PROCESSED = ROOT / "data" / "processed"
 SITE_JSON = ROOT / "config" / "site.json"
 AUTO_JSON = ROOT / "config" / "auto_fetch.json"
 TEAM_IDS = ROOT / "config" / "team_ids.json"
+BIO_JSON = ROOT / "config" / "player_bio.json"
 LOGO_DIR = ROOT / "player-profiles" / "assets" / "logos"
 LOG_DIR = ROOT / "logs" / "admin"
 PY = sys.executable
@@ -269,6 +270,99 @@ def _remove_unused_logo(path: str | None, site: dict) -> None:
     f = (ROOT / "player-profiles" / path).resolve()
     if f.parent == LOGO_DIR.resolve() and f.exists():
         f.unlink()
+
+
+# ── Fișe jucători (config/player_bio.json) ─────────────────────────────────
+
+POSITIONS = ["Point guard", "Shooting guard", "Small forward", "Power forward", "Center"]
+BIO_FIELDS = ["name", "jersey", "position", "birth_date", "birthplace", "nationality", "height_cm"]
+
+
+def _bio() -> dict:
+    # citire directă (nu _read_json), ca ordinea cheilor din fișier să rămână neschimbată
+    try:
+        data = json.loads(BIO_JSON.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    data.setdefault("players", {})
+    return data
+
+
+@app.get("/api/players")
+def players():
+    df = pd.read_csv(PROCESSED / "player_stats_normalized.csv", dtype={"player_id": str})
+    season = int(df["season"].max())
+    cur = df[df["season"] == season]
+    bio = _bio()["players"]
+    out = []
+    for pid, grp in cur.groupby("player_id"):
+        img = grp["image_url"].dropna()
+        out.append({"id": pid, "name": grp["player_name"].iloc[0],
+                    "competitions": sorted(COMPETITIONS.get(c, c) for c in set(grp["competition_key"])),
+                    "games": int(pd.to_numeric(grp["games_played"], errors="coerce").fillna(0).sum()),
+                    "image": img.iloc[0] if len(img) else None, "bio": bio.get(pid)})
+    out.sort(key=lambda p: (p["bio"] is not None, -p["games"]))
+    nats = sorted({b.get("nationality") for b in bio.values() if b.get("nationality")})
+    return {"season": _season_label(season), "players": out, "positions": POSITIONS, "nationalities": nats,
+            "source": _bio().get("_source")}
+
+
+def _refresh_names() -> None:
+    """Aplică imediat numele din fișe în CSV-uri (altfel ar apărea abia la următorul fetch)."""
+    r = subprocess.run([PY, "processors/player_names.py"], cwd=ROOT, capture_output=True, text=True, timeout=120)
+    if r.returncode != 0:
+        raise HTTPException(500, "Fișa e salvată, dar numele nu s-au putut aplica în date: " + (r.stderr or r.stdout)[-300:])
+
+
+@app.post("/api/players/bio")
+def player_bio_set(player_id: str = Form(...), name: str = Form(...), jersey: str = Form(""),
+                   position: str = Form(""), birth_date: str = Form(""), birthplace: str = Form(""),
+                   nationality: str = Form(""), height_cm: str = Form("")):
+    known = {p["id"] for p in players()["players"]}
+    if player_id not in known:
+        raise HTTPException(400, "Jucătorul nu apare în sezonul curent.")
+    name = " ".join(name.split())
+    if not name:
+        raise HTTPException(400, "Numele e obligatoriu.")
+    entry: dict = {"name": name}
+    if jersey.strip():
+        if not jersey.strip().isdigit() or int(jersey) > 99:
+            raise HTTPException(400, "Numărul de pe tricou trebuie să fie între 0 și 99.")
+        entry["jersey"] = int(jersey)
+    if position.strip():
+        entry["position"] = position.strip()
+    if birth_date.strip():
+        try:
+            d = datetime.strptime(birth_date.strip(), "%Y-%m-%d")
+        except ValueError:
+            raise HTTPException(400, "Data nașterii nu e validă.")
+        if not 1960 <= d.year <= datetime.now().year - 12:
+            raise HTTPException(400, "Data nașterii pare greșită (anul).")
+        entry["birth_date"] = d.strftime("%Y-%m-%d")
+    if birthplace.strip():
+        entry["birthplace"] = " ".join(birthplace.split())
+    if nationality.strip():
+        entry["nationality"] = " ".join(nationality.split())
+    if height_cm.strip():
+        if not height_cm.strip().isdigit() or not 150 <= int(height_cm) <= 235:
+            raise HTTPException(400, "Înălțimea trebuie să fie în cm, între 150 și 235.")
+        entry["height_cm"] = int(height_cm)
+
+    data = _bio()
+    data["players"][player_id] = entry  # jucătorii noi se adaugă la final, cei existenți rămân pe loc
+    _write_json(BIO_JSON, data)
+    _refresh_names()
+    return {"id": player_id, "bio": entry}
+
+
+@app.delete("/api/players/bio")
+def player_bio_delete(player_id: str):
+    data = _bio()
+    if data["players"].pop(player_id, None) is None:
+        raise HTTPException(404, "Jucătorul nu are fișă.")
+    _write_json(BIO_JSON, data)
+    _refresh_names()
+    return {"id": player_id, "bio": None}
 
 
 @app.get("/api/seasons")
