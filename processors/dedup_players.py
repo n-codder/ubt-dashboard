@@ -121,21 +121,30 @@ def best_photo(rows_for_player: list) -> str:
 
 
 def apply_merge(path: pathlib.Path, merge_map: dict, dry_run: bool) -> int:
-    rows = list(csv.DictReader(path.open()))
+    with path.open(newline='') as f:
+        reader = csv.DictReader(f)
+        fieldnames = list(reader.fieldnames or [])
+        rows = list(reader)
     changed = 0
     for r in rows:
         if r['player_id'] in merge_map:
             cid, cname, cphoto = merge_map[r['player_id']]
             r['player_id']   = cid
             r['player_name'] = cname
-            if cphoto:
+            # Fișierul per-meci nu are coloana image_url: dacă o adăugam în
+            # rând, DictWriter arunca eroare la mijlocul scrierii și fișierul
+            # rămânea trunchiat (bug 19.11.2026).
+            if cphoto and 'image_url' in fieldnames:
                 r['image_url'] = cphoto
             changed += 1
-    if not dry_run:
-        with path.open('w', newline='') as f:
-            w = csv.DictWriter(f, fieldnames=rows[0].keys())
+    if not dry_run and changed:
+        # Scriere atomică: întâi într-un fișier temporar, apoi înlocuire.
+        tmp = path.with_suffix(path.suffix + '.tmp')
+        with tmp.open('w', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=fieldnames)
             w.writeheader()
             w.writerows(rows)
+        tmp.replace(path)
     return changed
 
 
