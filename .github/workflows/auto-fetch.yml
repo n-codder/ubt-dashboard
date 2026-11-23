@@ -1,10 +1,13 @@
-# Fetch automat: rulează zilnic, iar fetchers/auto_fetch.py decide după
-# config/auto_fetch.json (setat din admin) dacă e cazul să aducă date noi.
+# Fetch automat: rulează din oră în oră. fetchers/auto_fetch.py decide, fără
+# niciun apel API, dacă e ceva de adus:
+#   - un meci din data/processed/schedule.json s-a terminat și lipsește din date
+#   - sau a trecut intervalul fetch-ului de siguranță (config/auto_fetch.json, setat din admin)
+# Când nu e nimic de făcut, job-ul se oprește în câteva secunde (fără pip install).
 name: Fetch automat
 
 on:
   schedule:
-    - cron: "0 7 * * *"   # zilnic la 07:00 UTC (09:00/10:00 în România)
+    - cron: "17 * * * *"   # din oră în oră, la minutul 17
   workflow_dispatch: {}
 
 permissions:
@@ -26,15 +29,22 @@ jobs:
           python-version: "3.13"
           cache: pip
 
+      - name: E ceva de adus?
+        id: decide
+        run: python fetchers/auto_fetch.py --decide >> "$GITHUB_OUTPUT"
+
       - name: Instalează dependențele
+        if: steps.decide.outputs.comps != ''
         run: pip install -r requirements.txt
 
       - name: Fetch
+        if: steps.decide.outputs.comps != ''
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
-        run: python fetchers/auto_fetch.py
+        run: python fetchers/auto_fetch.py --run "${{ steps.decide.outputs.comps }}"
 
       - name: Publică datele noi
+        if: steps.decide.outputs.comps != ''
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "Nimic nou."

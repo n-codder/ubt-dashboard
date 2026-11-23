@@ -1,0 +1,109 @@
+{
+  "games": [
+    {
+      "id": 16943165,
+      "competition_key": "aba_league",
+      "start_utc": "2026-12-06T19:00:00+00:00",
+      "home": "KK Bosna",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16561720,
+      "competition_key": "eurocup",
+      "start_utc": "2026-12-09T19:00:00+00:00",
+      "home": "Umana Reyer Venezia",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16561736,
+      "competition_key": "eurocup",
+      "start_utc": "2026-12-16T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "Šiauliai"
+    },
+    {
+      "id": 16943194,
+      "competition_key": "aba_league",
+      "start_utc": "2026-12-20T17:00:00+00:00",
+      "home": "KK Zadar",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16561752,
+      "competition_key": "eurocup",
+      "start_utc": "2026-12-23T19:30:00+00:00",
+      "home": "London Lions",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16943199,
+      "competition_key": "aba_league",
+      "start_utc": "2026-12-26T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "KK Partizan Mozzart Bet"
+    },
+    {
+      "id": 16561769,
+      "competition_key": "eurocup",
+      "start_utc": "2026-12-30T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "Fraport Skyliners Frankfurt"
+    },
+    {
+      "id": 16943218,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-04T17:00:00+00:00",
+      "home": "BC Dubai",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16561782,
+      "competition_key": "eurocup",
+      "start_utc": "2027-01-05T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "La Laguna Tenerife"
+    },
+    {
+      "id": 16943229,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-09T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "KK Spartak Office Shoes"
+    },
+    {
+      "id": 16561801,
+      "competition_key": "eurocup",
+      "start_utc": "2027-01-13T16:30:00+00:00",
+      "home": "Türk Telekom B.K.",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16943237,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-16T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "KK Mega Basket"
+    },
+    {
+      "id": 16943093,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-21T17:00:00+00:00",
+      "home": "KK SC Derby",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    },
+    {
+      "id": 16943250,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-24T17:00:00+00:00",
+      "home": "U-Banca Transilvania Cluj-Napoca",
+      "away": "BC Vienna"
+    },
+    {
+      "id": 16943257,
+      "competition_key": "aba_league",
+      "start_utc": "2027-01-28T17:00:00+00:00",
+      "home": "Perspektiva Ilirija",
+      "away": "U-Banca Transilvania Cluj-Napoca"
+    }
+  ]
+}

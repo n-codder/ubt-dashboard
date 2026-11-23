@@ -225,6 +225,15 @@ def run(force: bool = False, only: str | None = None) -> list[str]:
 
     _summary()
 
+    # Programul meciurilor (1 cerere RapidAPI) — fetch-ul automat știe din el
+    # când s-a terminat un meci. Nu blochează publicarea dacă eșuează.
+    if ran_any:
+        try:
+            from fetchers import schedule
+            schedule.refresh()
+        except Exception as exc:
+            log.warning(f"Programul meciurilor nu s-a putut actualiza: {exc}")
+
     from processors import check_data
     if not check_data.run():
         errors.append("Verificarea datelor a eșuat")
