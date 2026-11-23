@@ -5,17 +5,19 @@
 (function () {
   'use strict';
 
-  const CB = Date.now();
+  // Fără parametru ?v=: fetch-urile cer „no-cache”, adică browserul păstrează
+  // fișierul, dar întreabă serverul de fiecare dată dacă s-a schimbat (ETag).
+  // Nemodificat → 304, fără conținut; modificat → versiunea nouă. Date mereu la zi.
   const DATA = '../data/processed/';
   const URLS = {
-    games:      DATA + 'games_normalized.csv?v=' + CB,
-    gameStats:  DATA + 'game_stats.csv?v=' + CB,
-    players:    DATA + 'player_stats_normalized.csv?v=' + CB,
-    perGame:    DATA + 'player_stats_per_game_normalized.csv?v=' + CB,
-    details:    DATA + 'player_details.csv?v=' + CB,
-    updated:    DATA + 'last_updated.json?v=' + CB,
-    bio:        '../config/player_bio.json?v=' + CB,
-    quarters:   DATA + 'quarters.csv?v=' + CB,
+    games:      DATA + 'games_normalized.csv',
+    gameStats:  DATA + 'game_stats.csv',
+    players:    DATA + 'player_stats_normalized.csv',
+    perGame:    DATA + 'player_stats_per_game_normalized.csv',
+    details:    DATA + 'player_details.csv',
+    updated:    DATA + 'last_updated.json',
+    bio:        '../config/player_bio.json',
+    quarters:   DATA + 'quarters.csv',
   };
 
   // ── Competiții ────────────────────────────────────────────────────────────
@@ -61,12 +63,13 @@
   };
 
   // ── Date ──────────────────────────────────────────────────────────────────
-  const json = url => fetch(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  const get = url => fetch(url, { cache: 'no-cache' });
+  const json = url => get(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
   // config/site.json (scris din admin): sezoane ascunse + logo-uri echipe
   let siteP = null;
-  const site = () => siteP || (siteP = json('../config/site.json?v=' + CB).then(c => ({ hidden_seasons: [], team_logos: {}, ...(c || {}) })));
+  const site = () => siteP || (siteP = json('../config/site.json').then(c => ({ hidden_seasons: [], team_logos: {}, ...(c || {}) })));
   // CSV-urile se citesc fără rândurile din sezoanele ascunse
-  const csv = url => Promise.all([site(), fetch(url).then(r => (r.ok ? r.text() : '')).catch(() => '')]).then(([cfg, t]) => {
+  const csv = url => Promise.all([site(), get(url).then(r => (r.ok ? r.text() : '')).catch(() => '')]).then(([cfg, t]) => {
     if (!t) return [];
     const hid = new Set((cfg.hidden_seasons || []).map(String));
     const rows = Papa.parse(t.trim(), { header: true, skipEmptyLines: true }).data;
