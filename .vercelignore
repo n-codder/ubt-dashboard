@@ -1,3 +1,22 @@
-admin/
-logs/
-.github/
+# Vercel publică DOAR ce folosește site-ul. Restul (date brute, cod Python,
+# admin, manual, notebooks) rămâne doar în GitHub.
+# Regulă: întâi se exclude tot, apoi se readuc explicit fișierele site-ului.
+# Dacă site-ul începe să citească un fișier nou din afara player-profiles/,
+# trebuie adăugat aici.
+
+/*
+
+!/vercel.json
+!/index.html
+!/player-profiles
+
+# date: doar cele procesate (CSV-urile citite de pagini)
+!/data
+/data/*
+!/data/processed
+
+# config: doar ce citește site-ul (scrise din admin / de mână)
+!/config
+/config/*
+!/config/site.json
+!/config/player_bio.json

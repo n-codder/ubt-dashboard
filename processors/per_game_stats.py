@@ -331,12 +331,8 @@ def process_ln(season: int, full: bool) -> pd.DataFrame:
 # ── Helpers ────────────────────────────────────────────────────────────────
 
 def _fmt_name(name: str) -> str:
-    if not name:
-        return ""
-    if "," in name and name == name.upper():
-        surname, _, first = name.partition(",")
-        return f"{first.strip().title()} {surname.strip().title()}"
-    return name
+    from processors.player_names import fmt_name
+    return fmt_name(name) or ""
 
 
 # ── Merge & save ───────────────────────────────────────────────────────────

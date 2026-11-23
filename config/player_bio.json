@@ -1,9 +1,10 @@
 {
-  "_comment": "Date bio jucători U-BT, extrase de pe u-bt.ro/seniori. Cheie: player_id canonical.",
+  "_comment": "Date bio jucători U-BT, extrase de pe u-bt.ro/seniori. Cheie: player_id canonical. „name” = numele afișat pe site (are prioritate față de numele din surse).",
   "_source": "https://www.u-bt.ro/seniori/u-banca-transilvania-cluj-napoca",
   "_season": "2026-2027",
   "players": {
     "14838": {
+      "name": "Otis Livingston II",
       "jersey": 0,
       "position": "Point guard",
       "birth_date": "1996-10-12",
@@ -12,6 +13,7 @@
       "height_cm": 181
     },
     "12801": {
+      "name": "Javonte Smart",
       "jersey": 1,
       "position": "Shooting guard",
       "birth_date": "1999-06-03",
@@ -20,6 +22,7 @@
       "height_cm": 191
     },
     "14840": {
+      "name": "Dušan Beslać",
       "jersey": 3,
       "position": "Power forward",
       "birth_date": "1998-10-06",
@@ -28,6 +31,7 @@
       "height_cm": 205
     },
     "13399": {
+      "name": "Andrei Cepoi",
       "jersey": 7,
       "position": "Point guard",
       "birth_date": "2008-10-09",
@@ -36,6 +40,7 @@
       "height_cm": 185
     },
     "14841": {
+      "name": "Jalyn McCreary",
       "jersey": 8,
       "position": "Power forward",
       "birth_date": "2000-09-19",
@@ -44,6 +49,7 @@
       "height_cm": 202
     },
     "14843": {
+      "name": "Christian Bishop",
       "jersey": 13,
       "position": "Center",
       "birth_date": "1999-06-13",
@@ -52,6 +58,7 @@
       "height_cm": 201
     },
     "13300": {
+      "name": "Javon Bess",
       "jersey": 20,
       "position": "Small forward",
       "birth_date": "1996-04-01",
@@ -60,6 +67,7 @@
       "height_cm": 198
     },
     "14844": {
+      "name": "Malcolm Hill",
       "jersey": 21,
       "position": "Small forward",
       "birth_date": "1995-10-26",
@@ -68,6 +76,7 @@
       "height_cm": 198
     },
     "6240": {
+      "name": "Uroš Plavšić",
       "jersey": 22,
       "position": "Center",
       "birth_date": "1998-12-22",
@@ -76,6 +85,7 @@
       "height_cm": 216
     },
     "14845": {
+      "name": "Bogdan Nicolescu",
       "jersey": 24,
       "position": "Small forward",
       "birth_date": "1997-01-03",
@@ -84,6 +94,7 @@
       "height_cm": 199
     },
     "11801": {
+      "name": "Patrick Richard",
       "jersey": 35,
       "position": "Shooting guard",
       "birth_date": "1990-01-25",
@@ -92,6 +103,7 @@
       "height_cm": 196
     },
     "7729": {
+      "name": "Kristian Kullamäe",
       "jersey": 77,
       "position": "Point guard",
       "birth_date": "1999-05-25",
@@ -100,12 +112,40 @@
       "height_cm": 195
     },
     "12461": {
+      "name": "Luca Illés",
       "jersey": 88,
       "position": "Point guard",
       "birth_date": "2007-01-08",
       "birthplace": "Timișoara, România",
       "nationality": "Român",
       "height_cm": 195
+    },
+    "15407": {
+      "name": "Leland Walker",
+      "jersey": 5,
+      "position": "Point guard",
+      "birth_date": "2003-04-12",
+      "birthplace": "Indianapolis, SUA",
+      "nationality": "American",
+      "height_cm": 185
+    },
+    "14839": {
+      "name": "Thomas Bernát",
+      "jersey": 2,
+      "position": "Point guard",
+      "birth_date": "2009-12-05",
+      "birthplace": "Cluj-Napoca, România",
+      "nationality": "Român",
+      "height_cm": 191
+    },
+    "2296360": {
+      "name": "Alex Câmpean",
+      "jersey": 11,
+      "position": "Small forward",
+      "birth_date": "2009-05-08",
+      "birthplace": "Cluj-Napoca, România",
+      "nationality": "Român",
+      "height_cm": 192
     }
   }
 }

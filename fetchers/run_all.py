@@ -149,6 +149,14 @@ def _run_processors(season: int, full: bool) -> list[str]:
         log.error(f"Dedup eroare: {exc}")
         errors.append(f"Dedup eroare: {exc}")
 
+    log.info("Rulez processors/player_names.py ...")
+    try:
+        names = importlib.import_module("processors.player_names")
+        names.run()
+    except Exception as exc:
+        log.error(f"Nume jucători eroare: {exc}")
+        errors.append(f"Nume jucători eroare: {exc}")
+
     return errors
 
 

@@ -132,12 +132,8 @@ def _normalize_player_name(name: str) -> str:
     Convertește "ALTIT, BEN" → "Ben Altit".
     Numele deja în format normal sunt returnate neschimbate.
     """
-    if not isinstance(name, str) or not name.strip():
-        return name
-    if "," in name and name == name.upper():
-        surname, _, first = name.partition(",")
-        return f"{first.strip().title()} {surname.strip().title()}"
-    return name
+    from processors.player_names import fmt_name
+    return fmt_name(name)
 
 
 # ── Player ID unification ──────────────────────────────────────────────────
