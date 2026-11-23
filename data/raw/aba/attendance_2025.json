@@ -1,0 +1,152 @@
+{
+  "14397509": {
+    "date": "2025-10-11",
+    "aba_match": 11,
+    "attendance": 150,
+    "venue": "Mala dvorana Tivoli"
+  },
+  "14397526": {
+    "date": "2025-10-19",
+    "aba_match": 18,
+    "attendance": 2341,
+    "venue": "Coca Cola Arena"
+  },
+  "14397529": {
+    "date": "2025-10-25",
+    "aba_match": 27,
+    "attendance": 500,
+    "venue": "Mala dvorana KK Split"
+  },
+  "14397496": {
+    "date": "2025-11-01",
+    "aba_match": 35,
+    "attendance": 5612,
+    "venue": "BT Arena"
+  },
+  "14397502": {
+    "date": "2025-11-08",
+    "aba_match": 42,
+    "attendance": 4356,
+    "venue": "BT Arena"
+  },
+  "14397505": {
+    "date": "2025-11-14",
+    "aba_match": 51,
+    "attendance": 550,
+    "venue": "Sportski centar Morača"
+  },
+  "15039407": {
+    "date": "2025-11-22",
+    "aba_match": 58,
+    "attendance": 763,
+    "venue": "Arena KK FMP"
+  },
+  "14397519": {
+    "date": "2025-12-07",
+    "aba_match": 65,
+    "attendance": 10000,
+    "venue": "BT Arena"
+  },
+  "14397524": {
+    "date": "2025-12-19",
+    "aba_match": 74,
+    "attendance": 2400,
+    "venue": "Horia Demian Sports Hall"
+  },
+  "14936498": {
+    "date": "2025-12-22",
+    "aba_match": 83,
+    "attendance": 4359,
+    "venue": "BT Arena"
+  },
+  "14397578": {
+    "date": "2025-12-26",
+    "aba_match": 91,
+    "attendance": 4063,
+    "venue": "BT Arena"
+  },
+  "15306734": {
+    "date": "2026-01-03",
+    "aba_match": 99,
+    "attendance": 4006,
+    "venue": "BT Arena"
+  },
+  "14397589": {
+    "date": "2026-01-10",
+    "aba_match": 107,
+    "attendance": 700,
+    "venue": "J.U. Sportska dvorana Laktaši"
+  },
+  "14397598": {
+    "date": "2026-01-17",
+    "aba_match": 113,
+    "attendance": 10000,
+    "venue": "BT Arena"
+  },
+  "14397597": {
+    "date": "2026-01-31",
+    "aba_match": 129,
+    "attendance": 3126,
+    "venue": "Beogradska Arena"
+  },
+  "14949152": {
+    "date": "2026-02-07",
+    "aba_match": 138,
+    "attendance": 1800,
+    "venue": "Dvorana Borac"
+  },
+  "15485269": {
+    "date": "2026-03-08",
+    "aba_match": 154,
+    "attendance": 9213,
+    "venue": "BT Arena"
+  },
+  "15485273": {
+    "date": "2026-03-14",
+    "aba_match": 170,
+    "attendance": 550,
+    "venue": "Sportski centar Morača"
+  },
+  "15485278": {
+    "date": "2026-03-22",
+    "aba_match": 180,
+    "attendance": 800,
+    "venue": "Zetra Olympic Hall"
+  },
+  "15485268": {
+    "date": "2026-03-25",
+    "aba_match": 148,
+    "attendance": 4612,
+    "venue": "BT Arena"
+  },
+  "15485282": {
+    "date": "2026-03-28",
+    "aba_match": 188,
+    "attendance": 2900,
+    "venue": "Arena Stožice"
+  },
+  "15485264": {
+    "date": "2026-04-05",
+    "aba_match": 198,
+    "attendance": 4200,
+    "venue": "BT Arena"
+  },
+  "15485272": {
+    "date": "2026-04-13",
+    "aba_match": 207,
+    "attendance": 3776,
+    "venue": "Košarkaška dvorana Aleksandar Nikolić"
+  },
+  "15485284": {
+    "date": "2026-04-19",
+    "aba_match": 216,
+    "attendance": 4200,
+    "venue": "BT Arena"
+  },
+  "16086669": {
+    "date": "2026-05-05",
+    "aba_match": 233,
+    "attendance": 1120,
+    "venue": "Sportski centar Morača"
+  }
+}

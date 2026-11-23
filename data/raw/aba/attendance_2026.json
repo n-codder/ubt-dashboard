@@ -1,0 +1,50 @@
+{
+  "16943051": {
+    "date": "2026-10-03",
+    "aba_match": 18,
+    "attendance": 1000,
+    "venue": "BC Vienna Arena"
+  },
+  "16943064": {
+    "date": "2026-10-11",
+    "aba_match": 27,
+    "attendance": 6228,
+    "venue": "BT Arena"
+  },
+  "16943080": {
+    "date": "2026-10-18",
+    "aba_match": 39,
+    "attendance": 1280,
+    "venue": "Hala Sportova Dudova šuma"
+  },
+  "16943243": {
+    "date": "2026-10-23",
+    "aba_match": 50,
+    "attendance": 2417,
+    "venue": "Horia Demian Sports Hall"
+  },
+  "16943103": {
+    "date": "2026-11-02",
+    "aba_match": 56,
+    "attendance": 1017,
+    "venue": "Hala sportova Ranko Žeravica"
+  },
+  "16943114": {
+    "date": "2026-11-08",
+    "aba_match": 67,
+    "attendance": 2791,
+    "venue": "BT Arena"
+  },
+  "16943123": {
+    "date": "2026-11-14",
+    "aba_match": 79,
+    "attendance": 2803,
+    "venue": "BT Arena"
+  },
+  "16943152": {
+    "date": "2026-11-22",
+    "aba_match": 88,
+    "attendance": 4612,
+    "venue": "BT Arena"
+  }
+}

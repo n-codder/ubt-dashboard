@@ -134,13 +134,23 @@ def fetch_games(season: int, full: bool = False) -> pd.DataFrame:
     if not new_events:
         log.info("Niciun meci nou — încarc din raw JSON.")
         all_events = _load_raw_games(season)
-        return _normalize_games(all_events, season)
+        return _normalize_games(all_events, season, _attendance(season, all_events))
 
     log.info(f"{len(new_events)} meciuri noi găsite.")
     _save_raw_games(season, new_events, overwrite=full)
 
     all_events = _load_raw_games(season)
-    return _normalize_games(all_events, season)
+    return _normalize_games(all_events, season, _attendance(season, all_events))
+
+
+def _attendance(season: int, events: list[dict]) -> dict:
+    """Spectatori + sală de pe aba-liga.com (SofaScore nu îi are). Nu blochează fetch-ul dacă eșuează."""
+    from fetchers import aba_attendance
+    try:
+        return aba_attendance.update(season, events)
+    except Exception as exc:
+        log.warning(f"Spectatori ABA indisponibili acum ({exc}) — reîncerc la următorul fetch.")
+        return aba_attendance.load(season)
 
 
 def _fetch_new_matches(season_id: int, known_ids: set[int]) -> list[dict]:
@@ -213,9 +223,11 @@ def _load_existing_games(season: int) -> pd.DataFrame:
     return df[mask].copy()
 
 
-def _normalize_games(events: list[dict], season: int) -> pd.DataFrame:
+def _normalize_games(events: list[dict], season: int, attendance: dict | None = None) -> pd.DataFrame:
+    attendance = attendance or {}
     rows = []
     for e in events:
+        att = attendance.get(str(e["id"]), {})
         home_id    = e["homeTeam"]["id"]
         ubt_home   = home_id == TEAM_ID
         home_score = e.get("homeScore", {}).get("current")
@@ -240,8 +252,8 @@ def _normalize_games(events: list[dict], season: int) -> pd.DataFrame:
             "away_code":   e["awayTeam"].get("slug", ""),
             "score_home":  home_score,
             "score_away":  away_score,
-            "venue":       e.get("venue", {}).get("name"),
-            "attendance":  e.get("venue", {}).get("stadium", {}).get("capacity"),
+            "venue":       att.get("venue") or e.get("venue", {}).get("name"),
+            "attendance":  att.get("attendance"),
             "phase":       "Regular Season",
             "ubt_is_home": ubt_home,
             "ubt_score":   ubt_score,
