@@ -32,8 +32,10 @@ def main() -> int:
             return 0
 
     from fetchers import run_all
-    run_all.run()
-    return 0
+    errors = run_all.run()
+    # cod ≠ 0 → GitHub Actions oprește job-ul înainte de „Publică datele noi”
+    # și trimite email de eșec
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":

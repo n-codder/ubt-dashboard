@@ -314,6 +314,12 @@ def publish(message: str = Form(...)):
         steps.append({"step": label, "ok": r.returncode == 0, "output": (r.stdout + r.stderr).strip()})
         return r.returncode == 0
 
+    # Nu publicăm date stricate (ex. fișier trunchiat, meci fără statistici)
+    chk = subprocess.run([PY, "processors/check_data.py"], cwd=ROOT, capture_output=True, text=True, timeout=120)
+    steps.append({"step": "Verific datele", "ok": chk.returncode == 0, "output": (chk.stdout + chk.stderr).strip()})
+    if chk.returncode != 0:
+        return {"ok": False, "steps": steps}
+
     has_changes = bool(_git("status", "--porcelain").stdout.strip())
     if has_changes:
         if not (step("Adaug fișierele", "add", "-A") and step("Commit", "commit", "-m", message)):

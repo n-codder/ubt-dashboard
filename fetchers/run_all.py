@@ -101,8 +101,10 @@ def _run_fetcher(module_path: str, kwargs: dict) -> bool:
         return False
 
 
-def _run_processors(season: int, full: bool) -> None:
+def _run_processors(season: int, full: bool) -> list[str]:
+    """Rulează procesoarele; întoarce lista pașilor care au eșuat."""
     import importlib
+    errors: list[str] = []
     log.info("─" * 60)
     log.info("Rulez fetchers/team_stats_fetcher.py ...")
     try:
@@ -111,6 +113,7 @@ def _run_processors(season: int, full: bool) -> None:
         log.info("Team stats fetcher — done.")
     except Exception as exc:
         log.error(f"Team stats fetcher eroare: {exc}")
+        errors.append(f"Team stats fetcher eroare: {exc}")
 
     log.info("Rulez processors/normalizer.py ...")
     try:
@@ -119,6 +122,7 @@ def _run_processors(season: int, full: bool) -> None:
         log.info("Normalizer — done.")
     except Exception as exc:
         log.error(f"Normalizer eroare: {exc}")
+        errors.append(f"Normalizer eroare: {exc}")
 
     log.info("Rulez processors/quarters.py ...")
     try:
@@ -126,6 +130,7 @@ def _run_processors(season: int, full: bool) -> None:
         qtr.run()
     except Exception as exc:
         log.error(f"Quarters eroare: {exc}")
+        errors.append(f"Quarters eroare: {exc}")
 
     log.info("Rulez processors/per_game_stats.py ...")
     try:
@@ -134,6 +139,7 @@ def _run_processors(season: int, full: bool) -> None:
             pgs.run(season=s, full=full)
     except Exception as exc:
         log.error(f"Per-game stats eroare: {exc}")
+        errors.append(f"Per-game stats eroare: {exc}")
 
     log.info("Rulez processors/dedup_players.py ...")
     try:
@@ -141,6 +147,9 @@ def _run_processors(season: int, full: bool) -> None:
         dedup.run()
     except Exception as exc:
         log.error(f"Dedup eroare: {exc}")
+        errors.append(f"Dedup eroare: {exc}")
+
+    return errors
 
 
 def _summary() -> None:
@@ -171,13 +180,15 @@ def _summary() -> None:
 
 # ── Entry point ────────────────────────────────────────────────────────────
 
-def run(force: bool = False, only: str | None = None) -> None:
+def run(force: bool = False, only: str | None = None) -> list[str]:
+    """Întoarce lista erorilor (goală = totul a mers). Cu erori, datele nu se publică."""
     log.info("=" * 60)
     log.info("run_all.py — start")
     log.info("=" * 60)
 
     last_updated  = _load_last_updated()
     ran_any       = False
+    errors: list[str] = []
 
     for comp_key, season, module, kwargs in COMPETITIONS:
         if only and comp_key != only:
@@ -193,19 +204,32 @@ def run(force: bool = False, only: str | None = None) -> None:
 
         log.info(f"  → Rulez {module} ...")
         ok = _run_fetcher(module, kwargs)
+        if not ok:
+            errors.append(f"Fetcher {comp_key} a eșuat")
         if ok:
             ran_any = True
             last_updated = _load_last_updated()   # reîncarcă după scriere
 
     if ran_any:
-        _run_processors(season=2025, full=False)
+        errors += _run_processors(season=2025, full=False)
     else:
         log.info("\nToate competițiile au fost skip-uite — procesoarele nu rulează.")
 
     _summary()
+
+    from processors import check_data
+    if not check_data.run():
+        errors.append("Verificarea datelor a eșuat")
+
     log.info("\n" + "=" * 60)
-    log.info("run_all.py — done")
+    if errors:
+        log.error("run_all.py — TERMINAT CU ERORI (%d):", len(errors))
+        for e in errors:
+            log.error("  ✗ %s", e)
+    else:
+        log.info("run_all.py — done")
     log.info("=" * 60)
+    return errors
 
 
 if __name__ == "__main__":
@@ -219,4 +243,4 @@ if __name__ == "__main__":
         help="Rulează doar o competiție (eurocup / aba_league / liga_nationala)",
     )
     args = parser.parse_args()
-    run(force=args.force, only=args.only)
+    sys.exit(1 if run(force=args.force, only=args.only) else 0)
