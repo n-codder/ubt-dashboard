@@ -70,13 +70,12 @@ def check_directories():
     header("3. Directory structure")
     required = [
         "data/raw/eurocup",
-        "data/raw/aba_league",
-        "data/raw/liga_nationala",
+        "data/raw/aba",
+        "data/raw/ln",
         "data/raw/cupa_romaniei",
         "data/processed",
         "fetchers",
         "processors",
-        "uploaders",
         "player-profiles/assets/players",
         "player-profiles/assets/flags",
         "config",
@@ -124,24 +123,12 @@ def check_api_keys():
         import os
         load_dotenv(ROOT / ".env")
 
-        api_key    = os.getenv("API_BASKETBALL_KEY", "")
-        sheets_id  = os.getenv("GOOGLE_SHEETS_ID", "")
+        api_key    = os.getenv("RAPIDAPI_KEY", "")
 
         if api_key and api_key != "your_key_here":
-            ok("API_BASKETBALL_KEY — set")
+            ok("RAPIDAPI_KEY — set")
         else:
-            warn("API_BASKETBALL_KEY — not set (needed for ABA / LN / Cupă)")
-
-        if sheets_id and sheets_id != "your_sheet_id_here":
-            ok("GOOGLE_SHEETS_ID — set")
-        else:
-            warn("GOOGLE_SHEETS_ID — not set (needed for Looker Studio sync)")
-
-        service_acc = ROOT / "config" / "service_account.json"
-        if service_acc.exists():
-            ok("Google service account JSON — found")
-        else:
-            warn("config/service_account.json — missing (needed for Sheets upload)")
+            warn("RAPIDAPI_KEY — not set (needed for ABA / LN / program meciuri)")
 
     except ImportError:
         warn("python-dotenv not installed yet — skipping key check")

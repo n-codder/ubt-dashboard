@@ -5,7 +5,8 @@ Sursele sunt fișierele brute deja descărcate (fără apeluri API):
   - EuroCup        : data/raw/eurocup/games_raw_{an}.csv   (ScoreQuarter1A … ScoreExtraTimeB, cumulat)
   - ABA League, LN : data/raw/{aba,ln}/games_raw_{an}.json (homeScore.period1…4, overtime)
 
-data/raw/ nu se commitează, de aceea pagina de meci citește fișierul procesat.
+Pagina de meci citește fișierul procesat; data/raw/ e în repo doar pentru fetch-ul automat
+(Vercel nu îl publică — vezi .vercelignore).
 Scorurile sunt pe sfert (nu cumulate); prelungirile sunt adunate într-o singură coloană.
 
 Usage:

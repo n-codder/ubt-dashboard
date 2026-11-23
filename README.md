@@ -41,7 +41,7 @@ python admin/app.py               # http://127.0.0.1:8770
 Din admin: pornești fetch-ul (cu log și istoric), setezi fetch-ul automat, încarci logo-uri pentru adversari, alegi ce sezoane apar pe site și publici (commit + push → Vercel).
 Logo-urile și sezoanele ascunse stau în `config/site.json`.
 
-**Fetch automat:** `.github/workflows/auto-fetch.yml` rulează zilnic pe GitHub Actions și face fetch dacă e pornit în `config/auto_fetch.json` și a trecut intervalul ales. Are nevoie de secretul `RAPIDAPI_KEY` în repo (Settings → Secrets and variables → Actions).
+**Fetch automat:** `.github/workflows/auto-fetch.yml` rulează din oră în oră pe GitHub Actions. Dacă e pornit în `config/auto_fetch.json`, aduce datele unui meci la ~2½ ore după start (după programul din `data/processed/schedule.json`) și face un fetch de siguranță la intervalul ales. Dacă ceva eșuează sau datele nu trec verificarea (`processors/check_data.py`), nu publică nimic. Are nevoie de secretul `RAPIDAPI_KEY` în repo (Settings → Secrets and variables → Actions).
 
 ## Structură
 

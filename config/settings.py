@@ -28,12 +28,6 @@ RAPIDAPI_KEY              = os.getenv("RAPIDAPI_KEY", "")
 RAPIDAPI_HOST_BASKETBALL  = "basketapi1.p.rapidapi.com"
 RAPIDAPI_BASE_BASKETBALL  = "https://basketapi1.p.rapidapi.com"
 
-# ── Google Sheets ──────────────────────────────────────────────────────────
-GOOGLE_SHEETS_ID           = os.getenv("GOOGLE_SHEETS_ID", "")
-GOOGLE_SERVICE_ACCOUNT_FILE = ROOT / os.getenv(
-    "GOOGLE_SERVICE_ACCOUNT_FILE", "config/service_account.json"
-)
-
 # ── Season ─────────────────────────────────────────────────────────────────
 SEASON = os.getenv("SEASON", "2025-2026")
 

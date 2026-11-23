@@ -297,7 +297,10 @@ def fetch_team_stats(season: int | None = None, full: bool = False, competition:
 
     if OUTPUT_PATH.exists() and not full:
         df_existing = pd.read_csv(OUTPUT_PATH)
-        df_out = pd.concat([df_existing, df_new], ignore_index=True)
+        # coloanele complet goale din rândurile noi (ex. pir la ABA) se scot înainte
+        # de concat — altfel pandas dă FutureWarning — și se refac după
+        order = df_existing.columns.tolist() + [c for c in cols if c not in df_existing.columns]
+        df_out = pd.concat([df_existing, df_new.dropna(axis=1, how="all")], ignore_index=True).reindex(columns=order)
     else:
         df_out = df_new
 

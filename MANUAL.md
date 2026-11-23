@@ -8,10 +8,9 @@
 2. [Cum actualizezi după un meci nou](#2-cum-actualizezi-după-un-meci-nou)
 3. [Fetcheri — detalii per competiție](#3-fetcheri--detalii-per-competiție)
 4. [Procesoare](#4-procesoare)
-5. [Upload Google Sheets](#5-upload-google-sheets)
-6. [Pagina cu jucători (GitHub Pages)](#6-pagina-cu-jucători-github-pages)
-7. [Referință rapidă — comenzi](#7-referință-rapidă--comenzi)
-8. [Admin (local)](#8-admin-local)
+5. [Site-ul (Vercel)](#5-site-ul-vercel)
+6. [Referință rapidă — comenzi](#6-referință-rapidă--comenzi)
+7. [Admin (local)](#7-admin-local)
 
 ---
 
@@ -20,18 +19,15 @@
 ```
 Fetcher (API)
     ↓
-data/raw/          ← date brute, nu se commitează
+data/raw/          ← date brute, în repo (necesare fetch-ului automat), nepublicate pe site
     ↓
-processors/normalizer.py
-processors/per_game_stats.py
+processors/  (normalizer, quarters, per_game_stats, dedup_players, player_names)
+    ↓
+processors/check_data.py  ← dacă datele nu trec verificarea, nu se publică nimic
     ↓
 data/processed/    ← CSV-uri finale, se commitează
-    ↓  ↓
-    │  └─ player-profiles/  ← citite direct de pagina de jucători
     ↓
-uploaders/sheets_uploader.py
-    ↓
-Google Sheets → Looker Studio
+player-profiles/   ← site-ul (Vercel) le citește direct
 ```
 
 ---
@@ -42,7 +38,6 @@ Google Sheets → Looker Studio
 
 ```bash
 python fetchers/run_all.py
-python uploaders/sheets_uploader.py
 ```
 
 `run_all.py` rulează automat și procesoarele dacă găsește date noi.  
@@ -76,13 +71,7 @@ python processors/normalizer.py
 python processors/per_game_stats.py
 ```
 
-**Pas 3 — Upload Sheets**
-
-```bash
-python uploaders/sheets_uploader.py
-```
-
-**Pas 4 — Commit date procesate**
+**Pas 3 — Commit date procesate**
 
 ```bash
 git add data/processed/
@@ -141,31 +130,9 @@ python processors/per_game_stats.py --full    # re-procesează tot
 
 ---
 
-## 5. Upload Google Sheets
+## 5. Site-ul (Vercel)
 
-```bash
-python uploaders/sheets_uploader.py                    # toate taburile
-python uploaders/sheets_uploader.py --tab games        # doar games
-python uploaders/sheets_uploader.py --tab player_stats
-python uploaders/sheets_uploader.py --tab player_stats_per_game
-python uploaders/sheets_uploader.py --dry-run          # test fără scriere
-```
-
-**Taburi actualizate:**
-
-| Tab Sheets | Sursă CSV |
-|------------|-----------|
-| `games` | `data/processed/games_normalized.csv` |
-| `player_stats` | `data/processed/player_stats_normalized.csv` |
-| `player_stats_per_game` | `data/processed/player_stats_per_game_normalized.csv` |
-
-După upload, în **Looker Studio** dai **Refresh data** (colț dreapta sus).
-
----
-
-## 6. Pagina cu jucători (GitHub Pages)
-
-Pagina citește direct din `data/processed/` — nu are nevoie de Sheets.
+Pagina citește direct din `data/processed/`.
 
 **Actualizare:**
 
@@ -178,7 +145,7 @@ git commit -m "data: update $(date +%Y-%m-%d)"
 git push
 ```
 
-GitHub Pages actualizează automat în câteva secunde după push.
+Vercel publică automat în câteva secunde după push. Publică doar fișierele site-ului (vezi `.vercelignore`).
 
 **Local (preview înainte de push):**
 
@@ -190,13 +157,12 @@ python3 -m http.server 8000
 
 ---
 
-## 7. Referință rapidă — comenzi
+## 6. Referință rapidă — comenzi
 
 ### Update complet după meciuri noi
 
 ```bash
 python fetchers/run_all.py
-python uploaders/sheets_uploader.py
 git add data/processed/ && git commit -m "data: update $(date +%Y-%m-%d)" && git push
 ```
 
@@ -204,7 +170,6 @@ git add data/processed/ && git commit -m "data: update $(date +%Y-%m-%d)" && git
 
 ```bash
 python fetchers/run_all.py --force
-python uploaders/sheets_uploader.py
 git add data/processed/ && git commit -m "data: update $(date +%Y-%m-%d)" && git push
 ```
 
@@ -212,7 +177,6 @@ git add data/processed/ && git commit -m "data: update $(date +%Y-%m-%d)" && git
 
 ```bash
 python fetchers/run_all.py --only aba_league
-python uploaders/sheets_uploader.py
 git add data/processed/ && git commit -m "data: update aba $(date +%Y-%m-%d)" && git push
 ```
 
@@ -223,13 +187,12 @@ python fetchers/aba_fetcher.py --season 2025 --full
 python fetchers/ln_fetcher.py  --season 2026 --full
 python processors/normalizer.py
 python processors/per_game_stats.py --full
-python uploaders/sheets_uploader.py
 git add data/processed/ && git commit -m "data: full rebuild $(date +%Y-%m-%d)" && git push
 ```
 
 ---
 
-## 8. Admin (local)
+## 7. Admin (local)
 
 Admin-ul pornește dintr-un terminal și se deschide în browser la **http://127.0.0.1:8770**.
 

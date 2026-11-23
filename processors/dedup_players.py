@@ -10,6 +10,8 @@ Cum funcționează:
   4. Canonicalizare: preferă ID-ul din EuroCup; dacă nu există, cel mai mic ID numeric.
   5. Actualizează player_stats_normalized.csv și player_stats_per_game_normalized.csv.
      Poza folosită: prima disponibilă din surse în ordinea PHOTO_PRIORITY.
+  6. Potrivirile sigure ABA/LN → EuroCup (similaritate ≥ 0.95) se salvează în
+     config/player_id_map.json, ca să nu mai fie nevoie de completat de mână.
 
 Rulare:
   python3 processors/dedup_players.py [--dry-run] [--threshold 0.88]
@@ -17,6 +19,7 @@ Rulare:
 
 import argparse
 import csv
+import json
 import pathlib
 import re
 import unicodedata
@@ -148,56 +151,40 @@ def apply_merge(path: pathlib.Path, merge_map: dict, dry_run: bool) -> int:
     return changed
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Deduplică jucători cu ID-uri diferite')
-    parser.add_argument('--dry-run', action='store_true',
-                        help='Doar afișează ce s-ar schimba, fără să modifice fișierele')
-    parser.add_argument('--threshold', type=float, default=THRESHOLD,
-                        help=f'Similaritate minimă pentru match automat (default {THRESHOLD})')
-    args = parser.parse_args()
+ID_MAP_PATH = ROOT / 'config' / 'player_id_map.json'
+SOFASCORE_COMPS = {'aba_league', 'liga_nationala'}  # aceleași ID-uri SofaScore
+SAVE_THRESHOLD = 0.95  # potrivirile sigure se salvează permanent în player_id_map.json
 
-    stats_path = STATS_FILES[0]
-    if not stats_path.exists():
-        print(f'Fișier lipsă: {stats_path}')
-        return
 
-    rows = list(csv.DictReader(stats_path.open()))
-    duplicates = find_duplicates(rows, args.threshold)
-
-    if not duplicates:
-        print('Niciun duplicat detectat.')
-        return
-
-    prefix = 'DRY RUN — ' if args.dry_run else ''
-    print(f'{prefix}Duplicați detectați ({len(duplicates)}):')
-    pid_to_name = {r['player_id']: r['player_name'] for r in rows}
-    for old_id, can_id, can_name, sim in duplicates:
-        old_name = pid_to_name.get(old_id, '?')
-        print(f'  [{sim:.2f}] "{old_name}" (id={old_id})  →  "{can_name}" (id={can_id})')
-
-    # Construiește merge_map cu cea mai bună poză
-    pid_to_rows = defaultdict(list)
+def save_to_id_map(duplicates: list, rows: list, dry_run: bool) -> list:
+    """
+    Salvează în player_id_map.json (aba_to_eurocup) potrivirile ABA/LN → EuroCup
+    sigure (similaritate ≥ SAVE_THRESHOLD), ca normalizer-ul și per_game_stats
+    să folosească ID-ul EuroCup direct, de la următoarea rulare.
+    Întoarce lista potrivirilor salvate.
+    """
+    comps = defaultdict(set)
     for r in rows:
-        pid_to_rows[r['player_id']].append(r)
+        comps[r['player_id']].add(r['competition_key'])
 
-    merge_map = {}
-    for old_id, can_id, can_name, _ in duplicates:
-        all_rows = pid_to_rows[old_id] + pid_to_rows[can_id]
-        photo = best_photo(all_rows)
-        merge_map[old_id] = (can_id, can_name, photo)
-
-    print()
-    for path in STATS_FILES:
-        if not path.exists():
-            print(f'  LIPSĂ: {path.name}')
+    data = json.loads(ID_MAP_PATH.read_text()) if ID_MAP_PATH.exists() else {}
+    id_map = data.setdefault('aba_to_eurocup', {})
+    saved = []
+    for old_id, can_id, can_name, sim in duplicates:
+        if sim < SAVE_THRESHOLD or old_id in id_map:
             continue
-        changed = apply_merge(path, merge_map, args.dry_run)
-        status = '(dry-run, neschimbat)' if args.dry_run else 'rânduri actualizate'
-        print(f'  {path.name}: {changed} {status}')
+        if 'eurocup' in comps[can_id] and comps[old_id] <= SOFASCORE_COMPS and old_id.isdigit() and can_id.isdigit():
+            id_map[old_id] = int(can_id)
+            saved.append((old_id, can_id, can_name, sim))
+    if saved and not dry_run:
+        tmp = ID_MAP_PATH.with_suffix('.json.tmp')
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
+        tmp.replace(ID_MAP_PATH)
+    return saved
 
 
 def run(threshold: float = THRESHOLD, dry_run: bool = False) -> None:
-    """Entry point apelabil programatic (fără argparse)."""
+    """Entry point (folosit și de run_all)."""
     stats_path = STATS_FILES[0]
     if not stats_path.exists():
         print(f'Fișier lipsă: {stats_path}')
@@ -235,6 +222,24 @@ def run(threshold: float = THRESHOLD, dry_run: bool = False) -> None:
         changed = apply_merge(path, merge_map, dry_run)
         status = '(dry-run, neschimbat)' if dry_run else 'rânduri actualizate'
         print(f'  {path.name}: {changed} {status}')
+
+    saved = save_to_id_map(duplicates, rows, dry_run)
+    for old_id, can_id, can_name, sim in saved:
+        print(f'  {prefix}player_id_map.json: adăugat {old_id} → {can_id} ({can_name}, {sim:.2f})')
+    for old_id, can_id, can_name, sim in duplicates:
+        if sim < SAVE_THRESHOLD:
+            print(f'  DE VERIFICAT (nesalvat în map, similaritate {sim:.2f}): '
+                  f'"{pid_to_name.get(old_id, "?")}" (id={old_id}) → "{can_name}" (id={can_id})')
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Deduplică jucători cu ID-uri diferite')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Doar afișează ce s-ar schimba, fără să modifice fișierele')
+    parser.add_argument('--threshold', type=float, default=THRESHOLD,
+                        help=f'Similaritate minimă pentru match automat (default {THRESHOLD})')
+    args = parser.parse_args()
+    run(threshold=args.threshold, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
